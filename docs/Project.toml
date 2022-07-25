@@ -1,0 +1,13 @@
+[deps]
+Chain = "8be319e6-bccf-4806-a6f7-6fae938471bc"
+CoherentNoise = "3547b4d8-3bdb-4c10-a099-d01a31e852e0"
+ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+
+[compat]
+ColorSchemes = "3.19"
+FileIO = "1.15"
+Images = "0.25"
+julia = "1.7"
