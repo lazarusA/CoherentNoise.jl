@@ -1,8 +1,8 @@
 module Common
 
 using FastPow
-using Images: RGB
-using ColorSchemes: grays, amp
+using ColorTypes: RGB
+using ColorSchemes: ColorScheme
 
 include("sampler.jl")
 include("shared.jl")

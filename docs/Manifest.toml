@@ -2,7 +2,7 @@
 
 julia_version = "1.8.0-rc4"
 manifest_format = "2.0"
-project_hash = "954dfa7cc175a912772699a3dc6c7d1d714120ff"
+project_hash = "0b80edb74668c943f79d5f36eae77452ea0f78b5"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -96,7 +96,7 @@ uuid = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 version = "0.14.2"
 
 [[deps.CoherentNoise]]
-deps = ["CircularArrays", "ColorSchemes", "Distributions", "FastPow", "Images", "Random", "Reexport"]
+deps = ["CircularArrays", "ColorSchemes", "ColorTypes", "Distributions", "FastPow", "Random", "Reexport"]
 path = ".."
 uuid = "3547b4d8-3bdb-4c10-a099-d01a31e852e0"
 version = "0.1.0"

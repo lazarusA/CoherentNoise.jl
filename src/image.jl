@@ -26,7 +26,7 @@ function gen_image(
     h::Integer=1024,
     xbounds::NTuple{2,Float64}=(-1.0, 1.0),
     ybounds::NTuple{2,Float64}=(-1.0, 1.0),
-    colorscheme=nothing,
+    colorscheme::Union{ColorScheme,Nothing}=nothing,
 ) where {N,S<:AbstractSampler{N}}
     x1, x2 = xbounds
     y1, y2 = ybounds
