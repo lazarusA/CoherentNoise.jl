@@ -34,7 +34,7 @@ for the coordinate along the X axis, and one for the coordinate along the Y axis
     integral coordinates.
 
 There is one potential problem with the above example though: every time we create a sampler and
-sample from it, it will produce a different output:
+sample from it with the same input coordinates, it will produce a different output:
 
 ```@example 1
 sampler = Perlin{2}()
@@ -49,7 +49,6 @@ results with the same input. We can change this behavior on a per-sampler basis,
 own seed:
 
 ```@example 2
-using CoherentNoise
 sampler = Perlin{2}(seed=42)
 sample(sampler, 120.2, 42.8)
 ```
