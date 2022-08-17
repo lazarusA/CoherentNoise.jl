@@ -202,7 +202,7 @@ source sampler:
 
 ```@example tutorial
 @chain OpenSimplex{3}(seed=1) begin
-    FBM{3}(seeed=1, source=_, octaves=3)
+    FBM{3}(seed=1, source=_, octaves=3)
     gen_image
 end
 @chain OpenSimplex2{3}(seed=1) begin # hide
