@@ -7,10 +7,10 @@ function generate(file, sampler; xbounds=(-1.0, 1.0), ybounds=(-1.0, 1.0), color
 end
 ```
 
-# First steps
+# [First steps](@id first_steps)
 
 Before following along with this tutorial, it is a good idea to get familiar with how to work with
-samplers. See [Getting Started](getting_started.html).
+samplers. See [Getting Started](@ref installation).
 
 ## Visualizing results
 
@@ -124,9 +124,9 @@ generate("tutorial07", scaled) # hide
 
 We decreased the scale by 4, making the result look much more interesting.
 
-There are many more modifiers. It is recommended to check out the [API Reference](reference.html)
+There are many more modifiers. It is recommended to check out the [API Reference](@ref)
 for a full list of modifiers (and other samplers). Also, be sure to check out the
-[Gallery](gallery.html) for more examples.
+[Gallery](@ref user_creations) for more examples.
 
 ## Pipelines
 
