@@ -34,12 +34,12 @@ function gen_image(
     yd = (y2 - y1) / h
     img = Array{RGB{Float64}}(undef, h, w)
     zw = rand(rng(sampler), Float64, N - 2) * 1000
-    Threads.@threads for x in 1:w
+    Threads.@threads for x in 1:h
         cx = x * xd + x1
-        for y in 1:h
+        for y in 1:w
             cy = y * yd + y1
             value = sample(sampler, cx, cy, zw...) * 0.5 + 0.5
-            img[y, x] = colorscheme !== nothing ? colorscheme[value] : value
+            img[x, y] = colorscheme !== nothing ? colorscheme[value] : value
         end
     end
     img
