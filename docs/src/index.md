@@ -2,7 +2,7 @@
 CurrentModule = CoherentNoise
 ```
 
-# CoherentNoise
+![](assets/splash.png)
 
 [CoherentNoise](https://github.com/mfiano/CoherentNoise.jl) is a comprehensive suite of coherent
 noise algorithms and composable tools for manipulating them to create interesting
