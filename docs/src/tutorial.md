@@ -31,7 +31,7 @@ This produces an array of RGB values using [Images.jl](https://github.com/JuliaI
 You can then, write it out as an image file with something like:
 
 ```@julia
-using Images, FileIO
+using FileIO
 img = gen_image(sampler)
 save(img, "/tmp/noise.png")
 ```

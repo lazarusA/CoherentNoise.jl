@@ -1,3 +1,6 @@
+```@setup getting-started
+using CoherentNoise
+```
 ## Installation
 
 CoherentNoise.jl exists in the Julia's General registry. In Julia ≥ 1.0, you can add it using the
@@ -16,7 +19,7 @@ To get started, let's get a feel for how to create a sampler and sample from it 
 supported noise algorithms. Perlin noise is a well-known algorithm so let's create a 2-dimensional
 Perlin noise sample and sample from it:
 
-```@example 1
+```@example getting-started
 using CoherentNoise
 sampler = Perlin{2}()
 sample(sampler, 120.2, 42.8)
@@ -36,7 +39,7 @@ for the coordinate along the X axis, and one for the coordinate along the Y axis
 There is one potential problem with the above example though: every time we create a sampler and
 sample from it with the same input coordinates, it will produce a different output:
 
-```@example 1
+```@example getting-started
 sampler = Perlin{2}()
 sample(sampler, 120.2, 42.8)
 ```
@@ -48,12 +51,12 @@ samplers have their own distinct random number generator, and it is how we can r
 results with the same input. We can change this behavior on a per-sampler basis, by supplying our
 own seed:
 
-```@example 2
+```@example getting-started
 sampler = Perlin{2}(seed=42)
 sample(sampler, 120.2, 42.8)
 ```
 
-```@example 2
+```@example getting-started
 sampler = Perlin{2}(seed=42)
 sample(sampler, 120.2, 42.8)
 ```

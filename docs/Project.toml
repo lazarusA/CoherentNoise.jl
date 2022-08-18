@@ -9,5 +9,4 @@ Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
 [compat]
 ColorSchemes = "3.19"
 FileIO = "1.15"
-Images = "0.25"
 julia = "1.7"

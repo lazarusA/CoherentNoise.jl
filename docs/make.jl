@@ -1,5 +1,5 @@
 using CoherentNoise
-using Images, FileIO, Chain
+using FileIO, Chain
 using Documenter
 
 DocMeta.setdocmeta!(CoherentNoise, :DocTestSetup, :(using CoherentNoise); recursive=true)
