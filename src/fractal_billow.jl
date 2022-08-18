@@ -15,7 +15,7 @@ end
 """
     Billow{N}(; kwargs...)
 
-Construct a sampler that outputs an `N`-dimensional billowy fractal noise when it is sampler from.
+Construct a sampler that outputs an `N`-dimensional billowy fractal noise when it is sampled from.
 
 # Arguments
 

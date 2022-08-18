@@ -12,7 +12,7 @@ An `N`-dimensional sampler that generates OpenSimplex (legacy) noise.
 `N` must be an integer in the range [2, 4].
 
 Note: This version of OpenSimplex is considered "legacy" by its original author. Consider using one
-of the newer algorithms, [`OpenSimplex2`](@ref Main.CoherentNoise.Noise.OpenSimplex2Noise.OpenSimplex2) 
+of the newer algorithms, [`OpenSimplex2`](@ref Main.CoherentNoise.Noise.OpenSimplex2Noise.OpenSimplex2)
 or [`OpenSimplex2S`](@ref Main.CoherentNoise.Noise.OpenSimplex2SNoise.OpenSimplex2S).
 """
 struct OpenSimplex{N} <: NoiseSampler{N}
@@ -24,7 +24,7 @@ end
 """
     OpenSimplex{N}(; seed=nothing)
 
-Construct a sampler that outputs `N`-dimensional OpenSimplex noise when it is sampler from.
+Construct a sampler that outputs `N`-dimensional OpenSimplex noise when it is sampled from.
 
 # Arguments
 

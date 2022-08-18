@@ -50,7 +50,7 @@ end
 """
     OpenSimplex2{N,O}(; seed=nothing)
 
-Construct a sampler that outputs `N`-dimensional OpenSimplex2 noise when it is sampler from.
+Construct a sampler that outputs `N`-dimensional OpenSimplex2 noise when it is sampled from.
 
 The noise space is re-oriented according by the supplied [`Orientation`](@ref) type `O`.
 
@@ -68,7 +68,7 @@ end
 """
     OpenSimplex2{N}(; seed=nothing)
 
-Construct a sampler that outputs `N`-dimensional OpenSimplex2 noise when it is sampler from.
+Construct a sampler that outputs `N`-dimensional OpenSimplex2 noise when it is sampled from.
 
 The noise space will be re-oriented using [`Standard`](@ref) orientation.
 

@@ -16,7 +16,7 @@ end
     FBM{N}(; kwargs...)
 
 Construct a sampler that outputs an `N`-dimensional fractional Brownian motion fractal noise when it
-is sampler from.
+is sampled from.
 
 # Arguments
 

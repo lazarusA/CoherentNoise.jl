@@ -15,7 +15,7 @@ end
 """
     Multifractal{N}(; kwargs...)
 
-Construct a sampler that outputs an `N`-dimensional multifractal noise when it is sampler from.
+Construct a sampler that outputs an `N`-dimensional multifractal noise when it is sampled from.
 
 # Arguments
 

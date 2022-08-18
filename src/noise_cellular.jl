@@ -63,7 +63,7 @@ end
     Cellular{N,M}(; seed=nothing)
     Cellular{N,M,F}(; seed=nothing)
 
-Construct a sampler that outputs `N`-dimensional cellular noise when it is sampler from.
+Construct a sampler that outputs `N`-dimensional cellular noise when it is sampled from.
 
 `M` if supplied, must be a [`DistanceMetric`](@ref) type, which denotes the method to use for
 determining adjacent cells.

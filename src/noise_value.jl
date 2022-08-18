@@ -17,7 +17,7 @@ end
 """
     Value{N}(; seed=nothing)
 
-Construct a sampler that outputs `N`-dimensional value noise when it is sampler from.
+Construct a sampler that outputs `N`-dimensional value noise when it is sampled from.
 
 # Arguments
 

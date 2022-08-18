@@ -17,7 +17,7 @@ end
 """
     Perlin{N}(; seed=nothing)
 
-Construct a sampler that outputs `N`-dimensional Perlin "Improved" noise when it is sampler from.
+Construct a sampler that outputs `N`-dimensional Perlin "Improved" noise when it is sampled from.
 
 # Arguments
 

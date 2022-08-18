@@ -18,7 +18,7 @@ end
 """
     Simplex{N}(; seed=nothing)
 
-Construct a sampler that outputs `N`-dimensional Simplex noise when it is sampler from.
+Construct a sampler that outputs `N`-dimensional Simplex noise when it is sampled from.
 
 # Arguments
 
