@@ -27,8 +27,9 @@ gen_image(sampler)
 generate("tutorial01", sampler) # hide
 ```
 
-This produces an array of RGB values using [ColorTypes.jl](https://github.com/JuliaGraphics/ColorTypes.jl).
-You can then, write it out as an image file with something like:
+This produces an array of RGB values using
+[ColorTypes.jl](https://github.com/JuliaGraphics/ColorTypes.jl). You can then, write it out as an
+image file with something like:
 
 ```@julia
 using FileIO
@@ -275,9 +276,9 @@ end # hide
 ### Ridged
 
 `Ridged` is a fractal (actually a [multifractal](https://en.wikipedia.org/wiki/Multifractal_system))
-sampler type that produces ridges. It could be used as the basis for a a mountainous terrain texture,
-among many other uses. It supports all of the same parameters as all other fractals, with the
-addition of an `attenuation` parameter Here are some examples:
+sampler type that produces ridges. It could be used as the basis for a a mountainous terrain
+texture, among many other uses. It supports all of the same parameters as all other fractals, with
+the addition of an `attenuation` parameter Here are some examples:
 
 ```@example tutorial
 @chain OpenSimplex{3}(seed=1) begin
