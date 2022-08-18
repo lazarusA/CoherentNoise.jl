@@ -13,7 +13,7 @@ struct Multifractal{N,S,O} <: FractalSampler{N}
 end
 
 """
-    Multifractal{N}(; <kwargs>)
+    Multifractal{N}(; kwargs...)
 
 Construct a sampler that outputs an `N`-dimensional multifractal noise when it is sampler from.
 

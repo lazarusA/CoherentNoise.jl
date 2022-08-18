@@ -1,7 +1,7 @@
 ```@setup getting-started
 using CoherentNoise
 ```
-## Installation
+## [Installation](@id installation)
 
 CoherentNoise.jl exists in the Julia's General registry. In Julia ≥ 1.0, you can add it using the
 package manager with:

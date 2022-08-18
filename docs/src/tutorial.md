@@ -27,7 +27,7 @@ gen_image(sampler)
 generate("tutorial01", sampler) # hide
 ```
 
-This produces an array of RGB values using [Images.jl](https://github.com/JuliaImages/Images.jl).
+This produces an array of RGB values using [ColorTypes.jl](https://github.com/JuliaGraphics/ColorTypes.jl).
 You can then, write it out as an image file with something like:
 
 ```@julia

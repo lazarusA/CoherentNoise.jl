@@ -13,7 +13,7 @@ struct Billow{N,S,O} <: FractalSampler{N}
 end
 
 """
-    Billow{N}(; <kwargs>)
+    Billow{N}(; kwargs...)
 
 Construct a sampler that outputs an `N`-dimensional billowy fractal noise when it is sampler from.
 

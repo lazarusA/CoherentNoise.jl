@@ -10,7 +10,7 @@ struct Turbulence{N,N1,N2,S1,S2} <: ModifierSampler{N}
 end
 
 """
-    turbulence(s1::AbstractSampler; s2::AbstractSampler; <kwargs>)
+    turbulence(s1::AbstractSampler; s2::AbstractSampler; kwargs...)
 
 Construct a modifier sampler that displaces the input coordinates of sampler `s1` by the output of
 sampler `s2` with a fractional Brownian motion fractal applied to it.

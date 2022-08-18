@@ -5,7 +5,7 @@ struct Warp{N,N1,N2,N3,N4,S,SX,SY,SZ,SW} <: ModifierSampler{N}
 end
 
 """
-    warp(source::AbstractSampler; <kwargs>)
+    warp(source::AbstractSampler; kwargs...)
 
 Construct a modifier sampler that performs domain warping of the sampler `source` before sampling
 from it.

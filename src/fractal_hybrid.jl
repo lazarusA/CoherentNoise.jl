@@ -13,7 +13,7 @@ struct Hybrid{N,S,O} <: FractalSampler{N}
 end
 
 """
-    Hybrid{N}(; <kwargs>)
+    Hybrid{N}(; kwargs...)
 
 Construct a sampler that outputs an `N`-dimensional hybrid multifractal noise when it is sampler
 from.

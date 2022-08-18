@@ -9,7 +9,7 @@ struct Select{N,S1,S2,C} <: ModifierSampler{N}
 end
 
 """
-    select(x::AbstractSampler, y::AbstractSampler; <kwargs>)
+    select(x::AbstractSampler, y::AbstractSampler; kwargs...)
 
 Construct a modifier sampler that outputs either the out of sampler `x` or `y`, depending on the
 output of sampler `z`.
