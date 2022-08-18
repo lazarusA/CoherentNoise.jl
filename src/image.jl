@@ -32,7 +32,7 @@ function gen_image(
     y1, y2 = ybounds
     xd = (x2 - x1) / w
     yd = (y2 - y1) / h
-    img = Array{RGB}(undef, h, w)
+    img = Array{RGB{Float64}}(undef, h, w)
     zw = rand(rng(sampler), Float64, N - 2) * 1000
     Threads.@threads for x in 1:w
         cx = x * xd + x1
