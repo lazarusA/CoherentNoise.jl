@@ -113,11 +113,6 @@ for other sampler types, please file an issue, or submit a pull request.
 - `OpenSimplex2S` (2D, 3D, 4D)
 - `Cellular` (2D, 3D, 4D)
 
-!!! warning
-    Simplex noise ≥ 3 dimensions is patented for certain applications. It is strongly recommended to
-    use one of the supported OpenSimplex noise algorithms in its place if you are uncertain if your
-    use of Simplex noise is in violation of the patent.
-
 ### Pattern samplers
 
 - `Constant` (1D)

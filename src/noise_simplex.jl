@@ -9,9 +9,6 @@ using ..Noise: NoiseSampler
 An `N`-dimensional sampler that generates Simplex noise.
 
 `N` must be an integer in the range [2, 4].
-
-Note: ≥ 3 dimensions is patent-protected for certain applications. Consider using one of the
-OpenSimplex implementations, instead.
 """
 struct Simplex{N} <: NoiseSampler{N}
     random_state::RandomState
