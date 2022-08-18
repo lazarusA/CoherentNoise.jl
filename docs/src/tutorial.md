@@ -320,7 +320,7 @@ looks like this:
 ```@example tutorial
 @chain OpenSimplex2S{3}(seed=1) begin
     Ridged{3}(seed=1, source=_, octaves=6, frequency=1.2, attenuation=1.3, lacunarity=4.5, persistence=0.58)
-    gen_image(_, colorscheme=ColorSchemes.terrain)
+    gen_image(colorscheme=ColorSchemes.terrain)
 end
 @chain OpenSimplex2S{3}(seed=1) begin # hide
     Ridged{3}(seed=1, source=_, octaves=6, frequency=1.2, attenuation=1.3, lacunarity=4.5, persistence=0.58) # hide
@@ -336,7 +336,7 @@ Here is the same thing with the noise output negated with the unary `-` modifier
 @chain OpenSimplex2S{3}(seed=1) begin
     Ridged{3}(seed=1, source=_, octaves=6, frequency=1.2, attenuation=1.3, lacunarity=4.5, persistence=0.58)
     -
-    gen_image(_, colorscheme=ColorSchemes.terrain)
+    gen_image(colorscheme=ColorSchemes.terrain)
 end
 @chain OpenSimplex2S{3}(seed=1) begin # hide
     Ridged{3}(seed=1, source=_, octaves=6, frequency=1.2, attenuation=1.3, lacunarity=4.5, persistence=0.58) # hide
@@ -355,7 +355,7 @@ and terrain-like. For example, to make it more arid, you can simply add an `abs`
     Ridged{3}(seed=1, source=_, octaves=6, frequency=1.2, attenuation=1.3, lacunarity=4.5, persistence=0.58)
     -
     abs
-    gen_image(_, colorscheme=ColorSchemes.terrain)
+    gen_image(colorscheme=ColorSchemes.terrain)
 end
 @chain OpenSimplex2S{3}(seed=1) begin # hide
     Ridged{3}(seed=1, source=_, octaves=6, frequency=1.2, attenuation=1.3, lacunarity=4.5, persistence=0.58) # hide
