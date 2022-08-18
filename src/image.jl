@@ -1,7 +1,7 @@
 """
-    gen_image(sampler::AbstractSampler; <kwargs>)
+    gen_image(sampler::AbstractSampler; kwargs...)
 
-Construct a 2-dimensional array of `Images.RGB` values, suitable for writing to disk as an image
+Construct a 2-dimensional array of `ColorTypes.RGB` values, suitable for writing to disk as an image
 file.
 
 # Arguments

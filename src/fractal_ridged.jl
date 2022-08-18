@@ -13,7 +13,7 @@ struct Ridged{N,S,O} <: FractalSampler{N}
 end
 
 """
-    Ridged{N}(; <kwargs>)
+    Ridged{N}(; kwargs...)
 
 Construct a sampler that outputs an `N`-dimensional ridged multifractal noise when it is sampler
 from.

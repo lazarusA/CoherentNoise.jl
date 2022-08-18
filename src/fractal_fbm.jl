@@ -13,7 +13,7 @@ struct FBM{N,S,O} <: FractalSampler{N}
 end
 
 """
-    FBM{N}(; <kwargs>)
+    FBM{N}(; kwargs...)
 
 Construct a sampler that outputs an `N`-dimensional fractional Brownian motion fractal noise when it
 is sampler from.
