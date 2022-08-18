@@ -8,12 +8,12 @@ using ..Noise: NoiseSampler
 
 """
 Supertype of all orientations that can be applied to the [`OpenSimplex2`](@ref) or
-[`OpenSimplex2S`](@ref) sampler types to re-orient the noise space.
+[`OpenSimplex2S`](@ref Main.CoherentNoise.Noise.OpenSimplex2SNoise.OpenSimplex2S) sampler types to re-orient the noise space.
 """
 abstract type Orientation end
 
 """
-The standard orientation for [`OpenSimple2`](@ref) and [`OpenSimplex2S`](@ref).
+The standard orientation for [`OpenSimplex2`](@ref) and [`OpenSimplex2S`](@ref Main.CoherentNoise.Noise.OpenSimplex2SNoise.OpenSimplex2S).
 """
 struct Standard <: Orientation end
 """
@@ -37,7 +37,7 @@ struct ImproveXYZ <: Orientation end
 """
 An `N`-dimensional sampler that generates OpenSimplex2 noise, with an orientation of `O`.
 
-OpenSimplex2 is not as smooth as [`OpenSimplex2S`](@ref), although more performant.
+OpenSimplex2 is not as smooth as [`OpenSimplex2S`](@ref Main.CoherentNoise.Noise.OpenSimplex2SNoise.OpenSimplex2S), although more performant.
 
 `N` must be an integer in the range [2, 4].
 

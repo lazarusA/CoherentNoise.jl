@@ -13,7 +13,7 @@ pkg> add CoherentNoise
 ## Basic Usage
 
 The following is only a brief explanation of basic usage. For more advanced usage examples, please
-see the [Tutorial](tutorial.html) section.
+see the [Tutorial](@ref first_steps) section.
 
 To get started, let's get a feel for how to create a sampler and sample from it for one of the
 supported noise algorithms. Perlin noise is a well-known algorithm so let's create a 2-dimensional
@@ -78,4 +78,4 @@ per-sampler basis.
 
 Of particular note is that all samplers accept a `seed` keyword argument; even those that don't make
 use of any random numbers in their implementation. This is required for the composition pipeline
-feature described in the [Tutorial](tutorial.html).
+feature described in the [Tutorial](@ref first_steps).

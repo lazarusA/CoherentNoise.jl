@@ -11,7 +11,7 @@ using ..OpenSimplex2Noise: Orientation, Standard, ImproveX, ImproveXY, ImproveXZ
 """
 An `N`-dimensional sampler that generates OpenSimplex2S noise, with an orientation of `O`.
 
-OpenSimplex2S is smoother than [`OpenSimplex2`](@ref), at the expense of being less performant.
+OpenSimplex2S is smoother than [`OpenSimplex2`](@ref Main.CoherentNoise.Noise.OpenSimplex2Noise.OpenSimplex2), at the expense of being less performant.
 
 `N` must be an integer in the range [2, 4].
 
