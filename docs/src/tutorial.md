@@ -28,7 +28,7 @@ generate("tutorial01", sampler) # hide
 ```
 
 This produces an array of RGB values using
-[ColorTypes.jl](https://github.com/JuliaGraphics/ColorTypes.jl). You can then, write it out as an
+[ColorTypes.jl](https://github.com/JuliaGraphics/ColorTypes.jl). You can then write it out as an
 image file with something like:
 
 ```@julia
@@ -69,7 +69,7 @@ as input, and linearly interpolates between the outputs of the first two sampler
 sampler's output as a blending factor.
 
 Let's mix our original sampler together with another new sampler, with interpolation controlled by
-yet another new sampler. But first, let's see what each of these looks like individually:
+yet another new sampler. But first, let's see what each of these look like individually:
 
 ```@example tutorial
 sampler1 = opensimplex2_2d(seed=1)
@@ -152,8 +152,8 @@ end # hide
 
 Admittedly, this doesn't look that much better, but the more your noise composition grows, the more
 this variable-free clear flow of control will be appealing. The remainder of this tutorial will use
-`@chain`, but nothing is forcing you to write the pipeline code manually without it if this style is
-not for you.
+@chain, but it's not a necessary part of the workflow. You can also write the pipeline code manually
+without it, if this style is not for you.
 
 ## Fractals
 
@@ -277,7 +277,7 @@ end # hide
 `Ridged` is a fractal (actually a [multifractal](https://en.wikipedia.org/wiki/Multifractal_system))
 sampler type that produces ridges. It could be used as the basis for a mountainous terrain texture,
 among many other uses. It supports all of the same parameters as all other fractals, with the
-addition of an `attenuation` parameter Here are some examples:
+addition of an `attenuation` parameter. Here are some examples:
 
 ```@example tutorial
 @chain opensimplex2_3d(seed=1) begin
@@ -305,7 +305,7 @@ end # hide
 
 ![](assets/tutorial/tutorial17.png)
 
-There are a couple other fractal types they we didn't go over, but feel free to experiment with
+There are a couple other fractal types that we didn't go over, but feel free to experiment with
 them. Their interface is the same as any other fractal type.
 
 ## Adding color
@@ -313,8 +313,9 @@ them. Their interface is the same as any other fractal type.
 CoherentNoise works in combination with
 [ColorSchemes.jl](https://github.com/JuliaGraphics/ColorSchemes.jl) to add color to generated
 images. To do so, just pass the `colorscheme` keyword argument to `gen_image` with any color scheme
-provided by ColorSchemes.jl, or your own. Adding some color to the last Ridged fractal example
-looks like this:
+provided by ColorSchemes.jl, or [create your
+own](https://juliagraphics.github.io/ColorSchemes.jl/stable/basics/#Make-your-own-colorscheme).
+Adding some color to the last Ridged fractal example looks like this:
 
 ```@example tutorial
 @chain opensimplex2s_3d(seed=1) begin

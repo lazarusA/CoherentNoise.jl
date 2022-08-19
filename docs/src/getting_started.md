@@ -15,8 +15,8 @@ pkg> add CoherentNoise
 The following is only a brief explanation of basic usage. For more advanced usage examples, please
 see the [Tutorial](@ref first_steps) section.
 
-To get started, let's get a feel for how to create a sampler and sample from it for one of the
-supported noise algorithms. Perlin Improved noise is a well-known algorithm, so let's create a
+To get started, let's get a feel for how to create a sampler for one of the supported noise
+algorithms, and sample from it. Perlin Improved noise is a well-known algorithm, so let's create a
 2-dimensional Perlin Improved noise sampler and sample from it:
 
 ```@example getting-started
@@ -25,7 +25,7 @@ sampler = perlin_improved_2d()
 sample(sampler, 120.2, 42.8)
 ```
 
-To create a sampler we simply call the function corresponding to the noise algorithm and
+To create a sampler, we simply call the function corresponding to the noise algorithm and
 dimensionality. We can then sample from it using the `sample` function, passing in as arguments a
 sampler, and multiple `Real` arguments corresponding to the coordinates in the sampler's noise
 space. In this example, we have a 2-dimensional sampler, so we passed 2 numbers; one for the
