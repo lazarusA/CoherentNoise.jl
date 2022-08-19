@@ -44,7 +44,7 @@ Construct a sampler that outputs a 2-dimensional ridged multifractal noise when 
 """
 function ridged_fractal_2d(;
     seed=nothing,
-    source=opensimplex2s_2d(seed),
+    source=opensimplex2s_2d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
@@ -82,7 +82,7 @@ Construct a sampler that outputs a 3-dimensional ridged multifractal noise when 
 """
 function ridged_fractal_3d(;
     seed=nothing,
-    source=opensimplex2s_3d(seed),
+    source=opensimplex2s_3d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
@@ -120,7 +120,7 @@ Construct a sampler that outputs a 4-dimensional ridged multifractal noise when 
 """
 function ridged_fractal_4d(;
     seed=nothing,
-    source=opensimplex2s_4d(seed),
+    source=opensimplex2s_4d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,

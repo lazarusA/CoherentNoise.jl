@@ -41,7 +41,7 @@ Construct a sampler that outputs a 2-dimensional billow fractal noise when it is
 """
 function billow_fractal_2d(;
     seed=nothing,
-    source=opensimplex2s_2d(seed),
+    source=opensimplex2s_2d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
@@ -76,7 +76,7 @@ Construct a sampler that outputs a 3-dimensional billow fractal noise when it is
 """
 function billow_fractal_3d(;
     seed=nothing,
-    source=opensimplex2s_3d(seed),
+    source=opensimplex2s_3d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
@@ -111,7 +111,7 @@ Construct a sampler that outputs a 4-dimensional billow fractal noise when it is
 """
 function billow_fractal_4d(;
     seed=nothing,
-    source=opensimplex2s_4d(seed),
+    source=opensimplex2s_4d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,

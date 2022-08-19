@@ -42,7 +42,7 @@ is sampled from.
 """
 function fbm_fractal_2d(;
     seed=nothing,
-    source=opensimplex2_2d(seed),
+    source=opensimplex2_2d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
@@ -78,7 +78,7 @@ is sampled from.
 """
 function fbm_fractal_3d(;
     seed=nothing,
-    source=opensimplex2_3d(seed),
+    source=opensimplex2_3d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
@@ -114,7 +114,7 @@ is sampled from.
 """
 function fbm_fractal_4d(;
     seed=nothing,
-    source=opensimplex2_4d(seed),
+    source=opensimplex2_4d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
