@@ -153,10 +153,10 @@ for other algorithms, please file an issue or submit a pull request.
 - `muladd`: multiplication followed by addition of a sampler by two scalars
 - `rotate`: rotate the noise space of a sampler around its origin by scalars denoting axis angles of
   rotation in radians
-- `scale`: scale the output of a sampler by scalars for the specified axes
-- `scale`: uniformly scale the output of a sampler along all axes
+- `scale`: scale the input coordinates of a sampler by scalars for the specified axes
+- `scale`: uniformly scale the input coordinates of a sampler along all axes
 - `select`: select the result of one of two samplers decided upon by the output of a third sampler
-- `terrace`: maps the output of a sampler onto a terrace-forming curve
+- `terrace`: map the output of a sampler onto a terrace-forming curve
 - `translate`: translate (move) the noise space of a sampler along the specified axes
 - `turbulence`: randomly displace the input coordinates of a sampler before sampling from it
 - `warp`: domain-warps the sampler by modifying its input coordinates to be summed with the result
