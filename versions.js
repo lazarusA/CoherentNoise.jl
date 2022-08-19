@@ -1,5 +1,4 @@
 var DOC_VERSIONS = [
-  "stable",
   "dev",
 ];
 var DOCUMENTER_NEWEST = "dev";
