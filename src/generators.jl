@@ -1,27 +1,27 @@
 module Patterns
 include("pattern.jl")
-include("pattern_constant.jl")
-include("pattern_checkered.jl")
-include("pattern_cylinders.jl")
-include("pattern_spheres.jl")
+include("pattern_constant_1d.jl")
+include("pattern_checkered_2d.jl")
+include("pattern_cylinders_2d.jl")
+include("pattern_spheres_3d.jl")
 end
 
 module Noise
 include("noise.jl")
 include("noise_value.jl")
-include("noise_perlin.jl")
+include("noise_perlin_improved.jl")
 include("noise_simplex.jl")
 include("noise_opensimplex.jl")
 include("noise_opensimplex2.jl")
 include("noise_opensimplex2s.jl")
-include("noise_cellular.jl")
+include("noise_worley.jl")
 end
 
 module Fractals
 include("fractal.jl")
 include("fractal_fbm.jl")
 include("fractal_billow.jl")
-include("fractal_multifractal.jl")
+include("fractal_multi.jl")
 include("fractal_hybrid.jl")
 include("fractal_ridged.jl")
 end

@@ -1,8 +1,19 @@
 const SKEW_3D = 1 / 3
-
 const UNSKEW_3D = 1 / 6
-
 const SCALE_3D = 32
+
+"""
+    simplex_3d(; kwargs...)
+
+Construct a sampler that outputs 3-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+"""
+simplex_3d(; seed=nothing) = simplex(3, seed)
 
 @inline function grad(S::Type{Simplex{3}}, hash, x, y, z)
     s = 0.6 - x^2 - y^2 - z^2

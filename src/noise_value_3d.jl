@@ -1,3 +1,16 @@
+"""
+    value_3d(; kwargs...)
+
+Construct a sampler that outputs 3-dimensonal value noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+"""
+value_3d(; seed=nothing) = value(3, seed)
+
 function sample(sampler::S, x::T, y::T, z::T) where {S<:Value{3},T<:Real}
     seed = get_seed(sampler)
     primes = (PRIME_X, PRIME_Y, PRIME_Z)

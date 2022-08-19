@@ -34,12 +34,13 @@ function turbulence(
     S2<:AbstractSampler{N1},
 }
     rs = random_state(s1)
+    seed = rand(rs.rng, UInt64)
     N2 = min(N, N1)
     x = ntuple(i -> rand(rs.rng, Float64), N2)
     y = ntuple(i -> rand(rs.rng, Float64), N2)
     z = ntuple(i -> rand(rs.rng, Float64), N2)
     w = ntuple(i -> rand(rs.rng, Float64), N2)
-    s3 = FBM{N1}(seed=rand(rs.rng, UInt64), source=s2, octaves=roughness, frequency=frequency)
+    s3 = FBMFractal{N1}(seed=seed, source=s2, octaves=roughness, frequency=frequency)
     S3 = typeof(s3)
     Turbulence{N,N1,N2,S1,S3}(rs, s1, s3, Float64(power), x, y, z, w)
 end

@@ -1,10 +1,25 @@
 const GRADIENTS_2D = Int8.((5, 2, 2, 5, -5, 2, -2, 5, 5, -2, 2, -5, -5, -2, -2, -5))
-
 const STRETCH_2D = (1 / sqrt(3) - 1) / 2
-
 const SQUISH_2D = (sqrt(3) - 1) / 2
-
 const SCALE_2D = 1 / 40.7
+
+"""
+    opensimplex_2d(; kwargs...)
+
+Construct a sampler that outputs 2-dimensional legacy OpenSimplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+# See also:
+
+  - [`OpenSimplex2`](@ref Main.CoherentNoise.Noise.OpenSimplex2Noise.opensimplex2_2d)
+  - [`OpenSimplex2S`](@ref Main.CoherentNoise.Noise.OpenSimplex2SNoise.opensimplex2s_2d)
+"""
+opensimplex_2d(; seed=nothing) = opensimplex(2, seed)
 
 @inline function contribute(sampler::OpenSimplex{2}, X, Y, x, y)
     t = sampler.state.table

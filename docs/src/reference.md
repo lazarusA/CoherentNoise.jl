@@ -5,12 +5,12 @@ Modules = [
   CoherentNoise.Patterns,
   CoherentNoise.Noise,
   CoherentNoise.Noise.ValueNoise,
-  CoherentNoise.Noise.PerlinNoise,
+  CoherentNoise.Noise.PerlinImprovedNoise,
   CoherentNoise.Noise.SimplexNoise,
   CoherentNoise.Noise.OpenSimplexNoise,
   CoherentNoise.Noise.OpenSimplex2Noise,
   CoherentNoise.Noise.OpenSimplex2SNoise,
-  CoherentNoise.Noise.CellularNoise,
+  CoherentNoise.Noise.WorleyNoise,
   CoherentNoise.Fractals,
   CoherentNoise.Modifiers
 ]

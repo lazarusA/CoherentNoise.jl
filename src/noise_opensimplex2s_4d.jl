@@ -12,13 +12,9 @@ struct Vertex4D
 end
 
 const SKEW_4D = 0.309016994374947
-
 const UNSKEW_4D = -0.138196601125011
-
 const R²4D = 4 / 5
-
 const GRADIENTS_4D = GRADIENTS_NORMALIZED_4D ./ 0.11127401889945551 |> CircularVector
-
 const VERTICES_4D = [
     [0x15 0x45 0x51 0x54 0x55 0x56 0x59 0x5a 0x65 0x66 0x69 0x6a 0x95 0x96 0x99 0x9a 0xa5 0xa6 0xa9 0xaa],
     [0x15 0x45 0x51 0x55 0x56 0x59 0x5a 0x65 0x66 0x6a 0x95 0x96 0x9a 0xa6 0xaa],
@@ -304,6 +300,33 @@ const LOOKUP_4D_A, LOOKUP_4D_B = let
     end
     (a, b)
 end
+
+"""
+    opensimplex2s_4d(; kwargs...)
+
+Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+  - `orient=nothing`: One of the following symbols or the value `nothing`:
+
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
+
+      + `:xyz`: Re-orient the noise space to be better suited for time-varied animations, where the
+        W axis is time.
+
+      + `nothing`: Use the standard orientation.
+"""
+opensimplex2s_4d(; seed=nothing, orient=nothing) = opensimplex2s(4, seed, orient)
 
 @inline transform(::Type{Standard}, x, y, z, w) = (x, y, z, w) .+ SKEW_4D .* (x + y + z + w)
 

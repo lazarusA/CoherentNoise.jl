@@ -1,15 +1,9 @@
 const SEED_FLIP_3D = -0x52d547b2e96ed629
-
 const FALLBACK_ROTATE_3D = 2 / 3
-
 const ROTATE_3D_ORTHONORMALIZER = UNSKEW_2D
-
 const R²3D = 0.6
-
 const NUM_GRADIENTS_EXP_3D = 8
-
 const NUM_GRADIENTS_3D = 1 << NUM_GRADIENTS_EXP_3D
-
 const GRADIENTS_NORMALIZED_3D = [
     2.22474487139, 2.22474487139, -1.0, 0.0,
     2.22474487139, 2.22474487139, 1.0, 0.0,
@@ -59,8 +53,31 @@ const GRADIENTS_NORMALIZED_3D = [
     2.22474487139, 1.0, 2.22474487139, 0.0,
     1.1721513422464978, 0.0, 3.0862664687972017, 0.0,
     3.0862664687972017, 0.0, 1.1721513422464978, 0.0]
-
 const GRADIENTS_3D = GRADIENTS_NORMALIZED_3D ./ 0.07969837668935331 |> CircularVector
+
+"""
+    opensimplex2_3d(; kwargs...)
+
+Construct a sampler that outputs 3-dimensional OpenSimplex2 noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+  - `orient=nothing`: One of the following symbols or the value `nothing`:
+
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
+
+      + `nothing`: Use the standard orientation.
+"""
+opensimplex2_3d(; seed=nothing, orient=nothing) = opensimplex2(3, seed, orient)
 
 @inline function grad(table, seed, X, Y, Z, x, y, z)
     hash = ((seed ⊻ X) ⊻ (Y ⊻ Z)) * HASH_MULTIPLIER

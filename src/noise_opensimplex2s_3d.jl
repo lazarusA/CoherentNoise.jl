@@ -2,8 +2,31 @@ using ..OpenSimplex2Noise: SEED_FLIP_3D, FALLBACK_ROTATE_3D, ROTATE_3D_ORTHONORM
 using ..OpenSimplex2Noise: GRADIENTS_NORMALIZED_3D
 
 const R²3D = 3 / 4
-
 const GRADIENTS_3D = GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> CircularVector
+
+"""
+    opensimplex2s_3d(; kwargs...)
+
+Construct a sampler that outputs 3-dimensional OpenSimplex2S noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+  - `orient=nothing`: One of the following symbols or the value `nothing`:
+
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
+
+      + `nothing`: Use the standard orientation.
+"""
+opensimplex2s_3d(; seed=nothing, orient=nothing) = opensimplex2s(3, seed, orient)
 
 @inline @fastpow contribute1(seed, a, args...) = a^4 * grad(GRADIENTS_3D, seed, args...)
 

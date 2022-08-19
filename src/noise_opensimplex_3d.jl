@@ -1,15 +1,30 @@
 const STRETCH_3D = 1 / -6
-
 const SQUISH_3D = 1 / 3
-
 const SCALE_3D = 1 / 103
-
 const GRADIENTS_3D =
     Int8.((
         -11, 4, 4, -4, 11, 4, -4, 4, 11, 11, 4, 4, 4, 11, 4, 4, 4, 11, -11, -4, 4, -4, -11, 4, -4,
         -4, 11, 11, -4, 4, 4, -11, 4, 4, -4, 11, -11, 4, -4, -4, 11, -4, -4, 4, -11, 11, 4, -4, 4,
         11, -4, 4, 4, -11, -11, -4, -4, -4, -11, -4, -4, -4, -11, 11, -4, -4, 4, 11, -4, 4, -4, -11,
     ))
+
+"""
+    opensimplex_3d(; kwargs...)
+
+Construct a sampler that outputs 3-dimensional legacy OpenSimplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+# See also:
+
+  - [`OpenSimplex2`](@ref Main.CoherentNoise.Noise.OpenSimplex2Noise.opensimplex2_3d)
+  - [`OpenSimplex2S`](@ref Main.CoherentNoise.Noise.OpenSimplex2SNoise.opensimplex2s_3d)
+"""
+opensimplex_3d(; seed=nothing) = opensimplex(3, seed)
 
 @inline function contribute(sampler::OpenSimplex{3}, X, Y, Z, x, y, z)
     t = sampler.table

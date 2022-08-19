@@ -1,13 +1,8 @@
 const SKEW_2D = 0.366025403784439
-
 const UNSKEW_2D = -0.21132486540518713
-
 const R²2D = 0.5
-
 const NUM_GRADIENTS_EXP_2D = 7
-
 const NUM_GRADIENTS_2D = 1 << NUM_GRADIENTS_EXP_2D
-
 const GRADIENTS_NORMALIZED_2D = [
     0.38268343236509, 0.923879532511287,
     0.923879532511287, 0.38268343236509,
@@ -33,8 +28,27 @@ const GRADIENTS_NORMALIZED_2D = [
     -0.793353340291235, 0.608761429008721,
     -0.608761429008721, 0.793353340291235,
     -0.130526192220052, 0.99144486137381]
-
 const GRADIENTS_2D = GRADIENTS_NORMALIZED_2D ./ 0.01001634121365712 |> CircularVector
+
+"""
+    opensimplex2_2d(; kwargs...)
+
+Construct a sampler that outputs 2-dimensional OpenSimplex2 noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+  - `orient=nothing`: Either the symbol `:x` or the value `nothing`:
+
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+
+      + `nothing`: Use the standard orientation.
+"""
+opensimplex2_2d(; seed=nothing, orient=nothing) = opensimplex2(2, seed, orient)
 
 @inline function grad(table, seed, X, Y, x, y)
     hash = (seed ⊻ X ⊻ Y) * HASH_MULTIPLIER

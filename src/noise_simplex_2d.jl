@@ -1,8 +1,19 @@
 const SKEW_2D = (sqrt(3) - 1) / 2
-
 const UNSKEW_2D = (3 - sqrt(3)) / 6
-
 const SCALE_2D = 45.23065
+
+"""
+    simplex_2d(; kwargs...)
+
+Construct a sampler that outputs 2-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+"""
+simplex_2d(; seed=nothing) = simplex(2, seed)
 
 @inline function grad(::Type{Simplex{2}}, hash, x, y)
     s = 0.5 - x^2 - y^2

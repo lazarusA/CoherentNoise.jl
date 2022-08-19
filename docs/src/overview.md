@@ -40,7 +40,7 @@ or contribution by more experienced Julia developers that find value in Coherent
 
 ## What's different from other libraries?
 
-- Many more noise algorithms than libnoise supported and well-tested.
+- Many more noise algorithms than libnoise supported, and well-tested.
 
 - Algorithms are consistently implemented in 2, 3, and 4 dimensions, whereas libnoise only has
   3-dimensional gradient noise.
@@ -62,10 +62,9 @@ or contribution by more experienced Julia developers that find value in Coherent
   important when working with fractal-based noises, composition of complex noises, and in general is
   something just expected when working with coherent noise.
 
-- The Perlin noise implementation is [Ken Perlin's "Improved Noise"
-  algorithm](https://cs.nyu.edu/~perlin/noise/), unlike his original Perlin noise algorithm found in
-  libnoise, which is sometimes just called value or gradient noise, of which we also support,
-  called `Value`.
+- The `PerlinImproved` noise implementation is [Ken Perlin's "Improved Noise"
+  algorithm](https://cs.nyu.edu/~perlin/noise/), unlike his classic Perlin noise algorithm found in
+  libnoise, which is sometimes just called gradient noise.
 
 - Fractal samplers can be driven by any source sampler, not just gradient noise -- even other
   fractal samplers.
@@ -74,7 +73,7 @@ or contribution by more experienced Julia developers that find value in Coherent
 
 ### How is it used?
 
-In summary, you call a constructor depending on the coherent noise algorithm and dimensionality you
+In summary, you call a function corresponding to the coherent noise algorithm and dimensionality you
 want to generate, in order to create a "sampler". A sampler can then be sampled from with the
 `sample` function, by passing to it a sampler instance, along with input coordinates for each of the
 sampler's dimensions.
@@ -87,10 +86,10 @@ pipelines.
 
 Higher-order samplers include both fractal samplers and modifier samplers.
 
-Fractal sampler constructors accept another sampler as an input source, and produce much more
+Fractal sampler functions accept another sampler as an input source, and produce much more
 interesting results by combining the results of multiple octaves of the source.
 
-Modifier sampler constructors also accept other sampler instance as input; and modify their input
+Modifier sampler functions also accept other sampler instances as input; and modify their input
 coordinates or output values in interesting ways. Modifiers are the crux of CoherentNoise's
 composition pipeline support, and allow merging different samplers together, even other modifiers,
 into a composition of potentially very complex and interesting results.
@@ -101,17 +100,17 @@ multi-dimensional noise spaces in order to generate entire images effortlessly.
 ## Available samplers
 
 The following noise algorithms and other samplers are implemented. If you would like to see support
-for other sampler types, please file an issue, or submit a pull request.
+for other algorithms, please file an issue or submit a pull request.
 
 ### Noise samplers
 
 - `Value` (2D, 3D, 4D)
-- `Perlin` "Improved" (2D, 3D, 4D)
+- `PerlinImproved` (2D, 3D, 4D)
 - `Simplex` (2D, 3D, 4D)
 - `OpenSimplex` (2D, 3D, 4D)
 - `OpenSimplex2` (2D, 3D, 4D)
 - `OpenSimplex2S` (2D, 3D, 4D)
-- `Cellular` (2D, 3D, 4D)
+- `Worley` (2D, 3D, 4D)
 
 ### Pattern samplers
 

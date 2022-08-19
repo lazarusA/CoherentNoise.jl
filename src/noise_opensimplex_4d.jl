@@ -1,9 +1,6 @@
 const STRETCH_4D = (1 / sqrt(5) - 1) / 4
-
 const SQUISH_4D = (sqrt(5) - 1) / 4
-
 const SCALE_4D = 1 / 30
-
 const GRADIENTS_4D = [
     3, 1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 1, 1, 1, 1, 3, -3, 1, 1, 1, -1, 3, 1, 1, -1, 1, 3, 1, -1,
     1, 1, 3, 3, -1, 1, 1, 1, -3, 1, 1, 1, -1, 3, 1, 1, -1, 1, 3, -3, -1, 1, 1, -1, -3, 1, 1, -1,
@@ -15,6 +12,24 @@ const GRADIENTS_4D = [
     -1, 1, -3, 3, 1, -1, -1, 1, 3, -1, -1, 1, 1, -3, -1, 1, 1, -1, -3, -3, 1, -1, -1, -1, 3, -1,
     -1, -1, 1, -3, -1, -1, 1, -1, -3, 3, -1, -1, -1, 1, -3, -1, -1, 1, -1, -3, -1, 1, -1, -1,
     -3, -3, -1, -1, -1, -1, -3, -1, -1, -1, -1, 3, -1, -1, -1, -1, -3]
+
+"""
+    opensimplex_4d(; kwargs...)
+
+Construct a sampler that outputs 4-dimensional legacy OpenSimplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+# See also:
+
+  - [`OpenSimplex2`](@ref Main.CoherentNoise.Noise.OpenSimplex2Noise.opensimplex2_4d)
+  - [`OpenSimplex2S`](@ref Main.CoherentNoise.Noise.OpenSimplex2SNoise.opensimplex2s_4d)
+"""
+opensimplex_4d(; seed=nothing) = opensimplex(4, seed)
 
 @inline function contribute(sampler::OpenSimplex{4}, X, Y, Z, W, x, y, z, w)
     t = sampler.state.table

@@ -1,8 +1,8 @@
-struct HybridFractal{N,S,O} <: FractalSampler{N}
+struct MultiFractal{N,S,O} <: FractalSampler{N}
     state::State{N,S,O}
 end
 
-@inline function HybridFractal{N}(
+@inline function MultiFractal{N}(
     seed::Seed,
     source::S,
     octaves::Int,
@@ -11,14 +11,14 @@ end
     persistence,
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
-    fs = State{N,HybridFractal,O}(seed, source, frequency, lacunarity, persistence, 1.0)
-    HybridFractal{N,S,O}(fs)
+    fs = State{N,MultiFractal,O}(seed, source, frequency, lacunarity, persistence, 1.0)
+    MultiFractal{N,S,O}(fs)
 end
 
 """
-    hybrid_fractal_2d(; kwargs...)
+    multi_fractal_2d(; kwargs...)
 
-Construct a sampler that outputs a 2-dimensional hybrid multifractal noise when it is sampled from.
+Construct a sampler that outputs a 2-dimensional multifractal noise when it is sampled from.
 
 # Arguments
 
@@ -36,24 +36,24 @@ Construct a sampler that outputs a 2-dimensional hybrid multifractal noise when 
   - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
     successive octaves.
 
-  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
     successive octaves.
 """
-function hybrid_fractal_2d(;
+function multi_fractal_2d(;
     seed=nothing,
-    source=opensimplex2s_2d(seed),
+    source=opensimplex2_2d(seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
-    persistence=0.25,
+    persistence=0.5,
 )
-    HybridFractal{2}(seed, source, octaves, frequency, lacunarity, persistence)
+    MultiFractal{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 """
-    hybrid_fractal_3d(; kwargs...)
+    multi_fractal_3d(; kwargs...)
 
-Construct a sampler that outputs a 3-dimensional hybrid multifractal noise when it is sampled from.
+Construct a sampler that outputs a 3-dimensional multifractal noise when it is sampled from.
 
 # Arguments
 
@@ -71,24 +71,24 @@ Construct a sampler that outputs a 3-dimensional hybrid multifractal noise when 
   - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
     successive octaves.
 
-  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
     successive octaves.
 """
-function hybrid_fractal_3d(;
+function multi_fractal_3d(;
     seed=nothing,
-    source=opensimplex2s_3d(seed),
+    source=opensimplex2_3d(seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
-    persistence=0.25,
+    persistence=0.5,
 )
-    HybridFractal{3}(seed, source, octaves, frequency, lacunarity, persistence)
+    MultiFractal{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 """
-    hybrid_fractal_4d(; kwargs...)
+    multi_fractal_4d(; kwargs...)
 
-Construct a sampler that outputs a 4-dimensional hybrid multifractal noise when it is sampled from.
+Construct a sampler that outputs a 4-dimensional multifractal noise when it is sampled from.
 
 # Arguments
 
@@ -106,48 +106,38 @@ Construct a sampler that outputs a 4-dimensional hybrid multifractal noise when 
   - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
     successive octaves.
 
-  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
     successive octaves.
 """
-function hybrid_fractal_4d(;
+function multi_fractal_4d(;
     seed=nothing,
-    source=opensimplex2s_4d(seed),
+    source=opensimplex2_4d(seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
-    persistence=0.25,
+    persistence=0.5,
 )
-    HybridFractal{4}(seed, source, octaves, frequency, lacunarity, persistence)
+    MultiFractal{4}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-function scale_factor(::Type{HybridFractal}, octaves, persistence, _)
-    amplitude = persistence
-    weight = persistence^2
-    result = persistence + weight
-    for _ in 1:octaves-2
-        amplitude *= persistence
-        weight = max(weight, 1)
-        weight *= amplitude
-        result += weight
+@inline function scale_factor(::Type{MultiFractal}, octaves, persistence, _)
+    reduce(1:octaves-1, init=1) do result, i
+        result += result * persistence^i
     end
-    result
 end
 
-function sample(sampler::HybridFractal{N}, coords::Vararg{Real,N}) where {N}
+function sample(sampler::MultiFractal{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
     sources = state.sources
     persistence = state.persistence
-    amplitude = persistence
+    lacunarity = state.lacunarity
     coords = coords .* state.frequency
-    result = sample(sources[1], coords...) * amplitude
-    coords = coords .* state.lacunarity
-    weight = sample(sources[2], coords...) * amplitude * result
-    result += weight
-    for source in sources[3:end]
+    amplitude = 1.0
+    result = sample(sources[1], coords...)
+    for source in sources[2:end]
         amplitude *= persistence
-        weight = max(weight, 1)
-        weight *= sample(source, coords...) * amplitude
-        result += weight
+        coords = coords .* lacunarity
+        result += sample(source, coords...) * result * amplitude
     end
     result / state.scale
 end

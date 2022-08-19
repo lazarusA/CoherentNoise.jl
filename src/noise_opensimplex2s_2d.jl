@@ -1,8 +1,27 @@
 using ..OpenSimplex2Noise: SKEW_2D, UNSKEW_2D, GRADIENTS_NORMALIZED_2D
 
 const R²2D = 2 / 3
-
 const GRADIENTS_2D = GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118 |> CircularVector
+
+"""
+    opensimplex2s_2d(; kwargs...)
+
+Construct a sampler that outputs 2-dimensional OpenSimplex2S noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+  - `orient=nothing`: Either the symbol `:x` or the value `nothing`:
+
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal
+        to improve visual isotropy.
+
+      + `nothing`: Use the standard orientation.
+"""
+opensimplex2s_2d(; seed=nothing, orient=nothing) = opensimplex2s(2, seed, orient)
 
 @inline @fastpow function contribute(seed, X, Y, x, y)
     a = R²2D - x^2 - y^2

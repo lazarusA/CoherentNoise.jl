@@ -1,17 +1,10 @@
 const SEED_OFFSET_4D = 0xe83dc3e0da7164d
-
 const SKEW_4D = -0.138196601125011
-
 const UNSKEW_4D = 0.309016994374947
-
 const LATTICE_STEP_4D = 0.2
-
 const R²4D = 0.6
-
 const NUM_GRADIENTS_EXP_4D = 9
-
 const NUM_GRADIENTS_4D = 1 << NUM_GRADIENTS_EXP_4D
-
 const GRADIENTS_NORMALIZED_4D = [
     -0.6740059517812944, -0.3239847771997537, -0.3239847771997537, 0.5794684678643381,
     -0.7504883828755602, -0.4004672082940195, 0.15296486218853164, 0.5029860367700724,
@@ -173,8 +166,34 @@ const GRADIENTS_NORMALIZED_4D = [
     0.7821684431180708, 0.4321472685365301, -0.12128480194602098, 0.4321472685365301,
     0.7821684431180708, 0.4321472685365301, 0.4321472685365301, -0.12128480194602098,
     0.753341017856078, 0.37968289875261624, 0.37968289875261624, 0.37968289875261624]
-
 const GRADIENTS_4D = GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897 |> CircularVector
+
+"""
+    opensimplex2_4d(; kwargs...)
+
+Construct a sampler that outputs 4-dimensional OpenSimplex2 noise when it is sampled from.
+
+# Arguments
+
+  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
+    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
+    affect reproducibility.
+
+  - `orient=nothing`: One of the following symbols or the value `nothing`:
+
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
+
+      + `:xyz`: Re-orient the noise space to be better suited for time-varied animations, where
+        the W axis is time.
+
+      + `nothing`: Use the standard orientation.
+"""
+opensimplex2_4d(; seed=nothing, orient=nothing) = opensimplex2(4, seed, orient)
 
 @inline function grad(table, seed, X, Y, Z, W, x, y, z, w)
     hash = seed ⊻ (X ⊻ Y) ⊻ (Z ⊻ W) * HASH_MULTIPLIER

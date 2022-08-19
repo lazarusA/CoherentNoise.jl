@@ -18,17 +18,17 @@ be used instead.
 
 # Arguments
 
-  - `x::AbstractSampler=Constant()`: A sampler to warp the X axis by.
-  - `y::AbstractSampler=Constant()`: A sampler to warp the Y axis by.
-  - `z::AbstractSampler=Constant()`: A sampler to warp the Z axis by.
-  - `w::AbstractSampler=Constant()`: A sampler to warp the W axis by.
+  - `x::AbstractSampler=constant_1d()`: A sampler to warp the X axis by.
+  - `y::AbstractSampler=constant_1d()`: A sampler to warp the Y axis by.
+  - `z::AbstractSampler=constant_1d()`: A sampler to warp the Z axis by.
+  - `w::AbstractSampler=constant_1d()`: A sampler to warp the W axis by.
 """
 function warp(
     source::S;
-    x::SX=Constant(),
-    y::SY=Constant(),
-    z::SZ=Constant(),
-    w::SW=Constant(),
+    x::SX=constant_1d(),
+    y::SY=constant_1d(),
+    z::SZ=constant_1d(),
+    w::SW=constant_1d(),
 ) where {
     N,N1,N2,N3,N4,
     S<:AbstractSampler{N},
