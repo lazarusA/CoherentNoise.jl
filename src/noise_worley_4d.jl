@@ -14,15 +14,16 @@ Construct a sampler that outputs 4-dimensional Worley noise when it is sampled f
 
   - `metric=:euclidean`: One of the following symbols:
 
-      + `:manhattan`: Use the Manhattan distance to the next cell (Minkowski metric p=2⁰).
+      + `:manhattan`: Use the Manhattan distance to the next cell (Minkowski metric ``p = 2^0``).
 
-      + `:euclidean`: Use the Euclidean distance to the next cell (Minkowski metric p=2¹).
+      + `:euclidean`: Use the Euclidean distance to the next cell (Minkowski metric ``p = 2^1``).
 
-      + `:euclidean²`: Same as `:euclidean` but slighter faster due to no √.
+      + `:euclidean²`: Same as `:euclidean` but slighter faster due to no ``\\sqrt{}``.
 
-      + `:minkowski4`: Use Minkowski metric with p=2⁴ for the distance to the next cell.
+      + `:minkowski4`: Use Minkowski metric with ``p = 2^4`` for the distance to the next cell.
 
-      + `:chebyshev`: Use the Chebyshev distance to the next cell (Minkowski metric p=2^∞).
+      + `:chebyshev`: Use the Chebyshev distance to the next cell (Minkowski metric ``p =
+        2^\\infty``).
 
   - `output=:f1`: One of the following symbols:
 

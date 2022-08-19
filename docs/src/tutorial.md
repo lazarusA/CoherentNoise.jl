@@ -3,7 +3,7 @@ using CoherentNoise, ImageIO, FileIO, ColorSchemes, Chain
 function generate(file, sampler; xbounds=(-1.0, 1.0), ybounds=(-1.0, 1.0), colorscheme=nothing)
     img = gen_image(
         sampler, w=320, h=320, xbounds=xbounds, ybounds=ybounds, colorscheme=colorscheme)
-    save(joinpath(@__DIR__, "assets/tutorial/$(file).png"), img);
+    save(joinpath(@__DIR__, "assets/tutorial/$(file).png"), img)
 end
 ```
 
