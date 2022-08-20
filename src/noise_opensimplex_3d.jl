@@ -1,7 +1,7 @@
-const STRETCH_3D = 1 / -6
-const SQUISH_3D = 1 / 3
-const SCALE_3D = 1 / 103
-const GRADIENTS_3D =
+const OS_STRETCH_3D = 1 / -6
+const OS_SQUISH_3D = 1 / 3
+const OS_SCALE_3D = 1 / 103
+const OS_GRADIENTS_3D =
     Int8.((
         -11, 4, 4, -4, 11, 4, -4, 4, 11, 11, 4, 4, 4, 11, 4, 4, 4, 11, -11, -4, 4, -4, -11, 4, -4,
         -4, 11, 11, -4, 4, 4, -11, 4, 4, -4, 11, -11, 4, -4, -4, 11, -4, -4, 4, -11, 11, 4, -4, 4,
@@ -15,29 +15,27 @@ Construct a sampler that outputs 3-dimensional legacy OpenSimplex noise when it 
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 
 # See also:
 
-  - [`OpenSimplex2`](@ref Main.CoherentNoise.Noise.OpenSimplex2Noise.opensimplex2_3d)
-  - [`OpenSimplex2S`](@ref Main.CoherentNoise.Noise.OpenSimplex2SNoise.opensimplex2s_3d)
+  - [`OpenSimplex2`](@ref opensimplex2_3d)
+  - [`OpenSimplex2S`](@ref opensimplex2s_3d)
 """
-opensimplex_3d(; seed=nothing) = opensimplex(3, seed)
+opensimplex_3d(; seed=0) = opensimplex(3, seed)
 
 @inline function contribute(sampler::OpenSimplex{3}, X, Y, Z, x, y, z)
     t = sampler.table
-    g = GRADIENTS_3D
+    g = OS_GRADIENTS_3D
     @inbounds i = t[(Z+t[(Y+t[(X&0xff+1)])&0xff+1])&0xff+1] + 1
     a = 2 - x^2 - y^2 - z^2
     @inbounds @fastpow a > 0 ? a^4 * (g[i] * x + g[i+1] * y + g[i+2] * z) : 0.0
 end
 
 function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
-    s = (x, y, z) .+ ((x + y + z) * STRETCH_3D)
+    s = (x, y, z) .+ ((x + y + z) * OS_STRETCH_3D)
     X1, Y1, Z1 = floor.(Int, s)
-    x1, y1, z1 = (x, y, z) .- ((X1 + Y1 + Z1) * SQUISH_3D) .- (X1, Y1, Z1)
+    x1, y1, z1 = (x, y, z) .- ((X1 + Y1 + Z1) * OS_SQUISH_3D) .- (X1, Y1, Z1)
     Xs, Ys, Zs = s .- (X1, Y1, Z1)
     XYZs = Xs + Ys + Zs
     result = 0.0
@@ -79,37 +77,37 @@ function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
             c = (p1 | p2) & 0xff
             if iszero(c & 1)
                 X2, X3 = X1, X1 - 1
-                x8 = x1 - 2SQUISH_3D
-                x9 = x1 + 1 - SQUISH_3D
+                x8 = x1 - 2OS_SQUISH_3D
+                x9 = x1 + 1 - OS_SQUISH_3D
             else
                 X = X1 + 1
                 X2, X3 = X, X
-                x8 = x1 - 1 - 2SQUISH_3D
-                x9 = x1 - 1 - SQUISH_3D
+                x8 = x1 - 1 - 2OS_SQUISH_3D
+                x9 = x1 - 1 - OS_SQUISH_3D
             end
             if iszero(c & 2)
                 Y2, Y3 = Y1, Y1 - 1
-                y8 = y1 - 2SQUISH_3D
-                y9 = y1 + 1 - SQUISH_3D
+                y8 = y1 - 2OS_SQUISH_3D
+                y9 = y1 + 1 - OS_SQUISH_3D
             else
                 Y = Y1 + 1
                 Y2, Y3 = Y, Y
-                y8 = y1 - 1 - 2SQUISH_3D
-                y9 = y1 - 1 - SQUISH_3D
+                y8 = y1 - 1 - 2OS_SQUISH_3D
+                y9 = y1 - 1 - OS_SQUISH_3D
             end
             if iszero(c & 4)
                 Z2, Z3 = Z1, Z1 - 1
-                z8 = z1 - 2SQUISH_3D
-                z9 = z1 + 1 - SQUISH_3D
+                z8 = z1 - 2OS_SQUISH_3D
+                z9 = z1 + 1 - OS_SQUISH_3D
             else
                 Z = Z1 + 1
                 Z2, Z3 = Z, Z
-                z8 = z1 - 1 - 2SQUISH_3D
-                z9 = z1 - 1 - SQUISH_3D
+                z8 = z1 - 1 - 2OS_SQUISH_3D
+                z9 = z1 - 1 - OS_SQUISH_3D
             end
         end
-        y2, z2, x3 = (y1, z1, x1) .- SQUISH_3D
-        x2, y3, z4 = (x1, y1, z1) .- 1 .- SQUISH_3D
+        y2, z2, x3 = (y1, z1, x1) .- OS_SQUISH_3D
+        x2, y3, z4 = (x1, y1, z1) .- 1 .- OS_SQUISH_3D
         z3, x4, y4 = z2, x3, y2
         c1 = contribute(sampler, X1, Y1, Z1, x1, y1, z1)
         c2 = contribute(sampler, X1 + 1, Y1, Z1, x2, y2, z2)
@@ -127,15 +125,15 @@ function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
             c = s2 < s1 ? p2 : p1
             if !iszero(c & 1)
                 X2, X3 = X1 + 2, X1 + 1
-                x8 = x1 - 2 - 3SQUISH_3D
-                x9 = x1 - 1 - 3SQUISH_3D
+                x8 = x1 - 2 - 3OS_SQUISH_3D
+                x9 = x1 - 1 - 3OS_SQUISH_3D
             else
-                x = x1 - 3SQUISH_3D
+                x = x1 - 3OS_SQUISH_3D
                 X2, X3, x8, x9 = X1, X1, x, x
             end
             if !iszero(c & 2)
                 Y = Y1 + 1
-                y = y1 - 1 - 3SQUISH_3D
+                y = y1 - 1 - 3OS_SQUISH_3D
                 Y2, Y3, y8, y9 = Y, Y, y, y
                 if !iszero(c & 1)
                     Y3 += 1
@@ -145,51 +143,51 @@ function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
                     y8 -= 1
                 end
             else
-                y = y1 - 3SQUISH_3D
+                y = y1 - 3OS_SQUISH_3D
                 Y2, Y3, y8, y9 = Y1, Y1, y, y
             end
             if !iszero(c & 4)
                 Z2, Z3 = Z1 + 1, Z1 + 2
-                z8 = z1 - 1 - 3SQUISH_3D
-                z9 = z1 - 2 - 3SQUISH_3D
+                z8 = z1 - 1 - 3OS_SQUISH_3D
+                z9 = z1 - 2 - 3OS_SQUISH_3D
             else
-                z = z1 - 3SQUISH_3D
+                z = z1 - 3OS_SQUISH_3D
                 Z2, Z3, z8, z9 = Z1, Z1, z, z
             end
         else
             c = (p1 & p2) & 0xff
             if !iszero(c & 1)
                 X2, X3 = X1 + 1, X1 + 2
-                x8 = x1 - 1 - SQUISH_3D
-                x9 = x1 - 2 - 2SQUISH_3D
+                x8 = x1 - 1 - OS_SQUISH_3D
+                x9 = x1 - 2 - 2OS_SQUISH_3D
             else
                 X2, X3 = X1, X1
-                x8 = x1 - SQUISH_3D
-                x9 = x1 - 2SQUISH_3D
+                x8 = x1 - OS_SQUISH_3D
+                x9 = x1 - 2OS_SQUISH_3D
             end
             if !iszero(c & 2)
                 Y2, Y3 = Y1 + 1, Y1 + 2
-                y8 = y1 - 1 - SQUISH_3D
-                y9 = y1 - 2 - 2SQUISH_3D
+                y8 = y1 - 1 - OS_SQUISH_3D
+                y9 = y1 - 2 - 2OS_SQUISH_3D
             else
                 Y2, Y3 = Y1, Y1
-                y8 = y1 - SQUISH_3D
-                y9 = y1 - 2SQUISH_3D
+                y8 = y1 - OS_SQUISH_3D
+                y9 = y1 - 2OS_SQUISH_3D
             end
             if !iszero(c & 4)
                 Z2, Z3 = Z1 + 1, Z1 + 2
-                z8 = z1 - 1 - SQUISH_3D
-                z9 = z1 - 2 - 2SQUISH_3D
+                z8 = z1 - 1 - OS_SQUISH_3D
+                z9 = z1 - 2 - 2OS_SQUISH_3D
             else
                 Z2, Z3 = Z1, Z1
-                z8 = z1 - SQUISH_3D
-                z9 = z1 - 2SQUISH_3D
+                z8 = z1 - OS_SQUISH_3D
+                z9 = z1 - 2OS_SQUISH_3D
             end
         end
-        z3, x4, y4 = (z1, x1, y1) .- 1 .- 2SQUISH_3D
+        z3, x4, y4 = (z1, x1, y1) .- 1 .- 2OS_SQUISH_3D
         x3, y2, z2 = x4, y4, z3
-        z4, y3, x2 = (z1, y1, x1) .- 2SQUISH_3D
-        x1, y1, z1 = (x1, y1, z1) .- 1 .- 3SQUISH_3D
+        z4, y3, x2 = (z1, y1, x1) .- 2OS_SQUISH_3D
+        x1, y1, z1 = (x1, y1, z1) .- 1 .- 3OS_SQUISH_3D
         c1 = contribute(sampler, X1 + 1, Y1 + 1, Z1, x4, y4, z4)
         c2 = contribute(sampler, X1 + 1, Y1, Z1 + 1, x3, y3, z3)
         c3 = contribute(sampler, X1, Y1 + 1, Z1 + 1, x2, y2, z2)
@@ -225,35 +223,35 @@ function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
         if p1_farthest === p2_farthest
             if p1_farthest === true
                 c = p1 & p2
-                x8, y8, z8 = (x1, y1, z1) .- 1 .- 3SQUISH_3D
+                x8, y8, z8 = (x1, y1, z1) .- 1 .- 3OS_SQUISH_3D
                 X2, Y2, Z2 = Z1 + 1, Y1 + 1, Z1 + 1
                 if !iszero(c & 1)
-                    x9 = x1 - 2 - 2SQUISH_3D
-                    y9, z9 = (y1, z1) .- 2SQUISH_3D
+                    x9 = x1 - 2 - 2OS_SQUISH_3D
+                    y9, z9 = (y1, z1) .- 2OS_SQUISH_3D
                     X3, Y3, Z3 = X1 + 2, Y1, Z1
                 elseif !iszero(c & 2)
-                    x9, z9 = (x1, z1) .- 2SQUISH_3D
-                    y9 = y1 - 2 - 2SQUISH_3D
+                    x9, z9 = (x1, z1) .- 2OS_SQUISH_3D
+                    y9 = y1 - 2 - 2OS_SQUISH_3D
                     X3, Y3, Z3 = X1, Y1 + 2, Z1
                 else
-                    x9, y9 = (x1, y1) .- 2SQUISH_3D
-                    z9 = z1 - 2 - 2SQUISH_3D
+                    x9, y9 = (x1, y1) .- 2OS_SQUISH_3D
+                    z9 = z1 - 2 - 2OS_SQUISH_3D
                     X3, Y3, Z3 = X1, Y1, Z1 + 2
                 end
             else
                 c = p1 | p2
                 x8, y8, z8, X2, Y2, Z2 = x1, y1, z1, X1, Y1, Z1
                 if iszero(c & 1)
-                    x9 = x1 + 1 - SQUISH_3D
-                    y9, z9 = (y1, z1) .- 1 .- SQUISH_3D
+                    x9 = x1 + 1 - OS_SQUISH_3D
+                    y9, z9 = (y1, z1) .- 1 .- OS_SQUISH_3D
                     X3, Y3, Z3 = X1 - 1, Y1 + 1, Z1 + 1
                 elseif iszero(c & 2)
-                    x9, z9 = (x1, z1) .- 1 .- SQUISH_3D
-                    y9 = y1 + 1 - SQUISH_3D
+                    x9, z9 = (x1, z1) .- 1 .- OS_SQUISH_3D
+                    y9 = y1 + 1 - OS_SQUISH_3D
                     X3, Y3, Z3 = X1 + 1, Y1 - 1, Z1 + 1
                 else
-                    x9, y9 = (x1, y1) .- 1 .- SQUISH_3D
-                    z9 = z1 + 1 - SQUISH_3D
+                    x9, y9 = (x1, y1) .- 1 .- OS_SQUISH_3D
+                    z9 = z1 + 1 - OS_SQUISH_3D
                     X3, Y3, Z3 = X1 + 1, Y1 + 1, Z1 - 1
                 end
             end
@@ -261,19 +259,19 @@ function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
             c1 = p1_farthest ? p1 : p2
             c2 = p1_farthest ? p2 : p1
             if iszero(c1 & 1)
-                x8 = x1 + 1 - SQUISH_3D
-                y8, z8 = (y1, z1) .- 1 .- SQUISH_3D
+                x8 = x1 + 1 - OS_SQUISH_3D
+                y8, z8 = (y1, z1) .- 1 .- OS_SQUISH_3D
                 X2, Y2, Z2 = X1 - 1, Y1 + 1, Z1 + 1
             elseif iszero(c1 & 2)
-                x8, z8 = (x1, z1) .- 1 .- SQUISH_3D
-                y8 = y1 + 1 - SQUISH_3D
+                x8, z8 = (x1, z1) .- 1 .- OS_SQUISH_3D
+                y8 = y1 + 1 - OS_SQUISH_3D
                 X2, Y2, Z2 = X1 + 1, Y1 - 1, Z1 + 1
             else
-                x8, y8 = (x1, y1) .- 1 .- SQUISH_3D
-                z8 = z1 + 1 - SQUISH_3D
+                x8, y8 = (x1, y1) .- 1 .- OS_SQUISH_3D
+                z8 = z1 + 1 - OS_SQUISH_3D
                 X2, Y2, Z2 = X1 + 1, Y1 + 1, Z1 - 1
             end
-            x9, y9, z9 = (x1, y1, z1) .- 2SQUISH_3D
+            x9, y9, z9 = (x1, y1, z1) .- 2OS_SQUISH_3D
             X3, Y3, Z3 = X1, Y1, Z1
             if !iszero(c2 & 1)
                 x9 -= 2
@@ -286,10 +284,10 @@ function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
                 Z3 += 2
             end
         end
-        y2, z2, x3 = (y1, z1, x1) .- SQUISH_3D
-        x5, y5, z6 = (x1, y1, z1) .- 1 .- 2SQUISH_3D
-        x2, y3, z4 = (x1, y1, z1) .- 1 .- SQUISH_3D
-        z5, y6, x7 = (z1, y1, x1) .- 2SQUISH_3D
+        y2, z2, x3 = (y1, z1, x1) .- OS_SQUISH_3D
+        x5, y5, z6 = (x1, y1, z1) .- 1 .- 2OS_SQUISH_3D
+        x2, y3, z4 = (x1, y1, z1) .- 1 .- OS_SQUISH_3D
+        z5, y6, x7 = (z1, y1, x1) .- 2OS_SQUISH_3D
         z3, x4, y4, x6, y7, z7 = z2, x3, y2, x5, y5, z6
         c1 = contribute(sampler, X1 + 1, Y1, Z1, x2, y2, z2)
         c2 = contribute(sampler, X1, Y1 + 1, Z1, x3, y3, z3)
@@ -301,5 +299,5 @@ function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
     end
     c1 = contribute(sampler, X2, Y2, Z2, x8, y8, z8)
     c2 = contribute(sampler, X3, Y3, Z3, x9, y9, z9)
-    (result + c1 + c2) * SCALE_3D
+    (result + c1 + c2) * OS_SCALE_3D
 end

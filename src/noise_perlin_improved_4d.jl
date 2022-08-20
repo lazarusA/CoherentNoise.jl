@@ -1,5 +1,3 @@
-const SCALE_4D = 0.84
-
 """
     perlin_improved_4d(; kwargs...)
 
@@ -7,11 +5,9 @@ Construct a sampler that outputs 4-dimensional Perlin "Improved" noise when it i
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 """
-perlin_improved_4d(; seed=nothing) = perlin_improved(4, seed)
+perlin_improved_4d(; seed=0) = perlin_improved(4, seed)
 
 @inline function grad(S::Type{PerlinImproved{4}}, hash, x, y, z, w)
     h1 = hash & 31
@@ -45,5 +41,5 @@ function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:PerlinImproved{4},
     p8 = lerp(grad(S, t[c4+1], x1, y2, z2, w2), grad(S, t[c8+1], x2, y2, z2, w2), fx)
     p9 = lerp(lerp(p1, p2, fy), lerp(p3, p4, fy), fz)
     p10 = lerp(lerp(p5, p6, fy), lerp(p7, p8, fy), fz)
-    lerp(p9, p10, fw) * SCALE_4D
+    lerp(p9, p10, fw) * 0.84
 end

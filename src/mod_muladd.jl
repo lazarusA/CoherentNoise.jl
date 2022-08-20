@@ -12,7 +12,7 @@ Construct a modifier sampler that performs multiplies the output of sampler `x` 
 `strength`, followed by adding the scalar `bias`. sampler `y`.
 """
 function Base.muladd(x::S, strength::Real=1.0, bias::Real=0.0) where {N,S<:AbstractSampler{N}}
-    Muladd{N,S}(random_state(x), x, Float64(strength), Float64(bias))
+    Muladd{N,S}(x.random_state, x, Float64(strength), Float64(bias))
 end
 
 @inline function sample(

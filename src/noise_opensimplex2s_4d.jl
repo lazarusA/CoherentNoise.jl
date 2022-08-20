@@ -1,21 +1,19 @@
-using ..OpenSimplex2Noise: GRADIENTS_NORMALIZED_4D
-
-struct Vertex4D
+struct OS2S_Vertex4D
     XYZW::NTuple{4,UInt64}
     xyzw::NTuple{4,Float64}
-    function Vertex4D(x::T, y::T, z::T, w::T) where {T<:Int}
-        s = (x + y + z + w) * UNSKEW_4D
+    function OS2S_Vertex4D(x::T, y::T, z::T, w::T) where {T<:Int}
+        s = (x + y + z + w) * OS2_UNSKEW_4D
         XYZW = (x, y, z, w) .* (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
         xyzw = .-((x, y, z, w)) .- s
         new(XYZW, xyzw)
     end
 end
 
-const SKEW_4D = 0.309016994374947
-const UNSKEW_4D = -0.138196601125011
-const R²4D = 4 / 5
-const GRADIENTS_4D = GRADIENTS_NORMALIZED_4D ./ 0.11127401889945551 |> CircularVector
-const VERTICES_4D = [
+const OS2S_SKEW_4D = 0.309016994374947
+const OS2S_UNSKEW_4D = -0.138196601125011
+const OS2S_R²4D = 4 / 5
+const OS2S_GRADIENTS_4D = OS2_GRADIENTS_NORMALIZED_4D ./ 0.11127401889945551 |> CircularVector
+const OS2S_VERTICES_4D = [
     [0x15 0x45 0x51 0x54 0x55 0x56 0x59 0x5a 0x65 0x66 0x69 0x6a 0x95 0x96 0x99 0x9a 0xa5 0xa6 0xa9 0xaa],
     [0x15 0x45 0x51 0x55 0x56 0x59 0x5a 0x65 0x66 0x6a 0x95 0x96 0x9a 0xa6 0xaa],
     [0x01 0x05 0x11 0x15 0x41 0x45 0x51 0x55 0x56 0x5a 0x66 0x6a 0x96 0x9a 0xa6 0xaa],
@@ -274,27 +272,27 @@ const VERTICES_4D = [
     [0x55 0x56 0x59 0x5a 0x65 0x66 0x69 0x6a 0x95 0x96 0x99 0x9a 0xa5 0xa6 0xa9 0xaa 0xab 0xae 0xba 0xea],
 ]
 
-const LATTICE_VERTICES_4D = let
-    vertices = Vector{Vertex4D}(undef, 256)
+const OS2S_LATTICE_VERTICES_4D = let
+    vertices = Vector{OS2S_Vertex4D}(undef, 256)
     for i in 0:255
         cx = ((i >> 0) & 3) - 1
         cy = ((i >> 2) & 3) - 1
         cz = ((i >> 4) & 3) - 1
         cw = ((i >> 6) & 3) - 1
-        vertices[i+1] = Vertex4D(cx, cy, cz, cw)
+        vertices[i+1] = OS2S_Vertex4D(cx, cy, cz, cw)
     end
     vertices
 end
 
-const LOOKUP_4D_A, LOOKUP_4D_B = let
+const OS2S_LOOKUP_4D_A, OS2S_LOOKUP_4D_B = let
     a = Vector{NTuple{2,Int16}}(undef, 256)
-    b = Vector{Vertex4D}(undef, 3476)
+    b = Vector{OS2S_Vertex4D}(undef, 3476)
     j = 1
     for i in 1:256
-        len = length(VERTICES_4D[i])
+        len = length(OS2S_VERTICES_4D[i])
         a[i] = (j, j + len - 1)
         for k in 1:len
-            b[j] = LATTICE_VERTICES_4D[VERTICES_4D[i][k]+1]
+            b[j] = OS2S_LATTICE_VERTICES_4D[OS2S_VERTICES_4D[i][k]+1]
             j += 1
         end
     end
@@ -308,9 +306,7 @@ Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sa
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 
   - `orient=nothing`: One of the following symbols or the value `nothing`:
 
@@ -326,11 +322,13 @@ Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sa
 
       + `nothing`: Use the standard orientation.
 """
-opensimplex2s_4d(; seed=nothing, orient=nothing) = opensimplex2s(4, seed, orient)
+opensimplex2s_4d(; seed=0, orient=nothing) = opensimplex2s(4, seed, orient)
 
-@inline transform(::Type{Standard}, x, y, z, w) = (x, y, z, w) .+ SKEW_4D .* (x + y + z + w)
+@inline function transform(::OpenSimplex2S{4,OrientStandard}, x, y, z, w)
+    (x, y, z, w) .+ OS2S_SKEW_4D .* (x + y + z + w)
+end
 
-@inline function transform(::Type{ImproveXY}, x, y, z, w)
+@inline function transform(::OpenSimplex2S{4,OrientXY}, x, y, z, w)
     xy = x + y
     ww = w * 1.118033988749894
     zw = z * 0.28867513459481294226 + ww
@@ -340,9 +338,9 @@ opensimplex2s_4d(; seed=nothing, orient=nothing) = opensimplex2s(4, seed, orient
     (xr, yr, zr, wr)
 end
 
-@inline transform(::Type{ImproveXZ}, x, y, z, w) = transform(ImproveXY, x, z, y, w)
+@inline transform(::OpenSimplex2S{4,OrientXZ}, x, y, z, w) = transform(OrientXY, x, z, y, w)
 
-@inline function transform(::Type{ImproveXYZ}, x, y, z, w)
+@inline function transform(::OpenSimplex2S{4,OrientXYZ}, x, y, z, w)
     xyz = -(x + y + z)
     ww = w * 1.118033988749894
     s = xyz / 6 + ww
@@ -352,24 +350,24 @@ end
 end
 
 @fastpow function sample(sampler::OpenSimplex2S{4,O}, x::T, y::T, z::T, w::T) where {O,T<:Real}
-    seed = get_seed(sampler)
+    seed = sampler.seed
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
-    tr = transform(O, x, y, z, w)
+    tr = transform(sampler, x, y, z, w)
     XYZW = floor.(Int, tr)
     XYZWp = XYZW .* primes
     x1, y1, z1, w1 = tr .- XYZW
-    vs = (x1, y1, z1, w1) .+ (x1 + y1 + z1 + w1) * UNSKEW_4D
+    vs = (x1, y1, z1, w1) .+ (x1 + y1 + z1 + w1) * OS2S_UNSKEW_4D
     ix, iy, iz, iw = floor.(Int, (tr .* 4)) .& 3
     index = ix << 0 | iy << 2 | iz << 4 | iw << 6
     result = 0.0
-    start, stop = LOOKUP_4D_A[index+1]
+    start, stop = OS2S_LOOKUP_4D_A[index+1]
     for i in start:stop
-        c = LOOKUP_4D_B[i]
+        c = OS2S_LOOKUP_4D_B[i]
         V = XYZWp .+ c.XYZW
         x, y, z, w = vs .+ c.xyzw
         a = (x^2 + y^2) + (z^2 + w^2)
-        if a < R²4D
-            result += (a - R²4D)^4 * grad(GRADIENTS_4D, seed, V..., x, y, z, w)
+        if a < OS2S_R²4D
+            result += (a - OS2S_R²4D)^4 * grad(OS2S_GRADIENTS_4D, seed, V..., x, y, z, w)
         end
     end
     result

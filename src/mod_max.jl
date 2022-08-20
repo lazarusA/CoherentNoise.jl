@@ -12,7 +12,7 @@ Construct a modifier sampler that outputs the maximum value of the outputs of sa
 """
 function Base.max(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
-    Max{N,S1,S2}(random_state(x), x, y)
+    Max{N,S1,S2}(x.random_state, x, y)
 end
 
 @inline function sample(

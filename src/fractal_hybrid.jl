@@ -1,9 +1,9 @@
 struct HybridFractal{N,S,O} <: FractalSampler{N}
-    state::State{N,S,O}
+    state::FractalState{N,S,O}
 end
 
 @inline function HybridFractal{N}(
-    seed::Seed,
+    seed,
     source::S,
     octaves::Int,
     frequency,
@@ -11,7 +11,7 @@ end
     persistence,
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
-    fs = State{N,HybridFractal,O}(seed, source, frequency, lacunarity, persistence, 1.0)
+    fs = FractalState{N,HybridFractal,O}(seed, source, frequency, lacunarity, persistence, 1.0)
     HybridFractal{N,S,O}(fs)
 end
 
@@ -22,9 +22,7 @@ Construct a sampler that outputs a 2-dimensional hybrid multifractal noise when 
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 
   - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
     source of the fractal.
@@ -40,7 +38,7 @@ Construct a sampler that outputs a 2-dimensional hybrid multifractal noise when 
     successive octaves.
 """
 function hybrid_fractal_2d(;
-    seed=nothing,
+    seed=0,
     source=opensimplex2s_2d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -57,9 +55,7 @@ Construct a sampler that outputs a 3-dimensional hybrid multifractal noise when 
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 
   - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
     source of the fractal.
@@ -75,7 +71,7 @@ Construct a sampler that outputs a 3-dimensional hybrid multifractal noise when 
     successive octaves.
 """
 function hybrid_fractal_3d(;
-    seed=nothing,
+    seed=0,
     source=opensimplex2s_3d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -92,9 +88,7 @@ Construct a sampler that outputs a 4-dimensional hybrid multifractal noise when 
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 
   - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
     source of the fractal.
@@ -110,7 +104,7 @@ Construct a sampler that outputs a 4-dimensional hybrid multifractal noise when 
     successive octaves.
 """
 function hybrid_fractal_4d(;
-    seed=nothing,
+    seed=0,
     source=opensimplex2s_4d(seed=seed),
     octaves=4,
     frequency=1.0,

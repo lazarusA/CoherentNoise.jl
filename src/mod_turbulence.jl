@@ -27,22 +27,20 @@ Sampler `s2`'s input coordinates are randomly generated using the seed of sample
 function turbulence(
     s1::S1,
     s2::S2;
-    frequency::Real=1.0, roughness::Real=3, power::Real=1.0,
-) where {
-    N,N1,
-    S1<:AbstractSampler{N},
-    S2<:AbstractSampler{N1},
-}
-    rs = random_state(s1)
-    seed = rand(rs.rng, UInt64)
+    frequency=1.0,
+    roughness=3,
+    power=1.0,
+) where {N,N1,S1<:AbstractSampler{N},S2<:AbstractSampler{N1}}
+    rng = s1.rng
+    seed = rand(rng, UInt64)
     N2 = min(N, N1)
-    x = ntuple(i -> rand(rs.rng, Float64), N2)
-    y = ntuple(i -> rand(rs.rng, Float64), N2)
-    z = ntuple(i -> rand(rs.rng, Float64), N2)
-    w = ntuple(i -> rand(rs.rng, Float64), N2)
+    x = ntuple(i -> rand(rng, Float64), N2)
+    y = ntuple(i -> rand(rng, Float64), N2)
+    z = ntuple(i -> rand(rng, Float64), N2)
+    w = ntuple(i -> rand(rng, Float64), N2)
     s3 = FBMFractal{N1}(seed=seed, source=s2, octaves=roughness, frequency=frequency)
     S3 = typeof(s3)
-    Turbulence{N,N1,N2,S1,S3}(rs, s1, s3, Float64(power), x, y, z, w)
+    Turbulence{N,N1,N2,S1,S3}(s1.random_state, s1, s3, Float64(power), x, y, z, w)
 end
 
 function sample(sampler::Turbulence{N,N1,N2}, coords::Vararg{Real,N}) where {N,N1,N2}

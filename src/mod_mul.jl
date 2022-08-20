@@ -11,7 +11,7 @@ Construct a modifier sampler that outputs the product of the outputs samplers `x
 """
 function Base.:*(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
-    Mul{N,S1,S2}(random_state(x), x, y)
+    Mul{N,S1,S2}(x.random_state, x, y)
 end
 
 """
@@ -21,7 +21,7 @@ Construct a modifier sampler that outputs the product of the output of sampler `
 `y`.
 """
 function Base.:*(x::S, y::Real) where {N,S<:AbstractSampler{N}}
-    Mul{N,S,Float64}(random_state(x), x, Float64(y))
+    Mul{N,S,Float64}(x.random_state, x, Float64(y))
 end
 
 @inline function sample(

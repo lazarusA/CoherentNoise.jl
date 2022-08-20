@@ -4,20 +4,18 @@ struct Spheres <: PatternSampler{3}
 end
 
 """
-    spheres_3d(; seed=nothing, frequency=1.0)
+    spheres_3d(; kwargs...)
 
 Construct a sampler that outputs values that form a pattern representing concentric spheres when it
 is sampled from.
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affeclt the reproducibility of any samplers further down the pipeline.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 
   - `frequency=1.0`: The frequency of the signal, which controls how small or large the spheres are.
 """
-spheres_3d(; seed=nothing, frequency=1.0) = Spheres(RandomState(seed), frequency)
+spheres_3d(; seed=0, frequency=1.0) = Spheres(RandomState(seed), frequency)
 
 function sample(sampler::S, x::T, y::T, z::T) where {S<:Spheres,T<:Real}
     x, y, z = (x, y, z) .* sampler.frequency

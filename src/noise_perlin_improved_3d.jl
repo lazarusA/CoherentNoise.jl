@@ -1,5 +1,3 @@
-const SCALE_3D = 0.9649214285521897
-
 """
     perlin_improved_3d(; kwargs...)
 
@@ -7,11 +5,9 @@ Construct a sampler that outputs 3-dimensional Perlin "Improved" noise when it i
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 """
-perlin_improved_3d(; seed=nothing) = perlin_improved(3, seed)
+perlin_improved_3d(; seed=0) = perlin_improved(3, seed)
 
 @inline function grad(S::Type{PerlinImproved{3}}, hash, x, y, z)
     h = hash & 15
@@ -32,5 +28,5 @@ function sample(sampler::S, x::T, y::T, z::T) where {S<:PerlinImproved{3},T<:Rea
     p2 = lerp(grad(S, t[c2], x1, y2, z1), grad(S, t[c4], x2, y2, z1), fx)
     p3 = lerp(grad(S, t[c1+1], x1, y1, z2), grad(S, t[c3+1], x2, y1, z2), fx)
     p4 = lerp(grad(S, t[c2+1], x1, y2, z2), grad(S, t[c4+1], x2, y2, z2), fx)
-    lerp(lerp(p1, p2, fy), lerp(p3, p4, fy), fz) * SCALE_3D
+    lerp(lerp(p1, p2, fy), lerp(p3, p4, fy), fz) * 0.9649214285521897
 end

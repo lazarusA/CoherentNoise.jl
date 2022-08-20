@@ -1,11 +1,11 @@
-const SEED_OFFSET_4D = 0xe83dc3e0da7164d
-const SKEW_4D = -0.138196601125011
-const UNSKEW_4D = 0.309016994374947
-const LATTICE_STEP_4D = 0.2
-const R²4D = 0.6
-const NUM_GRADIENTS_EXP_4D = 9
-const NUM_GRADIENTS_4D = 1 << NUM_GRADIENTS_EXP_4D
-const GRADIENTS_NORMALIZED_4D = [
+const OS2_SEED_OFFSET_4D = 0xe83dc3e0da7164d
+const OS2_SKEW_4D = -0.138196601125011
+const OS2_UNSKEW_4D = 0.309016994374947
+const OS2_LATTICE_STEP_4D = 0.2
+const OS2_R²4D = 0.6
+const OS2_NUM_GRADIENTS_EXP_4D = 9
+const OS2_NUM_GRADIENTS_4D = 1 << OS2_NUM_GRADIENTS_EXP_4D
+const OS2_GRADIENTS_NORMALIZED_4D = [
     -0.6740059517812944, -0.3239847771997537, -0.3239847771997537, 0.5794684678643381,
     -0.7504883828755602, -0.4004672082940195, 0.15296486218853164, 0.5029860367700724,
     -0.7504883828755602, 0.15296486218853164, -0.4004672082940195, 0.5029860367700724,
@@ -166,7 +166,7 @@ const GRADIENTS_NORMALIZED_4D = [
     0.7821684431180708, 0.4321472685365301, -0.12128480194602098, 0.4321472685365301,
     0.7821684431180708, 0.4321472685365301, 0.4321472685365301, -0.12128480194602098,
     0.753341017856078, 0.37968289875261624, 0.37968289875261624, 0.37968289875261624]
-const GRADIENTS_4D = GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897 |> CircularVector
+const OS2_GRADIENTS_4D = OS2_GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897 |> CircularVector
 
 """
     opensimplex2_4d(; kwargs...)
@@ -175,9 +175,7 @@ Construct a sampler that outputs 4-dimensional OpenSimplex2 noise when it is sam
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 
   - `orient=nothing`: One of the following symbols or the value `nothing`:
 
@@ -193,19 +191,21 @@ Construct a sampler that outputs 4-dimensional OpenSimplex2 noise when it is sam
 
       + `nothing`: Use the standard orientation.
 """
-opensimplex2_4d(; seed=nothing, orient=nothing) = opensimplex2(4, seed, orient)
+opensimplex2_4d(; seed=0, orient=nothing) = opensimplex2(4, seed, orient)
 
 @inline function grad(table, seed, X, Y, Z, W, x, y, z, w)
     hash = seed ⊻ (X ⊻ Y) ⊻ (Z ⊻ W) * HASH_MULTIPLIER
-    hash ⊻= hash >> (64 - NUM_GRADIENTS_EXP_4D + 2)
-    i = trunc(hash) & ((NUM_GRADIENTS_4D - 1) << 2)
+    hash ⊻= hash >> (64 - OS2_NUM_GRADIENTS_EXP_4D + 2)
+    i = trunc(hash) & ((OS2_NUM_GRADIENTS_4D - 1) << 2)
     t = (table[i+1], table[(i|1)+1], table[(i|2)+1], table[(i|3)+1])
     sum((t .* (x, y, z, w)))
 end
 
-@inline transform(::Type{Standard}, x, y, z, w) = (x, y, z, w) .+ SKEW_4D .* (x + y + z + w)
+@inline function transform(::OpenSimplex2{4,OrientStandard}, x, y, z, w)
+    (x, y, z, w) .+ OS2_SKEW_4D .* (x + y + z + w)
+end
 
-@inline function transform(::Type{ImproveXY}, x, y, z, w)
+@inline function transform(::OpenSimplex2{4,OrientXY}, x, y, z, w)
     xy = x + y
     ww = w * 0.2236067977499788
     zw = z * 0.28867513459481294226 + ww
@@ -215,9 +215,9 @@ end
     (xr, yr, zr, wr)
 end
 
-@inline transform(::Type{ImproveXZ}, x, y, z, w) = transform(ImproveXY, x, z, y, w)
+@inline transform(::OpenSimplex2{4,OrientXZ}, x, y, z, w) = transform(OrientXY, x, z, y, w)
 
-@inline function transform(::Type{ImproveXYZ}, x, y, z, w)
+@inline function transform(::OpenSimplex2{4,OrientXYZ}, x, y, z, w)
     xyz = -(x + y + z)
     ww = w * 0.2236067977499788
     s = xyz / 6 + ww
@@ -226,51 +226,51 @@ end
     (xs, ys, zs, ws)
 end
 
-@fastpow function sample(sampler::OpenSimplex2{4,O}, x::T, y::T, z::T, w::T) where {O,T<:Real}
-    seed = get_seed(sampler)
+@fastpow function sample(sampler::OpenSimplex2{4}, x::T, y::T, z::T, w::T) where {T<:Real}
+    seed = sampler.seed
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
-    tr = transform(O, x, y, z, w)
+    tr = transform(sampler, x, y, z, w)
     X1, Y1, Z1, W1 = floor.(Int, tr)
     X2, Y2, Z2, W2 = (X1, Y1, Z1, W1) .* primes
     v = tr .- (X1, Y1, Z1, W1)
     sv = sum(v)
     lattice = trunc(Int, sv * 1.25)
-    lattice_offset = lattice * -LATTICE_STEP_4D
+    lattice_offset = lattice * -OS2_LATTICE_STEP_4D
     x1, y1, z1, w1 = v .+ lattice_offset
-    ssi = (sv + 4lattice_offset) * UNSKEW_4D
-    seed += lattice * SEED_OFFSET_4D
+    ssi = (sv + 4lattice_offset) * OS2_UNSKEW_4D
+    seed += lattice * OS2_SEED_OFFSET_4D
     result = 0.0
     for i in 0:4
-        score = 1 + ssi * (-1 / UNSKEW_4D)
+        score = 1 + ssi * (-1 / OS2_UNSKEW_4D)
         if x1 ≥ y1 && x1 ≥ z1 && x1 ≥ w1 && x1 ≥ score
             X2 += PRIME_X
             x1 -= 1
-            ssi -= UNSKEW_4D
+            ssi -= OS2_UNSKEW_4D
         elseif y1 > x1 && y1 ≥ z1 && y1 ≥ w1 && y1 ≥ score
             Y2 += PRIME_Y
             y1 -= 1
-            ssi -= UNSKEW_4D
+            ssi -= OS2_UNSKEW_4D
         elseif z1 > x1 && z1 > y1 && z1 ≥ w1 && z1 ≥ score
             Z2 += PRIME_Z
             z1 -= 1
-            ssi -= UNSKEW_4D
+            ssi -= OS2_UNSKEW_4D
         elseif w1 > x1 && w1 > y1 && w1 > z1 && w1 ≥ score
             W2 += PRIME_W
             w1 -= 1
-            ssi -= UNSKEW_4D
+            ssi -= OS2_UNSKEW_4D
         end
         xyzw = (x1, y1, z1, w1) .+ ssi
         a = sum(xyzw .^ 2)
-        if a < R²4D
-            result += (a - R²4D)^4 * grad(GRADIENTS_4D, seed, X2, Y2, Z2, W2, xyzw...)
+        if a < OS2_R²4D
+            result += (a - OS2S_R²4D)^4 * grad(OS2_GRADIENTS_4D, seed, X2, Y2, Z2, W2, xyzw...)
         end
         if i !== 4
-            x1, y1, z1, w1 = (x1, y1, z1, w1) .+ LATTICE_STEP_4D
-            ssi += LATTICE_STEP_4D * 4UNSKEW_4D
-            seed -= SEED_OFFSET_4D
+            x1, y1, z1, w1 = (x1, y1, z1, w1) .+ OS2_LATTICE_STEP_4D
+            ssi += OS2_LATTICE_STEP_4D * 4OS2_UNSKEW_4D
+            seed -= OS2_SEED_OFFSET_4D
             if i == lattice
                 X2, Y2, Z2, W2 = (X2, Y2, Z2, W2) .- primes
-                seed += 5SEED_OFFSET_4D
+                seed += 5OS2_SEED_OFFSET_4D
             end
         end
     end

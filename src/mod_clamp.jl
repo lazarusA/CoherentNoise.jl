@@ -16,7 +16,7 @@ function Base.clamp(
     lo::L,
     hi::H,
 ) where {N,N1,N2,S<:AbstractSampler{N},L<:AbstractSampler{N1},H<:AbstractSampler{N2}}
-    Clamp{N,S,L,H}(random_state(x), x, lo, hi)
+    Clamp{N,S,L,H}(x.random_state, x, lo, hi)
 end
 
 """
@@ -26,7 +26,7 @@ Construct a modifier sampler that clamps the output of sampler `x` to be within 
 scalars `lo` and `hi`.
 """
 function Base.clamp(x::S, lo::Real=-1.0, hi::Real=1.0) where {N,S<:AbstractSampler{N}}
-    Clamp{N,S,Float64,Float64}(random_state(x), x, Float64(lo), Float64(hi))
+    Clamp{N,S,Float64,Float64}(x.random_state, x, Float64(lo), Float64(hi))
 end
 
 @inline function sample(

@@ -18,7 +18,7 @@ duplicated input sources would redundantly compute the same outputs, which would
 especially if long pipelines share a long subgraph.
 """
 function cache(x::S) where {N,S<:AbstractSampler{N}}
-    Cache{N,S}(random_state(x), x, false, ntuple(i -> 0.0, N), 0.0)
+    Cache{N,S}(x.random_state, x, false, ntuple(i -> 0.0, N), 0.0)
 end
 
 @inline function sample(sampler::Cache{N}, coords::Vararg{Real,N}) where {N}

@@ -5,11 +5,9 @@ Construct a sampler that outputs 2-dimensional Perlin "Improved" noise when it i
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 """
-perlin_improved_2d(; seed=nothing) = perlin_improved(2, seed)
+perlin_improved_2d(; seed=0) = perlin_improved(2, seed)
 
 @inline function grad(S::Type{PerlinImproved{2}}, hash, x, y)
     h = hash & 7

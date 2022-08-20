@@ -1,6 +1,5 @@
-const SKEW_3D = 1 / 3
-const UNSKEW_3D = 1 / 6
-const SCALE_3D = 32
+const SIMPLEX_SKEW_3D = 1 / 3
+const SIMPLEX_UNSKEW_3D = 1 / 6
 
 """
     simplex_3d(; kwargs...)
@@ -9,11 +8,9 @@ Construct a sampler that outputs 3-dimensional Perlin Simplex noise when it is s
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 """
-simplex_3d(; seed=nothing) = simplex(3, seed)
+simplex_3d(; seed=0) = simplex(3, seed)
 
 @inline function grad(S::Type{Simplex{3}}, hash, x, y, z)
     s = 0.6 - x^2 - y^2 - z^2
@@ -34,14 +31,14 @@ end
 
 function sample(sampler::S, x::T, y::T, z::T) where {S<:Simplex{3},T<:Real}
     t = sampler.state.table
-    s = (x + y + z) * SKEW_3D
+    s = (x + y + z) * SIMPLEX_SKEW_3D
     X, Y, Z = floor.(Int, (x, y, z) .+ s)
-    tx = (X + Y + Z) * UNSKEW_3D
+    tx = (X + Y + Z) * SIMPLEX_UNSKEW_3D
     xyz = (x, y, z) .- (X, Y, Z) .+ tx
     X1, Y1, Z1, X2, Y2, Z2 = get_simplex(S, xyz...)
     p1 = grad(S, t[t[t[Z]+Y]+X], xyz...)
-    p2 = grad(S, t[t[t[Z+Z1]+Y+Y1]+X+X1], xyz .- (X1, Y1, Z1) .+ UNSKEW_3D...)
-    p3 = grad(S, t[t[t[Z+Z2]+Y+Y2]+X+X2], xyz .- (X2, Y2, Z2) .+ 2UNSKEW_3D...)
-    p4 = grad(S, t[t[t[Z+1]+Y+1]+X+1], xyz .- 1 .+ 3UNSKEW_3D...)
-    (p1 + p2 + p3 + p4) * SCALE_3D
+    p2 = grad(S, t[t[t[Z+Z1]+Y+Y1]+X+X1], xyz .- (X1, Y1, Z1) .+ SIMPLEX_UNSKEW_3D...)
+    p3 = grad(S, t[t[t[Z+Z2]+Y+Y2]+X+X2], xyz .- (X2, Y2, Z2) .+ 2SIMPLEX_UNSKEW_3D...)
+    p4 = grad(S, t[t[t[Z+1]+Y+1]+X+1], xyz .- 1 .+ 3SIMPLEX_UNSKEW_3D...)
+    (p1 + p2 + p3 + p4) * 32
 end

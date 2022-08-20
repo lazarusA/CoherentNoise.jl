@@ -1,7 +1,6 @@
-const SKEW_4D = (sqrt(5) - 1) / 4
-const UNSKEW_4D = (5 - sqrt(5)) / 20
-const SCALE_4D = 27
-const GRADIENTS_4D = [
+const SIMPLEX_SKEW_4D = (sqrt(5) - 1) / 4
+const SIMPLEX_UNSKEW_4D = (5 - sqrt(5)) / 20
+const SIMPLEX_GRADIENTS_4D = [
     0x0, 0x1, 0x2, 0x3, 0x0, 0x1, 0x3, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 0x3, 0x1, 0x0, 0x0,
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, 0x2, 0x3, 0x0, 0x0, 0x2, 0x1, 0x3,
     0x0, 0x0, 0x0, 0x0, 0x0, 0x3, 0x1, 0x2, 0x0, 0x3, 0x2, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
@@ -25,11 +24,9 @@ Construct a sampler that outputs 4-dimensional Perlin Simplex noise when it is s
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 """
-simplex_4d(; seed=nothing) = simplex(4, seed)
+simplex_4d(; seed=0) = simplex(4, seed)
 
 @inline function grad(S::Type{Simplex{4}}, hash, x, y, z, w)
     s = 0.6 - x^2 - y^2 - z^2 - w^2
@@ -42,7 +39,7 @@ simplex_4d(; seed=nothing) = simplex(4, seed)
 end
 
 @inline function get_simplex(::Type{Simplex{4}}, x, y, z, w)
-    t = GRADIENTS_4D
+    t = SIMPLEX_GRADIENTS_4D
     c1 = x > y ? 32 : 0
     c2 = x > z ? 16 : 0
     c3 = y > z ? 8 : 0
@@ -60,19 +57,19 @@ end
 
 function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Simplex{4},T<:Real}
     t = sampler.state.table
-    s = (x + y + z + w) * SKEW_4D
+    s = (x + y + z + w) * SIMPLEX_SKEW_4D
     X, Y, Z, W = floor.(Int, (x, y, z, w) .+ s)
-    tx = (X + Y + Z + W) * UNSKEW_4D
+    tx = (X + Y + Z + W) * SIMPLEX_UNSKEW_4D
     v1 = (x, y, z, w) .- (X, Y, Z, W) .+ tx
     X1, Y1, Z1, W1, X2, Y2, Z2, W2, X3, Y3, Z3, W3 = get_simplex(S, v1...)
-    v2 = v1 .- (X1, Y1, Z1, W1) .+ UNSKEW_4D
-    v3 = v1 .- (X2, Y2, Z2, W2) .+ 2UNSKEW_4D
-    v4 = v1 .- (X3, Y3, Z3, W3) .+ 3UNSKEW_4D
-    v5 = v1 .- 1 .+ 4UNSKEW_4D
+    v2 = v1 .- (X1, Y1, Z1, W1) .+ SIMPLEX_UNSKEW_4D
+    v3 = v1 .- (X2, Y2, Z2, W2) .+ 2SIMPLEX_UNSKEW_4D
+    v4 = v1 .- (X3, Y3, Z3, W3) .+ 3SIMPLEX_UNSKEW_4D
+    v5 = v1 .- 1 .+ 4SIMPLEX_UNSKEW_4D
     p1 = grad(S, t[t[t[t[W]+Z]+Y]+X], v1...)
     p2 = grad(S, t[t[t[t[W+W1]+Z+Z1]+Y+Y1]+X+X1], v2...)
     p3 = grad(S, t[t[t[t[W+W2]+Z+Z2]+Y+Y2]+X+X2], v3...)
     p4 = grad(S, t[t[t[t[W+W3]+Z+Z3]+Y+Y3]+X+X3], v4...)
     p5 = grad(S, t[t[t[t[W+1]+Z+1]+Y+1]+X+1], v5...)
-    (p1 + p2 + p3 + p4 + p5) * SCALE_4D
+    (p1 + p2 + p3 + p4 + p5) * 27
 end

@@ -5,9 +5,7 @@ Construct a sampler that outputs 3-dimensional Worley noise when it is sampled f
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 
   - `jitter=1.0`: A `Real` number between 0.0 and 1.0, with values closer to one randomly
     distributing cells away from their grid alignment.
@@ -41,14 +39,14 @@ Construct a sampler that outputs 3-dimensional Worley noise when it is sampled f
 
       + `:value`: Use the cell's hash value as the output.
 """
-function worley_3d(; seed=nothing, metric=:euclidean, output=:f1, jitter=1.0)
+function worley_3d(; seed=0, metric=:euclidean, output=:f1, jitter=1.0)
     worley(3, seed, metric, output, jitter)
 end
 
 function sample(sampler::Worley{3,M,F}, x::T, y::T, z::T) where {M,F,T<:Real}
-    seed = get_seed(sampler)
+    seed = sampler.seed
     table = sampler.table
-    jitter = sampler.jitter * JITTER2
+    jitter = sampler.jitter * WORLEY_JITTER2
     r = round.(Int, (x, y, z)) .- 1
     xr, yr, zr = r .- (x, y, z)
     xp, yp_base, zp_base = r .* (PRIME_X, PRIME_Y, PRIME_Z)

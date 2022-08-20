@@ -9,7 +9,7 @@ end
 
 Construct a modifier sampler that raises the output of sampler `x` to the power of the scalar `y`.
 """
-Base.:^(x::S, y::Real) where {N,S<:AbstractSampler{N}} = Pow{N,S}(random_state(x), x, Float64(y))
+Base.:^(x::S, y::Real) where {N,S<:AbstractSampler{N}} = Pow{N,S}(x.random_state, x, Float64(y))
 
 @inline function sample(sampler::Pow{N}, coords::Vararg{Real,N}) where {N}
     x = sample(sampler.source, coords...)

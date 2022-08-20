@@ -18,7 +18,7 @@ When sampling from sampler `x`, the output is evaluated using the curve data, an
 output value.
 """
 function curve(x::S, points::Vector{Pair{Float64,Float64}}) where {N,S<:AbstractSampler{N}}
-    Curve{N,S}(random_state(x), x, sort(points, by=(p) -> p.first))
+    Curve{N,S}(x.random_state, x, sort(points, by=(p) -> p.first))
 end
 
 function sample(sampler::Curve{N}, coords::Vararg{Real,N}) where {N}

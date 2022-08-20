@@ -26,7 +26,7 @@ function terrace(
     points::Vector{Float64};
     invert::Bool=false,
 ) where {N,S<:AbstractSampler{N}}
-    Terrace{N,S}(random_state(x), x, sort(points), invert)
+    Terrace{N,S}(x.random_state, x, sort(points), invert)
 end
 
 function sample(sampler::Terrace{N}, coords::Vararg{Real,N}) where {N}

@@ -11,7 +11,7 @@ Construct a modifier sampler that outputs the difference of the outputs of sampl
 """
 function Base.:-(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
-    Sub{N,S1,S2}(random_state(x), x, y)
+    Sub{N,S1,S2}(x.random_state, x, y)
 end
 
 """
@@ -21,7 +21,7 @@ Construct a modifier sampler that outputs the difference of the output of sample
 `y`.
 """
 function Base.:-(x::S, y::Real) where {N,S<:AbstractSampler{N}}
-    Sub{N,S,Float64}(random_state(x), x, Float64(y))
+    Sub{N,S,Float64}(x.random_state, x, Float64(y))
 end
 
 """
@@ -29,7 +29,7 @@ end
 
 Construct a modifier sampler that outputs the negated output of sampler `x`.
 """
-Base.:-(x::S) where {N,S<:AbstractSampler{N}} = Sub{N,S,Nothing}(random_state(x), x, nothing)
+Base.:-(x::S) where {N,S<:AbstractSampler{N}} = Sub{N,S,Nothing}(x.random_state, x, nothing)
 
 @inline function sample(
     sampler::Sub{N,S1,S2},

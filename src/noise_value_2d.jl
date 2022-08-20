@@ -5,14 +5,12 @@ Construct a sampler that outputs 2-dimensonal value noise when it is sampled fro
 
 # Arguments
 
-  - `seed=nothing`: An integer used to seed the random number generator for this sampler, or
-    `nothing`. If a seed is not supplied, one will be generated automatically which will negatively
-    affect reproducibility.
+  - `seed=0`: An integer used to seed the random number generator for this sampler.
 """
-value_2d(; seed=nothing) = value(2, seed)
+value_2d(; seed=0) = value(2, seed)
 
 function sample(sampler::S, x::T, y::T) where {S<:Value{2},T<:Real}
-    seed = get_seed(sampler)
+    seed = sampler.seed
     primes = (PRIME_X, PRIME_Y)
     X, Y = floor.(Int, (x, y))
     X1, Y1 = (X, Y) .* primes

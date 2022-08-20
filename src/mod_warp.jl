@@ -37,7 +37,7 @@ function warp(
     SZ<:AbstractSampler{N3},
     SW<:AbstractSampler{N4},
 }
-    Warp{N,N1,N2,N3,N4,S,SX,SY,SZ,SW}(random_state(source), source, (x, y, z, w))
+    Warp{N,N1,N2,N3,N4,S,SX,SY,SZ,SW}(source.random_state, source, (x, y, z, w))
 end
 
 function sample(sampler::Warp{N,N1,N2,N3,N4}, coords::Vararg{Real,N}) where {N,N1,N2,N3,N4}

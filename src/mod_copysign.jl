@@ -12,7 +12,7 @@ the value of sampling from `y`.
 """
 function Base.copysign(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
-    CopySign{N,S1,S2}(random_state(x), x, y)
+    CopySign{N,S1,S2}(x.random_state, x, y)
 end
 
 @inline function sample(

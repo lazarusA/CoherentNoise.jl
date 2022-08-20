@@ -36,7 +36,7 @@ function select(
     falloff::Real=0.0,
 ) where {N1,N2,N3,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2},C<:AbstractSampler{N3}}
     N = Base.max(N1, N2, N3)
-    Select{N,S1,S2,C}(random_state(x), x, y, z, Float64(min), Float64(max), Float64(falloff))
+    Select{N,S1,S2,C}(x.random_state, x, y, z, Float64(min), Float64(max), Float64(falloff))
 end
 
 @inline function sample(
