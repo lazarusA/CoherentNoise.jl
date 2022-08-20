@@ -72,5 +72,5 @@ function sample(sampler::OpenSimplex{2}, x::T, y::T) where {T<:Real}
     end
     c1 = contribute(sampler, X1, Y1, x1, y1)
     c2 = contribute(sampler, X2, Y2, x4, y4)
-    (result + c1 + c2) * SCALE_2D
+    (result + c1 + c2) * OS_SCALE_2D
 end
