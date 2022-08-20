@@ -36,34 +36,19 @@ coordinate along the X axis, and one for the coordinate along the Y axis.
     value after the decimal point), as some algorithms (notably older gradient noises like
     `PerlinImproved`), will return zero for integral coordinates.
 
-There is one potential problem with the above example though: every time we create a sampler and
-sample from it with the same input coordinates, it will produce a different output:
-
-```@example getting-started
-sampler = perlin_improved_2d()
-sample(sampler, 120.2, 42.8)
-```
-
-Doesn't that conflict with the first property of coherent noise mentioned in "[What is coherent
-noise?](@ref)"? No, it doesn't. By not supplying any arguments to the sampler constructor, we are
-telling CoherentNoise to seed this sampler from your machine's hardware random number generator. All
-samplers have their own distinct random number generator, and it is how we can retrieve different
-results with the same input. This is useful if you want to repeatedly generate a result until you
-find something interesting. We can change this behavior on a per-sampler basis, by supplying our
-own seed:
+All samplers have their own distinct random number generator, and it is how we can retrieve
+different results with the same input coordinates. By default, a sampler's seed is set to `0`. We
+can change the seed on a per-sampler basis, by passing the `seed` keyword argument:
 
 ```@example getting-started
 sampler = perlin_improved_2d(seed=42)
 sample(sampler, 120.2, 42.8)
 ```
 
-```@example getting-started
-sampler = perlin_improved_2d(seed=42)
-sample(sampler, 120.2, 42.8)
-```
-
-Now, when we run this multiple times, we will always get the same result, and this is guaranteed to
-be reproducible across different machines.
+!!! note
+    Currently the seed must be an unsigned integer due to a limitation in Julia's random number
+    generator. There is an [open pull request](https://github.com/JuliaLang/julia/pull/46190) that
+    will lift this restriction in the future.
 
 !!! note
     Julia is free to change the implementation of its random number generator algorithms, even
@@ -74,8 +59,7 @@ be reproducible across different machines.
     reproducibility, but this is not a high priority.
 
 In summary, one creates a sampler by calling a function for the desired algorithm and
-dimensionality, and reproducibility can be controlled by supplying a `seed` keyword argument on a
-per-sampler basis.
+dimensionality, and we can alter the the sampler's output by changing its seed.
 
 Of particular note is that all samplers accept a `seed` keyword argument; even those that don't make
 use of any random numbers in their implementation. This is required for the composition pipeline
