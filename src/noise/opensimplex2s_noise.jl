@@ -14,7 +14,7 @@ const OS2S_R²2D = 2 / 3
 const OS2S_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118 |> CircularVector
 
 @doc doc_opensimplex2s_2d
-opensimplex2s_2d(; seed=0, orient=nothing) = opensimplex2s(2, seed, orient)
+opensimplex2s_2d(; seed=0, orient=nothing) = _opensimplex2s(2, seed, orient)
 
 @inline @fastpow function contribute(seed, X, Y, x, y)
     a = OS2S_R²2D - x^2 - y^2
