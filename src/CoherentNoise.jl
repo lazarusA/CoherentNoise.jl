@@ -30,7 +30,7 @@ export AbstractSampler, sample, gen_image
 # Noise
 export NoiseSampler
 export value_2d, value_3d, value_4d
-export perlin_improved_2d, perlin_improved_3d, perlin_improved_4d
+export perlin_2d, perlin_3d, perlin_4d
 export simplex_2d, simplex_3d, simplex_4d
 export opensimplex_2d, opensimplex_3d, opensimplex_4d
 export opensimplex2_2d, opensimplex2_3d, opensimplex2_4d

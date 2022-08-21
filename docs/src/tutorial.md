@@ -74,7 +74,7 @@ yet another new sampler. But first, let's see what each of these look like indiv
 ```@example tutorial
 sampler1 = opensimplex2_2d(seed=1)
 sampler2 = opensimplex2_2d(seed=2)
-sampler3 = perlin_improved_3d(seed=1)
+sampler3 = perlin_3d(seed=1)
 gen_image(sampler1)
 gen_image(sampler2)
 gen_image(sampler3)
@@ -92,7 +92,7 @@ Interpolating these with mix is done as follows:
 ```@example tutorial
 sampler1 = opensimplex2_2d(seed=1)
 sampler2 = opensimplex2_2d(seed=2)
-sampler3 = perlin_improved_2d(seed=1)
+sampler3 = perlin_2d(seed=1)
 mixed = mix(sampler1, sampler2, sampler3)
 gen_image(mixed)
 generate("tutorial06", mixed) # hide
@@ -114,7 +114,7 @@ try things out on your own.
 ```@example tutorial
 sampler1 = opensimplex2_2d(seed=1)
 sampler2 = opensimplex2_2d(seed=2)
-sampler3 = perlin_improved_2d(seed=1)
+sampler3 = perlin_2d(seed=1)
 mixed = mix(sampler1, sampler2, sampler3)
 scaled = scale(mixed, 0.5)
 gen_image(scaled)
@@ -138,11 +138,11 @@ conveniently, the [Chain.jl](https://github.com/jkrumbiegel/Chain.jl) package's 
 Let's rewrite our last example using `@chain`
 
 ```@example tutorial
-@chain mix(opensimplex2_2d(seed=1), opensimplex2_2d(seed=2), perlin_improved_2d(seed=1)) begin
+@chain mix(opensimplex2_2d(seed=1), opensimplex2_2d(seed=2), perlin_2d(seed=1)) begin
     scale(0.5)
     gen_image
 end
-@chain mix(opensimplex2_2d(seed=1), opensimplex2_2d(seed=2), perlin_improved_2d(seed=1)) begin # hide
+@chain mix(opensimplex2_2d(seed=1), opensimplex2_2d(seed=2), perlin_2d(seed=1)) begin # hide
     scale(0.5) # hide
     generate("tutorial08", _) # hide
 end # hide

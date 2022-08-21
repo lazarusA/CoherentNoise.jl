@@ -21,7 +21,7 @@ algorithms, and sample from it. Perlin Improved noise is a well-known algorithm,
 
 ```@example getting-started
 using CoherentNoise
-sampler = perlin_improved_2d()
+sampler = perlin_2d()
 sample(sampler, 120.2, 42.8)
 ```
 
@@ -34,14 +34,14 @@ coordinate along the X axis, and one for the coordinate along the Y axis.
 !!! note
     It is strongly recommended to use floating-point numbers with a fractional component (non-zero
     value after the decimal point), as some algorithms (notably older gradient noises like
-    `PerlinImproved`), will return zero for integral coordinates.
+    Perlin Noise or Perlin "Improved Noise"), will return zero for integral coordinates.
 
 All samplers have their own distinct random number generator, and it is how we can retrieve
 different results with the same input coordinates. By default, a sampler's seed is set to `0`. We
 can change the seed on a per-sampler basis, by passing the `seed` keyword argument:
 
 ```@example getting-started
-sampler = perlin_improved_2d(seed=42)
+sampler = perlin_2d(seed=42)
 sample(sampler, 120.2, 42.8)
 ```
 

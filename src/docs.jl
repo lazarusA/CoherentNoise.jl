@@ -113,26 +113,44 @@ Construct a sampler that outputs 4-dimensonal value noise when it is sampled fro
 $(_doc_sampler_args)
 """
 
-const doc_perlin_improved_2d = """
+const doc_perlin_2d = """
+    perlin_2d(; seed=0)
     perlin_improved_2d(; seed=0)
 
 Construct a sampler that outputs 2-dimensional Perlin "Improved" noise when it is sampled from.
 
+# Notes:
+
+  - `perlin_improved_2d` is deprecated and will be removed in favor of `perlin_2d` in a future
+    major version release.
+
 $(_doc_sampler_args)
 """
 
-const doc_perlin_improved_3d = """
+const doc_perlin_3d = """
+    perlin_3d(; seed=0)
     perlin_improved_3d(; seed=0)
 
 Construct a sampler that outputs 3-dimensional Perlin "Improved" noise when it is sampled from.
 
+# Notes:
+
+  - `perlin_improved_3d` is deprecated and will be removed in favor of `perlin_3d` in a future
+    major version release.
+
 $(_doc_sampler_args)
 """
 
-const doc_perlin_improved_4d = """
+const doc_perlin_4d = """
+    perlin_4d(; seed=0)
     perlin_improved_4d(; seed=0)
 
 Construct a sampler that outputs 4-dimensional Perlin "Improved" noise when it is sampled from.
+
+# Notes:
+
+  - `perlin_improved_4d` is deprecated and will be removed in favor of `perlin_4d` in a future
+    major version release.
 
 $(_doc_sampler_args)
 """

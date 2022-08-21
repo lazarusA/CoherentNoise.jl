@@ -3,7 +3,7 @@ struct PerlinImproved{N} <: NoiseSampler{N}
     state::PerlinState
 end
 
-@inline function perlin_improved(dims, seed)
+@inline function perlin(dims, seed)
     rs = RandomState(seed)
     PerlinImproved{dims}(rs, PerlinState(rs))
 end
@@ -12,8 +12,9 @@ HashTrait(::Type{<:PerlinImproved}) = IsPerlinHashed()
 
 ### 2D
 
-@doc doc_perlin_improved_2d
-perlin_improved_2d(; seed=0) = perlin_improved(2, seed)
+@doc doc_perlin_2d
+perlin_2d(; seed=0) = perlin(2, seed)
+@deprecate perlin_improved_2d(; kwargs...) perlin_2d(; kwargs...)
 
 @inline function grad(S::Type{PerlinImproved{2}}, hash, x, y)
     h = hash & 7
@@ -36,8 +37,9 @@ end
 
 ### 3D
 
-@doc doc_perlin_improved_3d
-perlin_improved_3d(; seed=0) = perlin_improved(3, seed)
+@doc doc_perlin_3d
+perlin_3d(; seed=0) = perlin(3, seed)
+@deprecate perlin_improved_3d(; kwargs...) perlin_3d(; kwargs...)
 
 @inline function grad(S::Type{PerlinImproved{3}}, hash, x, y, z)
     h = hash & 15
@@ -63,8 +65,9 @@ end
 
 ### 4D
 #
-@doc doc_perlin_improved_4d
-perlin_improved_4d(; seed=0) = perlin_improved(4, seed)
+@doc doc_perlin_4d
+perlin_4d(; seed=0) = perlin(4, seed)
+@deprecate perlin_improved_4d(; kwargs...) perlin_4d(; kwargs...)
 
 @inline function grad(S::Type{PerlinImproved{4}}, hash, x, y, z, w)
     h1 = hash & 31
