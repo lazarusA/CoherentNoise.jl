@@ -491,13 +491,13 @@ $(_doc_fractal_4d_args)
 const doc_mod_abs = """
     abs(x::AbstractSampler)
 
-Construct a sampler that outputs the absolute value of its source when it is sampled from.
+Construct a modifier sampler that outputs the absolute value of its source when it is sampled from.
 """
 
 const doc_mod_add = """
     +(x::AbstractSampler, y::AbstractSampler)
 
-Construct a sampler that outputs the sum of the outputs of samplers `x` and `y`.
+Construct a modifier sampler that outputs the sum of the outputs of samplers `x` and `y`.
 """
 
 const doc_mod_add_scalar = """
