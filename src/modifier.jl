@@ -604,7 +604,7 @@ function turbulence(
     power=1.0,
 ) where {N,N1,S1<:AbstractSampler{N},S2<:AbstractSampler{N1}}
     rng = s1.random_state.rng
-    seed = rand(rng, Int)
+    seed = rand(rng, UInt64)
     N2 = min(N, N1)
     x = ntuple(i -> rand(rng, Float64), N2)
     y = ntuple(i -> rand(rng, Float64), N2)

@@ -30,7 +30,7 @@ const ROOT_3_OVER_3 = 0.577350269189626
 ### Random number generation
 
 struct RandomState
-    seed::Int
+    seed::UInt64
     rng::Xoroshiro128Star
 end
 
