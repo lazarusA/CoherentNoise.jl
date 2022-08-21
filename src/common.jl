@@ -31,10 +31,10 @@ const ROOT_3_OVER_3 = 0.577350269189626
 
 struct RandomState
     seed::UInt64
-    rng::Xoshiro
+    rng::Xoroshiro128Star
 end
 
-@inline RandomState(seed) = RandomState(seed, Xoshiro(seed))
+@inline RandomState(seed) = RandomState(seed, Xoroshiro128Star(seed))
 
 ### State for Perlin-based samplers
 

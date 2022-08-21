@@ -3,14 +3,15 @@ module CoherentNoise
 ### Dependencies
 
 # Language dependencies
-using Random: Xoshiro, shuffle
+using Random: shuffle
 
 # Third-party dependencies
 using CircularArrays: CircularVector
+using ColorSchemes: ColorScheme
+using ColorTypes: RGB
 using Distributions: Uniform
 using FastPow
-using ColorTypes: RGB
-using ColorSchemes: ColorScheme
+using RandomNumbers.Xorshifts: Xoroshiro128Star
 
 ### Includes
 
