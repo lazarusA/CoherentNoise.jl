@@ -2,14 +2,14 @@ struct Value{N} <: NoiseSampler{N}
     random_state::RandomState
 end
 
-@inline value(dims, seed=0) = Value{dims}(RandomState(seed))
+@inline _value(dims, seed=0) = Value{dims}(RandomState(seed))
 
 HashTrait(::Type{<:Value}) = IsValueHashed()
 
 ### 2D
 
 @doc doc_value_2d
-value_2d(; seed=0) = value(2, seed)
+value_2d(; seed=0) = _value(2, seed)
 
 function sample(sampler::S, x::T, y::T) where {S<:Value{2},T<:Real}
     seed = sampler.random_state.seed
@@ -26,7 +26,7 @@ end
 ### 3D
 
 @doc doc_value_3d
-value_3d(; seed=0) = value(3, seed)
+value_3d(; seed=0) = _value(3, seed)
 
 function sample(sampler::S, x::T, y::T, z::T) where {S<:Value{3},T<:Real}
     seed = sampler.random_state.seed
@@ -45,7 +45,7 @@ end
 ### 4D
 
 @doc doc_value_4d
-value_4d(; seed=0) = value(4, seed)
+value_4d(; seed=0) = _value(4, seed)
 
 function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Value{4},T<:Real}
     seed = sampler.random_state.seed

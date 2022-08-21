@@ -2,7 +2,7 @@ struct OpenSimplex2S{N,O<:Orientation} <: NoiseSampler{N}
     random_state::RandomState
 end
 
-@inline function opensimplex2s(dims, seed, orientation)
+@inline function _opensimplex2s(dims, seed, orientation)
     rs = RandomState(seed)
     orientation = os2_orientation_type(Val(orientation))
     OpenSimplex2S{dims,orientation}(rs)
@@ -82,7 +82,7 @@ const OS2S_R²3D = 3 / 4
 const OS2S_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> CircularVector
 
 @doc doc_opensimplex2s_3d
-opensimplex2s_3d(; seed=0, orient=nothing) = opensimplex2s(3, seed, orient)
+opensimplex2s_3d(; seed=0, orient=nothing) = _opensimplex2s(3, seed, orient)
 
 @inline @fastpow os2s_contribute1(seed, a, args...) = a^4 * grad(OS2S_GRADIENTS_3D, seed, args...)
 
@@ -479,7 +479,7 @@ const OS2S_LOOKUP_4D_A, OS2S_LOOKUP_4D_B = let
 end
 
 @doc doc_opensimplex2s_4d
-opensimplex2s_4d(; seed=0, orient=nothing) = opensimplex2s(4, seed, orient)
+opensimplex2s_4d(; seed=0, orient=nothing) = _opensimplex2s(4, seed, orient)
 
 @inline function transform(::OpenSimplex2S{4,OrientStandard}, x, y, z, w)
     (x, y, z, w) .+ OS2S_SKEW_4D .* (x + y + z + w)

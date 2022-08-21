@@ -3,7 +3,7 @@ struct Simplex{N} <: NoiseSampler{N}
     state::PerlinState
 end
 
-@inline function simplex(dims, seed)
+@inline function _simplex(dims, seed)
     rs = RandomState(seed)
     Simplex{dims}(rs, PerlinState(rs))
 end
@@ -16,7 +16,7 @@ const SIMPLEX_SKEW_2D = (sqrt(3) - 1) / 2
 const SIMPLEX_UNSKEW_2D = (3 - sqrt(3)) / 6
 
 @doc doc_simplex_2d
-simplex_2d(; seed=0) = simplex(2, seed)
+simplex_2d(; seed=0) = _simplex(2, seed)
 
 @inline function grad(::Type{Simplex{2}}, hash, x, y)
     s = 0.5 - x^2 - y^2
@@ -47,7 +47,7 @@ const SIMPLEX_SKEW_3D = 1 / 3
 const SIMPLEX_UNSKEW_3D = 1 / 6
 
 @doc doc_simplex_3d
-simplex_3d(; seed=0) = simplex(3, seed)
+simplex_3d(; seed=0) = _simplex(3, seed)
 
 @inline function grad(S::Type{Simplex{3}}, hash, x, y, z)
     s = 0.6 - x^2 - y^2 - z^2
@@ -102,7 +102,7 @@ const SIMPLEX_GRADIENTS_4D = [
     0x3, 0x2, 0x1, 0x0]
 
 @doc doc_simplex_4d
-simplex_4d(; seed=0) = simplex(4, seed)
+simplex_4d(; seed=0) = _simplex(4, seed)
 
 @inline function grad(S::Type{Simplex{4}}, hash, x, y, z, w)
     s = 0.6 - x^2 - y^2 - z^2 - w^2

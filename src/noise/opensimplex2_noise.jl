@@ -9,7 +9,7 @@ struct OpenSimplex2{N,O<:Orientation} <: NoiseSampler{N}
     random_state::RandomState
 end
 
-@inline function opensimplex2(dims, seed, orientation)
+@inline function _opensimplex2(dims, seed, orientation)
     rs = RandomState(seed)
     orientation = os2_orientation_type(Val(orientation))
     OpenSimplex2{dims,orientation}(rs)
@@ -44,7 +44,7 @@ const OS2_GRADIENTS_NORMALIZED_2D = [
 const OS2_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.01001634121365712 |> CircularVector
 
 @doc doc_opensimplex2_2d
-opensimplex2_2d(; seed=0, orient=nothing) = opensimplex2(2, seed, orient)
+opensimplex2_2d(; seed=0, orient=nothing) = _opensimplex2(2, seed, orient)
 
 @inline function grad(table, seed, X, Y, x, y)
     hash = (seed ⊻ X ⊻ Y) * HASH_MULTIPLIER
@@ -161,7 +161,7 @@ const OS2_GRADIENTS_NORMALIZED_3D = [
 const OS2_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.07969837668935331 |> CircularVector
 
 @doc doc_opensimplex2_3d
-opensimplex2_3d(; seed=0, orient=nothing) = opensimplex2(3, seed, orient)
+opensimplex2_3d(; seed=0, orient=nothing) = _opensimplex2(3, seed, orient)
 
 @inline function grad(table, seed, X, Y, Z, x, y, z)
     hash = ((seed ⊻ X) ⊻ (Y ⊻ Z)) * HASH_MULTIPLIER
@@ -396,7 +396,7 @@ const OS2_GRADIENTS_NORMALIZED_4D = [
 const OS2_GRADIENTS_4D = OS2_GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897 |> CircularVector
 
 @doc doc_opensimplex2_4d
-opensimplex2_4d(; seed=0, orient=nothing) = opensimplex2(4, seed, orient)
+opensimplex2_4d(; seed=0, orient=nothing) = _opensimplex2(4, seed, orient)
 
 @inline function grad(table, seed, X, Y, Z, W, x, y, z, w)
     hash = seed ⊻ (X ⊻ Y) ⊻ (Z ⊻ W) * HASH_MULTIPLIER
