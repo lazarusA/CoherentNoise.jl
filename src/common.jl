@@ -1,41 +1,21 @@
-"""
-Supertype for all samplers.
-"""
+### Abstract sampler types
+
+"Supertype for all samplers."
 abstract type AbstractSampler{N} end
 
-"""
-Supertype for all noise algorithm samplers.
-"""
-abstract type NoiseSampler{N} <: AbstractSampler{N} end
-
-"""
-Supertype for all fractal samplers.
-"""
-abstract type FractalSampler{N} <: AbstractSampler{N} end
-
-"""
-Supertype for all pattern samplers.
-"""
+"Supertype for all pattern samplers."
 abstract type PatternSampler{N} <: AbstractSampler{N} end
 
-"""
-Supertype for all modifier samplers.
-"""
+"Supertype for all noise algorithm samplers."
+abstract type NoiseSampler{N} <: AbstractSampler{N} end
+
+"Supertype for all fractal samplers."
+abstract type FractalSampler{N} <: AbstractSampler{N} end
+
+"Supertype for all modifier samplers."
 abstract type ModifierSampler{N} <: AbstractSampler{N} end
 
-struct RandomState
-    seed::UInt64
-    rng::Xoshiro
-end
-
-struct PerlinState
-    table::CircularVector{UInt8,Vector{UInt8}}
-    PerlinState(rs) = new(shuffle(rs.rng, 0x00:0xff) |> CircularVector)
-end
-
-abstract type HashTrait end
-struct IsPerlinHashed <: HashTrait end
-struct IsValueHashed <: HashTrait end
+### Constants shared by multiple samplers
 
 const HASH1 = 668_265_261
 const HASH2 = 2_147_483_648
@@ -47,30 +27,27 @@ const PRIME_W = 0x56cc5227e58f554b
 const ROOT_2_OVER_2 = 0.7071067811865476
 const ROOT_3_OVER_3 = 0.577350269189626
 
+### Random number generation
+
+struct RandomState
+    seed::UInt64
+    rng::Xoshiro
+end
+
 @inline RandomState(seed) = RandomState(seed, Xoshiro(seed))
 
-@inline function Base.getproperty(obj::AbstractSampler, name::Symbol)
-    if name === :rng
-        return obj.random_state.rng
-    elseif name === :seed
-        return obj.random_state.seed
-    else
-        return getfield(obj, name)
-    end
+### State for Perlin-based samplers
+
+struct PerlinState
+    table::CircularVector{UInt8,Vector{UInt8}}
+    PerlinState(rs) = new(shuffle(rs.rng, 0x00:0xff) |> CircularVector)
 end
 
-@inline curve3(t) = t^2 * (3 - 2t)
+### Trait to decide how some samplers should generate hash values
 
-@inline @fastpow curve5(t) = t^3 * (t * (6t - 15) + 10)
-
-@inline lerp(a, b, t) = a + t * (b - a)
-
-@inline @fastpow function cubic_interpolate(a, b, c, d, t)
-    x = (d - c) - (a - b)
-    y = (a - b) - x
-    z = c - a
-    x * t^3 + y * t^2 + z * t + t
-end
+abstract type HashTrait end
+struct IsPerlinHashed <: HashTrait end
+struct IsValueHashed <: HashTrait end
 
 @inline hash_coords(sampler::S, args...) where {S} = hash_coords(HashTrait(sampler), args...)
 
@@ -87,44 +64,27 @@ end
     (hash ⊻ hash >> 19) % UInt32 / HASH2
 end
 
-"""
-    sample(sampler::AbstractSampler, x::Real)
-    sample(sampler::AbstractSampler, x::Real, y::Real)
-    sample(sampler::AbstractSampler, x::Real, y::Real, z::Real)
-    sample(sampler::AbstractSampler, x::Real, y::Real, z::Real, w::Real)
+### Utility functions
 
-Sample from `sampler` with the supplied coordinates. The number of coordinates should match the
-dimensionality of the sampler type.
-"""
+@inline curve3(t) = t^2 * (3 - 2t)
+
+@inline @fastpow curve5(t) = t^3 * (t * (6t - 15) + 10)
+
+@inline lerp(a, b, t) = a + t * (b - a)
+
+@inline @fastpow function cubic_interpolate(a, b, c, d, t)
+    x = (d - c) - (a - b)
+    y = (a - b) - x
+    z = c - a
+    x * t^3 + y * t^2 + z * t + t
+end
+
+### Public interface functions
+
+@doc doc_sampler
 function sample end
 
-"""
-    gen_image(sampler::AbstractSampler; kwargs...)
-
-Construct a 2-dimensional array of `ColorTypes.RGB` values, suitable for writing to disk as an image
-file.
-
-# Arguments
-
-  - `sampler::AbstractSampler`: Any instance of a sampler. The sampler is sampled using each pixel
-    coordinates as the X and Y input coordinates, and random Z and W coordinates for 3 and
-    4-dimensional samplers.
-
-  - `w::Integer=1024`: The width in pixels of the image array to generate.
-
-  - `h::Integer=1024`: The height in pixels of the image array to generate.
-
-  - `xbounds::NTuple{2,Float64}=(-1.0, 1.0)`: The bounds along the X axis to sample coordinates
-    from. This remaps pixel coordinates to this range to be used for the input coordinates to sample
-    with.
-
-  - `ybounds::NTuple{2,Float64}=(-1.0, 1.0)`: The bounds along the Y axis to sample coordinates
-    from. This remaps pixel coordinates to this range to be used for the input coordinates to sample
-    with.
-
-  - `colorscheme=nothing`: A `ColorSchemes.ColorScheme` object to colorize the image with, or
-    `nothing`.
-"""
+@doc doc_gen_image
 function gen_image(
     sampler::S;
     w::Integer=1024,
@@ -138,12 +98,12 @@ function gen_image(
     xd = (x2 - x1) / w
     yd = (y2 - y1) / h
     img = Array{RGB{Float64}}(undef, h, w)
-    zw = rand(sampler.rng, Float64, N - 2) * 1000
+    zw = rand(sampler.random_state.rng, Float64, N - 2) * 1000
     Threads.@threads for x in 1:h
         cx = x * xd + x1
         for y in 1:w
             cy = y * yd + y1
-            value = sample(sampler, cx, cy, zw...) * 0.5 + 0.5
+            value = clamp(sample(sampler, cx, cy, zw...) * 0.5 + 0.5, 0, 1)
             img[x, y] = colorscheme !== nothing ? colorscheme[value] : value
         end
     end

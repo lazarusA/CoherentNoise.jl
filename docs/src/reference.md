@@ -1,5 +1,11 @@
 # API Reference
 ```@autodocs
-Modules = [ CoherentNoise ]
-Order = [:type, :function]
+Modules = [CoherentNoise]
+Pages = [
+    "common.jl",
+    "pattern.jl",
+    "_noise.jl",
+    "fractal.jl",
+    "modifier.jl"
+]
 ```

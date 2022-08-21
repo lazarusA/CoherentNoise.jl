@@ -1,8 +1,187 @@
+struct OpenSimplex2S{N,O<:Orientation} <: NoiseSampler{N}
+    random_state::RandomState
+end
+
+@inline function opensimplex2s(dims, seed, orientation)
+    rs = RandomState(seed)
+    orientation = os2_orientation_type(Val(orientation))
+    OpenSimplex2S{dims,orientation}(rs)
+end
+
+# 2D
+
+const OS2S_R²2D = 2 / 3
+const OS2S_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118 |> CircularVector
+
+@doc doc_opensimplex2s_2d
+opensimplex2s_2d(; seed=0, orient=nothing) = opensimplex2s(2, seed, orient)
+
+@inline @fastpow function contribute(seed, X, Y, x, y)
+    a = OS2S_R²2D - x^2 - y^2
+    a > 0 ? a^4 * grad(OS2S_GRADIENTS_2D, seed, X, Y, x, y) : 0.0
+end
+
+@inline transform(::OpenSimplex2S{2,OrientStandard}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
+
+@inline function transform(::OpenSimplex2S{2,OrientX}, x, y)
+    xx = x * ROOT_2_OVER_2
+    yy = y * ROOT_2_OVER_2 * (2OS2_SKEW_2D + 1)
+    (yy + xx, yy - xx)
+end
+
+@fastpow function sample(sampler::OpenSimplex2S{2,O}, x::T, y::T) where {O,T<:Real}
+    seed = sampler.random_state.seed
+    primes = (PRIME_X, PRIME_Y)
+    tr = transform(sampler, x, y)
+    XY = floor.(Int, tr)
+    xs, ys = tr .- XY
+    d = xs - ys
+    t = (xs + ys) * OS2_UNSKEW_2D
+    us = OS2_UNSKEW_2D
+    us2p1 = 2us + 1
+    X1, Y1 = XY .* primes
+    X2, Y2 = (X1, Y1) .+ primes
+    x1, y1 = (xs, ys) .+ t
+    x2, y2 = (x1, y1) .- us2p1
+    a1 = OS2S_R²2D - x1^2 - y1^2
+    c1 = a1^4 * grad(OS2S_GRADIENTS_2D, seed, X1, Y1, x1, y1)
+    a2 = 2us2p1 * (1 / us + 2) * t + -2us2p1^2 + a1
+    c2 = a2^4 * grad(OS2S_GRADIENTS_2D, seed, X2, Y2, x2, y2)
+    result = c1 + c2
+    if t < OS2_UNSKEW_2D
+        X3, Y3 = (X1, Y1) .+ (primes .<< 1)
+        if xs + d > 1
+            result += contribute(seed, X3, Y2, x1 - 3us - 2, y1 - 3us - 1)
+        else
+            result += contribute(seed, X1, Y2, x1 - us, y1 - us - 1)
+        end
+        if ys - d > 1
+            result += contribute(seed, X2, Y3, x1 - 3us - 1, y1 - 3us - 2)
+        else
+            result += contribute(seed, X2, Y1, x1 - us - 1, y1 - us)
+        end
+    else
+        X4, Y4 = (X1, Y1) .- primes
+        if xs + d < 0
+            result += contribute(seed, X4, Y1, x1 + us + 1, y1 + us)
+        else
+            result += contribute(seed, X2, Y1, x1 - us - 1, y1 - us)
+        end
+        if ys < d
+            result += contribute(seed, X1, Y4, x1 + us, y1 + us + 1)
+        else
+            result += contribute(seed, X1, Y2, x1 - us, y1 - us - 1)
+        end
+    end
+    result
+end
+
+# 3D
+
+const OS2S_R²3D = 3 / 4
+const OS2S_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> CircularVector
+
+@doc doc_opensimplex2s_3d
+opensimplex2s_3d(; seed=0, orient=nothing) = opensimplex2s(3, seed, orient)
+
+@inline @fastpow os2s_contribute1(seed, a, args...) = a^4 * grad(OS2S_GRADIENTS_3D, seed, args...)
+
+@inline os2s_contribute2(seed, a, args...) = a > 0 ? os2s_contribute1(seed, a, args...) : 0.0
+
+@inline function transform(::OpenSimplex2S{3,OrientStandard}, x, y, z)
+    OS2_FALLBACK_ROTATE_3D * (x + y + z) .- (x, y, z)
+end
+
+@inline function transform(::OpenSimplex2S{3,OrientXY}, x, y, z)
+    xy = x + y
+    zz = z * ROOT_3_OVER_3
+    xr, yr = (x, y) .+ xy .* OS2_ROTATE_3D_ORTHONORMALIZER .+ zz
+    zr = xy * -ROOT_3_OVER_3 + zz
+    (xr, yr, zr)
+end
+
+@inline function transform(::OpenSimplex2S{3,OrientXZ}, x, y, z)
+    xz = x + z
+    yy = y * ROOT_3_OVER_3
+    xr, zr = (x, z) .+ xz .* -0.211324865405187 .+ yy
+    yr = xz * -ROOT_3_OVER_3 + yy
+    (xr, yr, zr)
+end
+
+@fastpow function sample(sampler::OpenSimplex2S{3,O}, x::T, y::T, z::T) where {O,T<:Real}
+    seed = sampler.random_state.seed
+    seed2 = seed ⊻ -OS2_SEED_FLIP_3D
+    primes = (PRIME_X, PRIME_Y, PRIME_Z)
+    tr = transform(sampler, x, y, z)
+    V = floor.(Int, tr)
+    Vr = tr .- V
+    Vp = V .* primes
+    mask1 = trunc.(Int, -0.5 .- Vr)
+    mask2 = mask1 .| 1
+    X1, Y1, Z1 = Vp .+ mask1 .& primes
+    X2, Y2, Z2 = Vp .+ primes
+    X3, Y3, Z3 = Vp .+ .~mask1 .& primes
+    X4, Y4, Z4 = Vp .+ mask1 .& primes .<< 1
+    X5 = Vp[1] + mask1[1] & PRIME_X * 2
+    x1, y1, z1 = Vr .+ mask1
+    x2, y2, z2 = Vr .- 0.5
+    x3, y3, z3 = (x1, y1, z1) .- mask2
+    x4, y4, z4 = (x2, y2, z2) .+ mask2
+    a0 = OS2S_R²3D - x1^2 - y1^2 - z1^2
+    a1 = OS2S_R²3D - x2^2 - y2^2 - z2^2
+    xf1, yf1, zf1 = (x2, y2, z2) .* mask2 .<< 1
+    xf2, yf2, zf2 = (x2, y2, z2) .* (-2 .- mask1 .<< 2) .- 1
+    xf3, yf3, zf3 = (xf1, yf1, zf1) .+ a0
+    xf4, yf4, zf4 = (xf2, yf2, zf2) .+ a1
+    skip1, skip2, skip3 = false, false, false
+    result = os2s_contribute1(seed, a0, X1, Y1, Z1, x1, y1, z1)
+    result += os2s_contribute1(seed2, a1, X2, Y2, Z2, x2, y2, z2)
+    if xf3 > 0
+        result += os2s_contribute1(seed, xf3, X3, Y1, Z1, x3, y1, z1)
+    else
+        os2s_contribute2(seed, yf1 + zf1 + a0, X1, Y3, Z3, x1, y3, z3)
+        if xf4 > 0
+            result += os2s_contribute1(seed2, xf4, X5, Y2, Z2, x4, y2, z2)
+            skip1 = true
+        end
+    end
+    if yf3 > 0
+        result += os2s_contribute1(seed, yf3, X1, Y3, Z1, x1, y3, z1)
+    else
+        result += os2s_contribute2(seed, xf1 + zf1 + a0, X3, Y1, Z3, x3, y1, z3)
+        if yf4 > 0
+            result += os2s_contribute1(seed2, yf4, X2, Y4, Z2, x2, y4, z2)
+            skip2 = true
+        end
+    end
+    if zf3 > 0
+        result += os2s_contribute1(seed, zf3, X1, Y1, Z3, x1, y1, z3)
+    else
+        result += os2s_contribute2(seed, xf1 + yf1 + a0, X3, Y3, Z1, x3, y3, z1)
+        if zf4 > 0
+            result += os2s_contribute1(seed2, zf4, X2, Y2, Z4, x2, y2, z4)
+            skip3 = true
+        end
+    end
+    if !skip1
+        result += os2s_contribute2(seed2, yf2 + zf2 + a1, X2, Y4, Z4, x2, y4, z4)
+    end
+    if !skip2
+        result += os2s_contribute2(seed2, xf2 + zf2 + a1, X5, Y2, Z4, x4, y2, z4)
+    end
+    if !skip3
+        result += os2s_contribute2(seed2, xf2 + yf2 + a1, X4, Y4, Z2, x4, y4, z2)
+    end
+    result
+end
+
+# 4D
+
 struct OS2S_Vertex4D
     XYZW::NTuple{4,UInt64}
     xyzw::NTuple{4,Float64}
     function OS2S_Vertex4D(x::T, y::T, z::T, w::T) where {T<:Int}
-        s = (x + y + z + w) * OS2_UNSKEW_4D
+        s = (x + y + z + w) * OS2S_UNSKEW_4D
         XYZW = (x, y, z, w) .* (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
         xyzw = .-((x, y, z, w)) .- s
         new(XYZW, xyzw)
@@ -299,29 +478,7 @@ const OS2S_LOOKUP_4D_A, OS2S_LOOKUP_4D_B = let
     (a, b)
 end
 
-"""
-    opensimplex2s_4d(; kwargs...)
-
-Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sampled from.
-
-# Arguments
-
-  - `seed=0`: An integer used to seed the random number generator for this sampler.
-
-  - `orient=nothing`: One of the following symbols or the value `nothing`:
-
-      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
-        improve visual isotropy.
-
-      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
-
-      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
-
-      + `:xyz`: Re-orient the noise space to be better suited for time-varied animations, where the
-        W axis is time.
-
-      + `nothing`: Use the standard orientation.
-"""
+@doc doc_opensimplex2s_4d
 opensimplex2s_4d(; seed=0, orient=nothing) = opensimplex2s(4, seed, orient)
 
 @inline function transform(::OpenSimplex2S{4,OrientStandard}, x, y, z, w)
@@ -350,7 +507,7 @@ end
 end
 
 @fastpow function sample(sampler::OpenSimplex2S{4,O}, x::T, y::T, z::T, w::T) where {O,T<:Real}
-    seed = sampler.seed
+    seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
     tr = transform(sampler, x, y, z, w)
     XYZW = floor.(Int, tr)

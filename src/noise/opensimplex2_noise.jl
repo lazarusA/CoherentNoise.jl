@@ -1,3 +1,230 @@
+abstract type Orientation end
+struct OrientStandard <: Orientation end
+struct OrientX <: Orientation end
+struct OrientXY <: Orientation end
+struct OrientXZ <: Orientation end
+struct OrientXYZ <: Orientation end
+
+struct OpenSimplex2{N,O<:Orientation} <: NoiseSampler{N}
+    random_state::RandomState
+end
+
+@inline function opensimplex2(dims, seed, orientation)
+    rs = RandomState(seed)
+    orientation = os2_orientation_type(Val(orientation))
+    OpenSimplex2{dims,orientation}(rs)
+end
+
+@inline os2_orientation_type(::Val{nothing}) = OrientStandard
+@inline os2_orientation_type(::Val{:x}) = OrientX
+@inline os2_orientation_type(::Val{:xy}) = OrientXY
+@inline os2_orientation_type(::Val{:xz}) = OrientXZ
+@inline os2_orientation_type(::Val{:xyz}) = OrientXYZ
+
+# 2D
+
+const OS2_SKEW_2D = 0.366025403784439
+const OS2_UNSKEW_2D = -0.21132486540518713
+const OS2_R²2D = 0.5
+const OS2_NUM_GRADIENTS_EXP_2D = 7
+const OS2_NUM_GRADIENTS_2D = 1 << OS2_NUM_GRADIENTS_EXP_2D
+const OS2_GRADIENTS_NORMALIZED_2D = [
+    0.38268343236509, 0.923879532511287, 0.923879532511287, 0.38268343236509,
+    0.923879532511287, -0.38268343236509, 0.38268343236509, -0.923879532511287,
+    -0.38268343236509, -0.923879532511287, -0.923879532511287, -0.38268343236509,
+    -0.923879532511287, 0.38268343236509, -0.38268343236509, 0.923879532511287,
+    0.130526192220052, 0.99144486137381, 0.608761429008721, 0.793353340291235,
+    0.793353340291235, 0.608761429008721, 0.99144486137381, 0.130526192220051,
+    0.99144486137381, -0.130526192220051, 0.793353340291235, -0.60876142900872,
+    0.608761429008721, -0.793353340291235, 0.130526192220052, -0.99144486137381,
+    -0.130526192220052, -0.99144486137381, -0.608761429008721, -0.793353340291235,
+    -0.793353340291235, -0.608761429008721, -0.99144486137381, -0.130526192220052,
+    -0.99144486137381, 0.130526192220051, -0.793353340291235, 0.608761429008721,
+    -0.608761429008721, 0.793353340291235, -0.130526192220052, 0.99144486137381]
+const OS2_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.01001634121365712 |> CircularVector
+
+@doc doc_opensimplex2_2d
+opensimplex2_2d(; seed=0, orient=nothing) = opensimplex2(2, seed, orient)
+
+@inline function grad(table, seed, X, Y, x, y)
+    hash = (seed ⊻ X ⊻ Y) * HASH_MULTIPLIER
+    hash ⊻= hash >> (64 - OS2_NUM_GRADIENTS_EXP_2D + 1)
+    i = trunc(hash) & ((OS2_NUM_GRADIENTS_2D - 1) << 1)
+    t = (table[i+1], table[(i|1)+1])
+    sum((t .* (x, y)))
+end
+
+@inline transform(::OpenSimplex2{2,OrientStandard}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
+
+@inline function transform(::OpenSimplex2{2,OrientX}, x, y)
+    xx = x * ROOT_2_OVER_2
+    yy = y * ROOT_2_OVER_2 * (2OS2_SKEW_2D + 1)
+    (yy + xx, yy - xx)
+end
+
+@fastpow function sample(sampler::OpenSimplex2{2,O}, x::T, y::T) where {O,T<:Real}
+    seed = sampler.random_state.seed
+    primes = (PRIME_X, PRIME_Y)
+    tr = transform(sampler, x, y)
+    XY = floor.(Int, tr)
+    vtr = tr .- XY
+    t = sum(vtr) * OS2_UNSKEW_2D
+    X1, Y1 = XY .* primes
+    X2, Y2 = (X1, Y1) .+ primes
+    x1, y1 = vtr .+ t
+    us1 = 2OS2_UNSKEW_2D + 1
+    result = 0.0
+    a1 = OS2_R²2D - x1^2 - y1^2
+    if a1 > 0
+        result += a1^4 * grad(OS2_GRADIENTS_2D, seed, X1, Y1, x1, y1)
+    end
+    a2 = 2us1 * (1 / OS2_UNSKEW_2D + 2) * t + -2us1^2 + a1
+    if a2 > 0
+        x, y = (x1, y1) .- 2OS2_UNSKEW_2D .- 1
+        result += a2^4 * grad(OS2_GRADIENTS_2D, seed, X2, Y2, x, y)
+    end
+    if y1 > x1
+        x = x1 - OS2_UNSKEW_2D
+        y = y1 - OS2_UNSKEW_2D - 1
+        a3 = OS2_R²2D - x^2 - y^2
+        if a3 > 0
+            result += a3^4 * grad(OS2_GRADIENTS_2D, seed, X1, Y2, x, y)
+        end
+    else
+        x = x1 - OS2_UNSKEW_2D - 1
+        y = y1 - OS2_UNSKEW_2D
+        a4 = OS2_R²2D - x^2 - y^2
+        if a4 > 0
+            result += a4^4 * grad(OS2_GRADIENTS_2D, seed, X2, Y1, x, y)
+        end
+    end
+    result
+end
+
+# 3D
+
+const OS2_SEED_FLIP_3D = -0x52d547b2e96ed629
+const OS2_FALLBACK_ROTATE_3D = 2 / 3
+const OS2_ROTATE_3D_ORTHONORMALIZER = OS2_UNSKEW_2D
+const OS2_R²3D = 0.6
+const OS2_NUM_GRADIENTS_EXP_3D = 8
+const OS2_NUM_GRADIENTS_3D = 1 << OS2_NUM_GRADIENTS_EXP_3D
+const OS2_GRADIENTS_NORMALIZED_3D = [
+    2.22474487139, 2.22474487139, -1.0, 0.0,
+    2.22474487139, 2.22474487139, 1.0, 0.0,
+    3.0862664687972017, 1.1721513422464978, 0.0, 0.0,
+    1.1721513422464978, 3.0862664687972017, 0.0, 0.0,
+    -2.22474487139, 2.22474487139, -1.0, 0.0,
+    -2.22474487139, 2.22474487139, 1.0, 0.0,
+    -1.1721513422464978, 3.0862664687972017, 0.0, 0.0,
+    -3.0862664687972017, 1.1721513422464978, 0.0, 0.0,
+    -1.0, -2.22474487139, -2.22474487139, 0.0,
+    1.0, -2.22474487139, -2.22474487139, 0.0,
+    0.0, -3.0862664687972017, -1.1721513422464978, 0.0,
+    0.0, -1.1721513422464978, -3.0862664687972017, 0.0,
+    -1.0, -2.22474487139, 2.22474487139, 0.0,
+    1.0, -2.22474487139, 2.22474487139, 0.0,
+    0.0, -1.1721513422464978, 3.0862664687972017, 0.0,
+    0.0, -3.0862664687972017, 1.1721513422464978, 0.0,
+    -2.22474487139, -2.22474487139, -1.0, 0.0,
+    -2.22474487139, -2.22474487139, 1.0, 0.0,
+    -3.0862664687972017, -1.1721513422464978, 0.0, 0.0,
+    -1.1721513422464978, -3.0862664687972017, 0.0, 0.0,
+    -2.22474487139, -1.0, -2.22474487139, 0.0,
+    -2.22474487139, 1.0, -2.22474487139, 0.0,
+    -1.1721513422464978, 0.0, -3.0862664687972017, 0.0,
+    -3.0862664687972017, 0.0, -1.1721513422464978, 0.0,
+    -2.22474487139, -1.0, 2.22474487139, 0.0,
+    -2.22474487139, 1.0, 2.22474487139, 0.0,
+    -3.0862664687972017, 0.0, 1.1721513422464978, 0.0,
+    -1.1721513422464978, 0.0, 3.0862664687972017, 0.0,
+    -1.0, 2.22474487139, -2.22474487139, 0.0,
+    1.0, 2.22474487139, -2.22474487139, 0.0,
+    0.0, 1.1721513422464978, -3.0862664687972017, 0.0,
+    0.0, 3.0862664687972017, -1.1721513422464978, 0.0,
+    -1.0, 2.22474487139, 2.22474487139, 0.0,
+    1.0, 2.22474487139, 2.22474487139, 0.0,
+    0.0, 3.0862664687972017, 1.1721513422464978, 0.0,
+    0.0, 1.1721513422464978, 3.0862664687972017, 0.0,
+    2.22474487139, -2.22474487139, -1.0, 0.0,
+    2.22474487139, -2.22474487139, 1.0, 0.0,
+    1.1721513422464978, -3.0862664687972017, 0.0, 0.0,
+    3.0862664687972017, -1.1721513422464978, 0.0, 0.0,
+    2.22474487139, -1.0, -2.22474487139, 0.0,
+    2.22474487139, 1.0, -2.22474487139, 0.0,
+    3.0862664687972017, 0.0, -1.1721513422464978, 0.0,
+    1.1721513422464978, 0.0, -3.0862664687972017, 0.0,
+    2.22474487139, -1.0, 2.22474487139, 0.0,
+    2.22474487139, 1.0, 2.22474487139, 0.0,
+    1.1721513422464978, 0.0, 3.0862664687972017, 0.0,
+    3.0862664687972017, 0.0, 1.1721513422464978, 0.0]
+const OS2_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.07969837668935331 |> CircularVector
+
+@doc doc_opensimplex2_3d
+opensimplex2_3d(; seed=0, orient=nothing) = opensimplex2(3, seed, orient)
+
+@inline function grad(table, seed, X, Y, Z, x, y, z)
+    hash = ((seed ⊻ X) ⊻ (Y ⊻ Z)) * HASH_MULTIPLIER
+    hash ⊻= hash >> (64 - OS2_NUM_GRADIENTS_EXP_3D + 2)
+    i = trunc(hash) & ((OS2_NUM_GRADIENTS_3D - 1) << 2)
+    t = (table[i+1], table[(i|1)+1], table[(i|2)+1])
+    sum((t .* (x, y, z)))
+end
+
+@inline @fastpow function os2_contribute1(seed, a, X, Y, Z, x1, y1, z1, x2, y2, z2, xs, ys, zs)
+    result = 0.0
+    if a > 0
+        result += a^4 * grad(OS2_GRADIENTS_3D, seed, X, Y, Z, x1, y1, z1)
+    end
+    if x2 ≥ y2 && x2 ≥ z2
+        result += os2_contribute2(seed, a + 2x2, X - xs * PRIME_X, Y, Z, x1 + xs, y1, z1)
+    elseif y2 ≥ x2 && y2 ≥ z2
+        result += os2_contribute2(seed, a + 2y2, X, Y - ys * PRIME_Y, Z, x1, y1 + ys, z1)
+    else
+        result += os2_contribute2(seed, a + 2z2, X, Y, Z - zs * PRIME_Z, x1, y1, z1 + zs)
+    end
+    result
+end
+
+@inline @fastpow function os2_contribute2(seed, a, args...)
+    a > 1 ? (a - 1)^4 * grad(OS2_GRADIENTS_3D, seed, args...) : 0.0
+end
+
+@inline function transform(::OpenSimplex2{3,OrientStandard}, x, y, z)
+    OS2_FALLBACK_ROTATE_3D * (x + y + z) .- (x, y, z)
+end
+
+@inline function transform(::OpenSimplex2{3,OrientXY}, x, y, z)
+    xy = x + y
+    zz = z * ROOT_3_OVER_3
+    xr, yr = (x, y) .+ xy .* OS2_ROTATE_3D_ORTHONORMALIZER .+ zz
+    zr = xy * -ROOT_3_OVER_3 + zz
+    (xr, yr, zr)
+end
+
+@inline transform(::OpenSimplex2{3,OrientXZ}, x, y, z) = transform(OrientXY, x, z, y)
+
+function sample(sampler::OpenSimplex2{3,O}, x::T, y::T, z::T) where {O,T<:Real}
+    seed = sampler.random_state.seed
+    primes = (PRIME_X, PRIME_Y, PRIME_Z)
+    tr = transform(sampler, x, y, z)
+    V = round.(Int, tr)
+    XYZ = V .* primes
+    x1, y1, z1 = tr .- V
+    s = trunc.(Int, -1 .- (x1, y1, z1)) .| 1
+    XYZ2 = XYZ .+ s .>> 1 .& primes
+    xyz2 = s .* .-((x1, y1, z1))
+    x4, y4, z4 = 0.5 .- xyz2
+    xyz3 = s .* (x4, y4, z4)
+    a1 = OS2_R²3D - x1^2 - (y1^2 + z1^2)
+    c1 = os2_contribute1(seed, a1, XYZ..., x1, y1, z1, xyz2..., s...)
+    a2 = a1 + 0.75 - x4 - (y4 + z4)
+    c2 = os2_contribute1(seed ⊻ OS2_SEED_FLIP_3D, a2, XYZ2..., xyz3..., x4, y4, z4, .-s...)
+    c1 + c2
+end
+
+# 4D
+
 const OS2_SEED_OFFSET_4D = 0xe83dc3e0da7164d
 const OS2_SKEW_4D = -0.138196601125011
 const OS2_UNSKEW_4D = 0.309016994374947
@@ -168,29 +395,7 @@ const OS2_GRADIENTS_NORMALIZED_4D = [
     0.753341017856078, 0.37968289875261624, 0.37968289875261624, 0.37968289875261624]
 const OS2_GRADIENTS_4D = OS2_GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897 |> CircularVector
 
-"""
-    opensimplex2_4d(; kwargs...)
-
-Construct a sampler that outputs 4-dimensional OpenSimplex2 noise when it is sampled from.
-
-# Arguments
-
-  - `seed=0`: An integer used to seed the random number generator for this sampler.
-
-  - `orient=nothing`: One of the following symbols or the value `nothing`:
-
-      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
-        improve visual isotropy.
-
-      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
-
-      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
-
-      + `:xyz`: Re-orient the noise space to be better suited for time-varied animations, where
-        the W axis is time.
-
-      + `nothing`: Use the standard orientation.
-"""
+@doc doc_opensimplex2_4d
 opensimplex2_4d(; seed=0, orient=nothing) = opensimplex2(4, seed, orient)
 
 @inline function grad(table, seed, X, Y, Z, W, x, y, z, w)
@@ -226,8 +431,8 @@ end
     (xs, ys, zs, ws)
 end
 
-@fastpow function sample(sampler::OpenSimplex2{4}, x::T, y::T, z::T, w::T) where {T<:Real}
-    seed = sampler.seed
+@fastpow function sample(sampler::OpenSimplex2{4,O}, x::T, y::T, z::T, w::T) where {O,T<:Real}
+    seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
     tr = transform(sampler, x, y, z, w)
     X1, Y1, Z1, W1 = floor.(Int, tr)
@@ -262,7 +467,7 @@ end
         xyzw = (x1, y1, z1, w1) .+ ssi
         a = sum(xyzw .^ 2)
         if a < OS2_R²4D
-            result += (a - OS2S_R²4D)^4 * grad(OS2_GRADIENTS_4D, seed, X2, Y2, Z2, W2, xyzw...)
+            result += (a - OS2_R²4D)^4 * grad(OS2_GRADIENTS_4D, seed, X2, Y2, Z2, W2, xyzw...)
         end
         if i !== 4
             x1, y1, z1, w1 = (x1, y1, z1, w1) .+ OS2_LATTICE_STEP_4D
