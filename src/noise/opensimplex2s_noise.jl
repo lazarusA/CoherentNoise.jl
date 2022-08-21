@@ -178,7 +178,7 @@ end
 # 4D
 
 struct OS2S_Vertex4D
-    XYZW::NTuple{4,UInt64}
+    XYZW::NTuple{4,UInt}
     xyzw::NTuple{4,Float64}
     function OS2S_Vertex4D(x::T, y::T, z::T, w::T) where {T<:Int}
         s = (x + y + z + w) * OS2S_UNSKEW_4D
