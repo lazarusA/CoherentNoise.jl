@@ -51,6 +51,10 @@ struct IsValueHashed <: HashTrait end
 
 @inline hash_coords(sampler::S, args...) where {S} = hash_coords(HashTrait(sampler), args...)
 
+@inline function hash_coords(::IsPerlinHashed, hash, u)
+    iszero(hash & 1) ? u : -u
+end
+
 @inline function hash_coords(::IsPerlinHashed, hash, u, v)
     (iszero(hash & 1) ? u : -u) + (iszero(hash & 2) ? v : -v)
 end

@@ -10,6 +10,25 @@ end
 
 HashTrait(::Type{<:PerlinImproved}) = IsPerlinHashed()
 
+### 1D
+
+@doc doc_perlin_1d
+perlin_1d(; seed=0) = _perlin(1, seed)
+@deprecate perlin_improved_1d(; kwargs...) perlin_1d(; kwargs...)
+
+@inline function grad(S::Type{PerlinImproved{1}}, hash, x)
+    hash_coords(S, hash, x)
+end
+
+function sample(sampler::S, x::T) where {S<:PerlinImproved{1},T<:Real}
+    t = sampler.state.table
+    X = floor(Int, x)
+    x1 = x - X
+    x2 = x1 - 1
+    fx = curve5(x1)
+    lerp(grad(S, t[t[X]], x1), grad(S, t[t[X+1]], x2), fx)
+end
+
 ### 2D
 
 @doc doc_perlin_2d

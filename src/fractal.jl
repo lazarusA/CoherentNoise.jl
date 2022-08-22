@@ -46,6 +46,18 @@ end
     sum(persistence .^ (0:octaves-1))
 end
 
+@doc doc_fbm_fractal_1d
+function fbm_fractal_1d(;
+    seed=0,
+    source=simplex_1d(seed=seed),
+    octaves=4,
+    frequency=1.0,
+    lacunarity=2.0,
+    persistence=0.5,
+)
+    FBMFractal{1}(seed, source, octaves, frequency, lacunarity, persistence)
+end
+
 @doc doc_fbm_fractal_2d
 function fbm_fractal_2d(;
     seed=0,
@@ -120,6 +132,18 @@ end
 
 @inline function scale_factor(::Type{BillowFractal}, octaves, persistence, _)
     sum(persistence .^ (0:octaves-1))
+end
+
+@doc doc_billow_fractal_1d
+function billow_fractal_1d(;
+    seed=0,
+    source=simplex_1d(seed=seed),
+    octaves=4,
+    frequency=1.0,
+    lacunarity=2.0,
+    persistence=0.5,
+)
+    BillowFractal{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_billow_fractal_2d
@@ -198,6 +222,18 @@ end
     reduce(1:octaves-1, init=1) do result, i
         result += result * persistence^i
     end
+end
+
+@doc doc_multi_fractal_1d
+function multi_fractal_1d(;
+    seed=0,
+    source=simplex_1d(seed=seed),
+    octaves=4,
+    frequency=1.0,
+    lacunarity=2.0,
+    persistence=0.5,
+)
+    MultiFractal{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_multi_fractal_2d
@@ -284,6 +320,18 @@ end
         result += weight
     end
     result
+end
+
+@doc doc_hybrid_fractal_1d
+function hybrid_fractal_1d(;
+    seed=0,
+    source=simplex_1d(seed=seed),
+    octaves=4,
+    frequency=1.0,
+    lacunarity=2.0,
+    persistence=0.25,
+)
+    HybridFractal{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_hybrid_fractal_2d
@@ -376,8 +424,20 @@ end
     2 / result
 end
 
+@doc doc_ridged_fractal_1d
+function ridged_fractal_1d(;
+    seed=0,
+    source=simplex_1d(seed=seed),
+    octaves=4,
+    frequency=1.0,
+    lacunarity=2.0,
+    persistence=1.0,
+    attenuation=2.0,
+)
+    RidgedFractal{1}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
+end
+
 @doc doc_ridged_fractal_2d
-#  - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
 function ridged_fractal_2d(;
     seed=0,
     source=opensimplex2s_2d(seed=seed),

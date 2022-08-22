@@ -45,11 +45,6 @@ or contribution by more experienced Julia developers that find value in Coherent
 - Algorithms are consistently implemented in 2, 3, and 4 dimensions, whereas libnoise only has
   3-dimensional gradient noise.
 
-- Omission of 1-dimensional noise algorithms, as many are difficult to implement or are not
-  well-defined, and are not very useful in general. It was opted for a consistent interface over
-  adding hacks to support 1-dimensional variants. This is in contrast to a lot of other libraries,
-  excluding libnoise, which only provides 3-dimensional gradient noise.
-
 - Some terminology corrections. For example, libnoise refers to multiple octaves of gradient noise
   as "Perlin" noise. Perlin is an implementation of gradient noise, and is not defined in terms of a
   fractal; infact, any noise algorithm can be "fractalized".
@@ -104,28 +99,28 @@ for other algorithms, please file an issue or submit a pull request.
 
 ### Noise samplers
 
-- `Value` (2D, 3D, 4D)
-- `PerlinImproved` (2D, 3D, 4D)
-- `Simplex` (2D, 3D, 4D)
-- `OpenSimplex` (2D, 3D, 4D)
-- `OpenSimplex2` (2D, 3D, 4D)
-- `OpenSimplex2S` (2D, 3D, 4D)
-- `Worley` (2D, 3D, 4D)
+- Value: (1D, 2D, 3D, 4D)
+- Perlin: (1D, 2D, 3D, 4D)
+- Simplex: (1D, 2D, 3D, 4D)
+- OpenSimplex: (2D, 3D, 4D)
+- OpenSimplex2: (2D, 3D, 4D)
+- OpenSimplex2S: (2D, 3D, 4D)
+- Worley: (1D, 2D, 3D, 4D)
 
 ### Pattern samplers
 
-- `Constant` (1D)
-- `Checkered` (2D)
-- `Cylinders` (2D)
-- `Spheres` (3D)
+- Constant: (1D)
+- Checkered: (2D)
+- Cylinders: (2D)
+- Spheres: (3D)
 
 ### Fractal samplers
 
-- `FBM` (fractional Brownian motion; 2D, 3D, 4D)
-- `Billow` (2D, 3D, 4D)
-- `Multifractal` (2D, 3D, 4D)
-- `Hybrid` (2D, 3D, 4D)
-- `Ridged` (2D, 3D, 4D)
+- fBm: (fractional Brownian motion; 1D, 2D, 3D, 4D)
+- Billow: (1D, 2D, 3D, 4D)
+- Multifractal: (1D, 2D, 3D, 4D)
+- Hybrid: (1D, 2D, 3D, 4D)
+- Ridged: (1D, 2D, 3D, 4D)
 
 ### Modifier samplers
 

@@ -89,6 +89,14 @@ $(_doc_sampler_args)
   - `frequency`: The frequency of the signal, which controls how small or large the spheres are.
 """
 
+const doc_value_1d = """
+    value_1d(; seed=0)
+
+Construct a sampler that outputs 1-dimensonal value noise when it is sampled from.
+
+$(_doc_sampler_args)
+"""
+
 const doc_value_2d = """
     value_2d(; seed=0)
 
@@ -109,6 +117,20 @@ const doc_value_4d = """
     value_4d(; seed=0)
 
 Construct a sampler that outputs 4-dimensonal value noise when it is sampled from.
+
+$(_doc_sampler_args)
+"""
+
+const doc_perlin_1d = """
+    perlin_1d(; seed=0)
+    perlin_improved_1d(; seed=0)
+
+Construct a sampler that outputs 1-dimensional Perlin "Improved" noise when it is sampled from.
+
+# Notes:
+
+  - `perlin_improved_1d` is deprecated and will be removed in favor of `perlin_1d` in a future
+    major version release.
 
 $(_doc_sampler_args)
 """
@@ -151,6 +173,14 @@ Construct a sampler that outputs 4-dimensional Perlin "Improved" noise when it i
 
   - `perlin_improved_4d` is deprecated and will be removed in favor of `perlin_4d` in a future
     major version release.
+
+$(_doc_sampler_args)
+"""
+
+const doc_simplex_1d = """
+    simplex_1d(; seed=0)
+
+Construct a sampler that outputs 1-dimensional Perlin Simplex noise when it is sampled from.
 
 $(_doc_sampler_args)
 """
@@ -312,6 +342,14 @@ $(_doc_sampler_args)
       + `:value`: Use the cell's hash value as the output.
 """
 
+const doc_worley_1d = """
+    worley_1d(; seed=0, jitter=1.0, metric=:euclidean, output=:f1)
+
+Construct a sampler that outputs 1-dimensional Worley noise when it is sampled from.
+
+$(_doc_worley_args)
+"""
+
 const doc_worley_2d = """
     worley_2d(; seed=0, jitter=1.0, metric=:euclidean, output=:f1)
 
@@ -350,6 +388,15 @@ $(_doc_sampler_args)
     successive octaves.
 """
 
+const _doc_fractal_1d_args = """
+$(_doc_sampler_args)
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+$(_doc_fractal_args)
+"""
+
 const _doc_fractal_2d_args = """
 $(_doc_sampler_args)
 
@@ -375,6 +422,15 @@ $(_doc_sampler_args)
     source of the fractal.
 
 $(_doc_fractal_args)
+"""
+
+const doc_fbm_fractal_1d = """
+    fbm_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional fractional Brownian motion fractal noise when it
+is sampled from.
+
+$(_doc_fractal_1d_args)
 """
 
 const doc_fbm_fractal_2d = """
@@ -404,6 +460,14 @@ is sampled from.
 $(_doc_fractal_4d_args)
 """
 
+const doc_billow_fractal_1d = """
+    billow_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional billow fractal noise when it is sampled from.
+
+$(_doc_fractal_1d_args)
+"""
+
 const doc_billow_fractal_2d = """
     billow_fractal_2d(; kwargs...)
 
@@ -426,6 +490,14 @@ const doc_billow_fractal_4d = """
 Construct a sampler that outputs a 4-dimensional billow fractal noise when it is sampled from.
 
 $(_doc_fractal_4d_args)
+"""
+
+const doc_multi_fractal_1d = """
+    multi_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional multifractal noise when it is sampled from.
+
+$(_doc_fractal_1d_args)
 """
 
 const doc_multi_fractal_2d = """
@@ -452,6 +524,14 @@ Construct a sampler that outputs a 4-dimensional multifractal noise when it is s
 $(_doc_fractal_4d_args)
 """
 
+const doc_hybrid_fractal_1d = """
+    hybrid_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional hybrid multifractal noise when it is sampled from.
+
+$(_doc_fractal_1d_args)
+"""
+
 const doc_hybrid_fractal_2d = """
     hybrid_fractal_2d(; kwargs...)
 
@@ -474,6 +554,16 @@ const doc_hybrid_fractal_4d = """
 Construct a sampler that outputs a 4-dimensional hybrid multifractal noise when it is sampled from.
 
 $(_doc_fractal_4d_args)
+"""
+
+const doc_ridged_fractal_1d = """
+    ridged_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional ridged multifractal noise when it is sampled from.
+
+$(_doc_fractal_1d_args)
+
+   - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
 """
 
 const doc_ridged_fractal_2d = """

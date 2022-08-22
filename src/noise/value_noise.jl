@@ -6,6 +6,20 @@ end
 
 HashTrait(::Type{<:Value}) = IsValueHashed()
 
+### 1D
+
+@doc doc_value_1d
+value_1d(; seed=0) = _value(1, seed)
+
+function sample(sampler::S, x::Real) where {S<:Value{1}}
+    seed = sampler.random_state.seed
+    X = floor(Int, x)
+    X1 = X * PRIME_X
+    X2 = X1 + PRIME_X
+    x1 = curve3(x - X)
+    lerp(hash_coords(S, seed, X1), hash_coords(S, seed, X2), x1) - 1
+end
+
 ### 2D
 
 @doc doc_value_2d

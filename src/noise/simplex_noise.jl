@@ -10,6 +10,28 @@ end
 
 HashTrait(::Type{<:Simplex}) = IsPerlinHashed()
 
+# 1D
+
+@doc doc_simplex_1d
+simplex_1d(; seed=0) = _simplex(1, seed)
+
+@inline function grad(::Type{Simplex{1}}, hash, x)
+    s = 1 - x^2
+    h = hash & 15
+    u = (h & 7) + 1
+    g = iszero(h & 8) ? u * x : -u * x
+    @fastpow s > 0 ? s^4 * g : 0.0
+end
+
+function sample(sampler::S, x::Real) where {S<:Simplex{1}}
+    t = sampler.state.table
+    X = floor(Int, x)
+    x1 = x - X
+    p1 = grad(S, t[X], x1)
+    p2 = grad(S, t[X+1], x1 - 1)
+    (p1 + p2) * 0.395
+end
+
 # 2D
 
 const SIMPLEX_SKEW_2D = (sqrt(3) - 1) / 2

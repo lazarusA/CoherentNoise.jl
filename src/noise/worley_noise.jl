@@ -51,6 +51,7 @@ end
 @inline worley_output_type(::Val{:value}) = CellValue
 @inline worley_output_type(x::Any) = @error "invalid Worley noise output type: " x
 
+@inline worley_table_size(::Val{1}) = 256
 @inline worley_table_size(::Val{2}) = 512
 @inline worley_table_size(::Val{3}) = 1024
 @inline worley_table_size(::Val{4}) = 2048
@@ -70,6 +71,39 @@ end
 @inline cell_value(::Type{CellValue}, hash, _, _) = hash % UInt32 / HASH2
 @inline cell_value(F, ::Type{Euclidean}, hash, min, max) = cell_value(F, hash, sqrt(min), sqrt(max))
 @inline cell_value(F, ::Type{<:DistanceMetric}, args...) = cell_value(F, args...)
+
+# 1D
+
+@doc doc_worley_1d
+function worley_1d(; seed=0, metric=:euclidean, output=:f1, jitter=1.0)
+    _worley(1, seed, metric, output, jitter)
+end
+
+function sample(sampler::Worley{1,M,F}, x::Real) where {M,F}
+    seed = sampler.random_state.seed
+    table = sampler.table
+    jitter = sampler.jitter * WORLEY_JITTER1
+    r = round(Int, x) .- 1
+    xr = r .- x
+    xp = r * PRIME_X
+    minf = floatmax(Float64)
+    maxf = minf
+    closest_hash::UInt32 = 0
+    @inbounds for xi in 0:2
+        xri = xr + xi
+        sxp = seed ⊻ xp * HASH1
+        hash = sxp % UInt32
+        vx = table[(hash+1)&511] * jitter + xri
+        d = cell_distance(M, vx)
+        maxf = clamp(d, minf, maxf)
+        if d < minf
+            minf = d
+            closest_hash = hash
+        end
+        xp += PRIME_X
+    end
+    cell_value(F, M, closest_hash, minf, maxf) - 1
+end
 
 # 2D
 
