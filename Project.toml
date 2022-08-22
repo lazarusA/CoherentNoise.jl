@@ -1,7 +1,7 @@
 name = "CoherentNoise"
 uuid = "3547b4d8-3bdb-4c10-a099-d01a31e852e0"
 authors = ["Michael Fiano <mail@mfiano.net> and contributors"]
-version = "1.2.1"
+version = "1.2.2"
 
 [deps]
 CircularArrays = "7a955b69-7140-5f4e-a0ed-f168c5e2e749"
