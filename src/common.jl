@@ -104,7 +104,7 @@ function gen_image(
         for y in 1:w
             cy = y * yd + y1
             value = clamp(sample(sampler, cx, cy, zw...) * 0.5 + 0.5, 0, 1)
-            img[x, y] = colorscheme !== nothing ? colorscheme[value] : value
+            img[x, y] = isnothing(colorscheme) ? value : colorscheme[value]
         end
     end
     img

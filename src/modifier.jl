@@ -150,7 +150,7 @@ function sample(sampler::Curve{N}, coords::Vararg{Real,N}) where {N}
     len = length(points)
     x = sample(sampler.source, coords...)
     p = findfirst(>(x) ∘ first, points)
-    i = p !== nothing ? clamp(p, 3:len) : len
+    i = isnothing(p) ? len : clamp(p, 3:len)
     i1 = clamp(i - 2, 1:len)
     i2 = clamp(i - 1, 1:len)
     i3 = clamp(i, 1:len)
@@ -545,7 +545,7 @@ function sample(sampler::Terrace{N}, coords::Vararg{Real,N}) where {N}
     len = length(points)
     x = sample(sampler.source, coords...)
     p = findfirst(≥(x), points)
-    i = p !== nothing ? p : len
+    i = isnothing(p) ? len : p
     i1 = clamp(i - 1, 1:len)
     i2 = clamp(i, 1:len)
     if i1 == i2
