@@ -70,17 +70,20 @@ end
 
 ### Utility functions
 
+@inline pow3(x) = x * x * x
+@inline pow4(x) = x * x * x * x
+
 @inline curve3(t) = t^2 * (3 - 2t)
 
-@inline @fastpow curve5(t) = t^3 * (t * (6t - 15) + 10)
+@inline curve5(t) = pow3(t) * (t * (6t - 15) + 10)
 
 @inline lerp(a, b, t) = a + t * (b - a)
 
-@inline @fastpow function cubic_interpolate(a, b, c, d, t)
+@inline function cubic_interpolate(a, b, c, d, t)
     x = (d - c) - (a - b)
     y = (a - b) - x
     z = c - a
-    x * t^3 + y * t^2 + z * t + t
+    x * pow3(t) + y * t^2 + z * t + t
 end
 
 ### Public interface functions

@@ -62,7 +62,7 @@ end
     (yy + xx, yy - xx)
 end
 
-@fastpow function sample(sampler::OpenSimplex2{2,O}, x::T, y::T) where {O,T<:Real}
+function sample(sampler::OpenSimplex2{2,O}, x::T, y::T) where {O,T<:Real}
     seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y)
     tr = orient(sampler, x, y)
@@ -76,26 +76,26 @@ end
     result = 0.0
     a1 = OS2_R²2D - x1^2 - y1^2
     if a1 > 0
-        result += a1^4 * grad(OS2_GRADIENTS_2D, seed, X1, Y1, x1, y1)
+        result += pow4(a1) * grad(OS2_GRADIENTS_2D, seed, X1, Y1, x1, y1)
     end
     a2 = 2us1 * (1 / OS2_UNSKEW_2D + 2) * t + -2us1^2 + a1
     if a2 > 0
         x, y = (x1, y1) .- 2OS2_UNSKEW_2D .- 1
-        result += a2^4 * grad(OS2_GRADIENTS_2D, seed, X2, Y2, x, y)
+        result += pow4(a2) * grad(OS2_GRADIENTS_2D, seed, X2, Y2, x, y)
     end
     if y1 > x1
         x = x1 - OS2_UNSKEW_2D
         y = y1 - OS2_UNSKEW_2D - 1
         a3 = OS2_R²2D - x^2 - y^2
         if a3 > 0
-            result += a3^4 * grad(OS2_GRADIENTS_2D, seed, X1, Y2, x, y)
+            result += pow4(a3) * grad(OS2_GRADIENTS_2D, seed, X1, Y2, x, y)
         end
     else
         x = x1 - OS2_UNSKEW_2D - 1
         y = y1 - OS2_UNSKEW_2D
         a4 = OS2_R²2D - x^2 - y^2
         if a4 > 0
-            result += a4^4 * grad(OS2_GRADIENTS_2D, seed, X2, Y1, x, y)
+            result += pow4(a4) * grad(OS2_GRADIENTS_2D, seed, X2, Y1, x, y)
         end
     end
     result
@@ -171,10 +171,10 @@ opensimplex2_3d(; seed=0, orient=nothing) = _opensimplex2(3, seed, orient)
     sum((t .* (x, y, z)))
 end
 
-@inline @fastpow function os2_contribute1(seed, a, X, Y, Z, x1, y1, z1, x2, y2, z2, xs, ys, zs)
+@inline function os2_contribute1(seed, a, X, Y, Z, x1, y1, z1, x2, y2, z2, xs, ys, zs)
     result = 0.0
     if a > 0
-        result += a^4 * grad(OS2_GRADIENTS_3D, seed, X, Y, Z, x1, y1, z1)
+        result += pow4(a) * grad(OS2_GRADIENTS_3D, seed, X, Y, Z, x1, y1, z1)
     end
     if x2 ≥ y2 && x2 ≥ z2
         result += os2_contribute2(seed, a + 2x2, X - xs * PRIME_X, Y, Z, x1 + xs, y1, z1)
@@ -186,8 +186,8 @@ end
     result
 end
 
-@inline @fastpow function os2_contribute2(seed, a, args...)
-    a > 1 ? (a - 1)^4 * grad(OS2_GRADIENTS_3D, seed, args...) : 0.0
+@inline function os2_contribute2(seed, a, args...)
+    a > 1 ? pow4(a - 1) * grad(OS2_GRADIENTS_3D, seed, args...) : 0.0
 end
 
 @inline function orient(::OpenSimplex2{3,OrientStandard}, x, y, z)
@@ -431,7 +431,7 @@ end
     (xs, ys, zs, ws)
 end
 
-@fastpow function sample(sampler::OpenSimplex2{4,O}, x::T, y::T, z::T, w::T) where {O,T<:Real}
+function sample(sampler::OpenSimplex2{4,O}, x::T, y::T, z::T, w::T) where {O,T<:Real}
     seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
     tr = orient(sampler, x, y, z, w)
@@ -467,7 +467,7 @@ end
         xyzw = (x1, y1, z1, w1) .+ ssi
         a = sum(xyzw .^ 2)
         if a < OS2_R²4D
-            result += (a - OS2_R²4D)^4 * grad(OS2_GRADIENTS_4D, seed, X2, Y2, Z2, W2, xyzw...)
+            result += pow4(a - OS2_R²4D) * grad(OS2_GRADIENTS_4D, seed, X2, Y2, Z2, W2, xyzw...)
         end
         if i !== 4
             x1, y1, z1, w1 = (x1, y1, z1, w1) .+ OS2_LATTICE_STEP_4D

@@ -20,7 +20,7 @@ simplex_1d(; seed=0) = _simplex(1, seed)
     h = hash & 15
     u = (h & 7) + 1
     g = iszero(h & 8) ? u * x : -u * x
-    @fastpow s > 0 ? s^4 * g : 0.0
+    s > 0 ? pow4(s) * g : 0.0
 end
 
 function sample(sampler::S, x::Real) where {S<:Simplex{1}}
@@ -45,7 +45,7 @@ simplex_2d(; seed=0) = _simplex(2, seed)
     h = hash & 7
     u, v = h < 4 ? (x, y) : (y, x)
     g = (iszero(h & 1) ? u : -u) + (iszero(h & 2) ? 2v : -2v)
-    @fastpow s > 0 ? s^4 * g : 0.0
+    s > 0 ? pow4(s) * g : 0.0
 end
 
 @inline get_simplex(::Type{Simplex{2}}, x, y) = x > y ? (1, 0) : (0, 1)
@@ -77,7 +77,7 @@ simplex_3d(; seed=0) = _simplex(3, seed)
     u = h < 8 ? x : y
     v = h < 4 ? y : h == 12 || h == 14 ? x : z
     g = hash_coords(S, h, u, v)
-    @fastpow s > 0 ? s^4 * g : 0.0
+    s > 0 ? pow4(s) * g : 0.0
 end
 
 @inline function get_simplex(::Type{Simplex{3}}, x, y, z)
@@ -133,7 +133,7 @@ simplex_4d(; seed=0) = _simplex(4, seed)
     v = h < 16 ? y : z
     w = h < 8 ? z : w
     g = hash_coords(S, h, u, v, w)
-    @fastpow s > 0 ? s^4 * g : 0.0
+    s > 0 ? pow4(s) * g : 0.0
 end
 
 @inline function get_simplex(::Type{Simplex{4}}, x, y, z, w)

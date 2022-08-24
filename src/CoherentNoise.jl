@@ -10,7 +10,6 @@ using CircularArrays: CircularVector
 using ColorSchemes: ColorScheme
 using ColorTypes: RGB
 using Distributions: Uniform
-using FastPow
 using RandomNumbers.Xorshifts: Xoroshiro128Star
 
 ### Includes

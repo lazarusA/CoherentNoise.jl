@@ -25,7 +25,7 @@ opensimplex_2d(; seed=0) = _opensimplex(2, seed)
     g = OS_GRADIENTS_2D
     @inbounds i = (t[t[X]+Y] & 14) + 1
     a = 2 - x^2 - y^2
-    @inbounds @fastpow a > 0 ? a^4 * (g[i] * x + g[i+1] * y) : 0.0
+    @inbounds a > 0 ? pow4(a) * (g[i] * x + g[i+1] * y) : 0.0
 end
 
 function sample(sampler::OpenSimplex{2}, x::T, y::T) where {T<:Real}
@@ -96,7 +96,7 @@ opensimplex_3d(; seed=0) = _opensimplex(3, seed)
     g = OS_GRADIENTS_3D
     @inbounds i = t[(Z+t[(Y+t[(X&0xff+1)])&0xff+1])&0xff+1] + 1
     a = 2 - x^2 - y^2 - z^2
-    @inbounds @fastpow a > 0 ? a^4 * (g[i] * x + g[i+1] * y + g[i+2] * z) : 0.0
+    @inbounds a > 0 ? pow4(a) * (g[i] * x + g[i+1] * y + g[i+2] * z) : 0.0
 end
 
 function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
@@ -394,7 +394,7 @@ opensimplex_4d(; seed=0) = _opensimplex(4, seed)
     g = OS_GRADIENTS_4D
     @inbounds i = t[(W+t[(Z+t[(Y+t[(X&0xff+1)])&0xff+1])&0xff+1]&0xff+1)] & 252 + 1
     a = 2 - x^2 - y^2 - z^2 - w^2
-    @inbounds @fastpow a > 0 ? a^4 * (g[i] * x + g[i+1] * y + g[i+2] * z + g[i+3] * w) : 0.0
+    @inbounds a > 0 ? pow4(a) * (g[i] * x + g[i+1] * y + g[i+2] * z + g[i+3] * w) : 0.0
 end
 
 function sample(sampler::OpenSimplex{4}, x::T, y::T, z::T, w::T) where {T<:Real}
