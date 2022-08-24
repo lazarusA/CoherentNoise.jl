@@ -16,23 +16,23 @@ const OS2S_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118 |> 
 @doc doc_opensimplex2s_2d
 opensimplex2s_2d(; seed=0, orient=nothing) = _opensimplex2s(2, seed, orient)
 
-@inline transform(::OpenSimplex2S{2,OrientStandard}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
-
-@inline function transform(::OpenSimplex2S{2,OrientX}, x, y)
-    xx = x * ROOT_2_OVER_2
-    yy = y * ROOT_2_OVER_2 * (2OS2_SKEW_2D + 1)
-    (yy + xx, yy - xx)
-end
-
 @inline @fastpow function contribute(seed, X, Y, x, y)
     a = OS2S_R²2D - x^2 - y^2
     a > 0 ? a^4 * grad(OS2S_GRADIENTS_2D, seed, X, Y, x, y) : 0.0
 end
 
+@inline orient(::OpenSimplex2S{2,OrientStandard}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
+
+@inline function orient(::OpenSimplex2S{2,OrientX}, x, y)
+    xx = x * ROOT_2_OVER_2
+    yy = y * ROOT_2_OVER_2 * (2OS2_SKEW_2D + 1)
+    (yy + xx, yy - xx)
+end
+
 @fastpow function sample(sampler::OpenSimplex2S{2,O}, x::T, y::T) where {O,T<:Real}
     seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y)
-    tr = transform(sampler, x, y)
+    tr = orient(sampler, x, y)
     XY = floor.(Int, tr)
     xs, ys = tr .- XY
     d = xs - ys
@@ -84,11 +84,11 @@ const OS2S_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> C
 @doc doc_opensimplex2s_3d
 opensimplex2s_3d(; seed=0, orient=nothing) = _opensimplex2s(3, seed, orient)
 
-@inline function transform(::OpenSimplex2S{3,OrientStandard}, x, y, z)
+@inline function orient(::OpenSimplex2S{3,OrientStandard}, x, y, z)
     OS2_FALLBACK_ROTATE_3D * (x + y + z) .- (x, y, z)
 end
 
-@inline function transform(::OpenSimplex2S{3,OrientXY}, x, y, z)
+@inline function orient(::OpenSimplex2S{3,OrientXY}, x, y, z)
     xy = x + y
     zz = z * ROOT_3_OVER_3
     xr, yr = (x, y) .+ xy .* OS2_ROTATE_3D_ORTHONORMALIZER .+ zz
@@ -96,7 +96,7 @@ end
     (xr, yr, zr)
 end
 
-@inline function transform(::OpenSimplex2S{3,OrientXZ}, x, y, z)
+@inline function orient(::OpenSimplex2S{3,OrientXZ}, x, y, z)
     xz = x + z
     yy = y * ROOT_3_OVER_3
     xr, zr = (x, z) .+ xz .* -0.211324865405187 .+ yy
@@ -112,7 +112,7 @@ end
     seed = sampler.random_state.seed
     seed2 = seed ⊻ -OS2_SEED_FLIP_3D
     primes = (PRIME_X, PRIME_Y, PRIME_Z)
-    tr = transform(sampler, x, y, z)
+    tr = orient(sampler, x, y, z)
     V = floor.(Int, tr)
     Vr = tr .- V
     Vp = V .* primes
@@ -481,11 +481,11 @@ end
 @doc doc_opensimplex2s_4d
 opensimplex2s_4d(; seed=0, orient=nothing) = _opensimplex2s(4, seed, orient)
 
-@inline function transform(::OpenSimplex2S{4,OrientStandard}, x, y, z, w)
+@inline function orient(::OpenSimplex2S{4,OrientStandard}, x, y, z, w)
     (x, y, z, w) .+ OS2S_SKEW_4D .* (x + y + z + w)
 end
 
-@inline function transform(::OpenSimplex2S{4,OrientXY}, x, y, z, w)
+@inline function orient(::OpenSimplex2S{4,OrientXY}, x, y, z, w)
     xy = x + y
     ww = w * 1.118033988749894
     zw = z * 0.28867513459481294226 + ww
@@ -495,9 +495,9 @@ end
     (xr, yr, zr, wr)
 end
 
-@inline transform(::OpenSimplex2S{4,OrientXZ}, x, y, z, w) = transform(OrientXY, x, z, y, w)
+@inline orient(::OpenSimplex2S{4,OrientXZ}, x, y, z, w) = orient(OrientXY, x, z, y, w)
 
-@inline function transform(::OpenSimplex2S{4,OrientXYZ}, x, y, z, w)
+@inline function orient(::OpenSimplex2S{4,OrientXYZ}, x, y, z, w)
     xyz = -(x + y + z)
     ww = w * 1.118033988749894
     s = xyz / 6 + ww
@@ -509,7 +509,7 @@ end
 @fastpow function sample(sampler::OpenSimplex2S{4,O}, x::T, y::T, z::T, w::T) where {O,T<:Real}
     seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
-    tr = transform(sampler, x, y, z, w)
+    tr = orient(sampler, x, y, z, w)
     XYZW = floor.(Int, tr)
     XYZWp = XYZW .* primes
     x1, y1, z1, w1 = tr .- XYZW
