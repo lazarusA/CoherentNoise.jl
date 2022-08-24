@@ -16,17 +16,17 @@ const OS2S_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118 |> 
 @doc doc_opensimplex2s_2d
 opensimplex2s_2d(; seed=0, orient=nothing) = _opensimplex2s(2, seed, orient)
 
-@inline @fastpow function contribute(seed, X, Y, x, y)
-    a = OS2S_R²2D - x^2 - y^2
-    a > 0 ? a^4 * grad(OS2S_GRADIENTS_2D, seed, X, Y, x, y) : 0.0
-end
-
 @inline transform(::OpenSimplex2S{2,OrientStandard}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
 
 @inline function transform(::OpenSimplex2S{2,OrientX}, x, y)
     xx = x * ROOT_2_OVER_2
     yy = y * ROOT_2_OVER_2 * (2OS2_SKEW_2D + 1)
     (yy + xx, yy - xx)
+end
+
+@inline @fastpow function contribute(seed, X, Y, x, y)
+    a = OS2S_R²2D - x^2 - y^2
+    a > 0 ? a^4 * grad(OS2S_GRADIENTS_2D, seed, X, Y, x, y) : 0.0
 end
 
 @fastpow function sample(sampler::OpenSimplex2S{2,O}, x::T, y::T) where {O,T<:Real}
@@ -84,10 +84,6 @@ const OS2S_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> C
 @doc doc_opensimplex2s_3d
 opensimplex2s_3d(; seed=0, orient=nothing) = _opensimplex2s(3, seed, orient)
 
-@inline @fastpow os2s_contribute1(seed, a, args...) = a^4 * grad(OS2S_GRADIENTS_3D, seed, args...)
-
-@inline os2s_contribute2(seed, a, args...) = a > 0 ? os2s_contribute1(seed, a, args...) : 0.0
-
 @inline function transform(::OpenSimplex2S{3,OrientStandard}, x, y, z)
     OS2_FALLBACK_ROTATE_3D * (x + y + z) .- (x, y, z)
 end
@@ -107,6 +103,10 @@ end
     yr = xz * -ROOT_3_OVER_3 + yy
     (xr, yr, zr)
 end
+
+@inline @fastpow os2s_contribute1(seed, a, args...) = a^4 * grad(OS2S_GRADIENTS_3D, seed, args...)
+
+@inline os2s_contribute2(seed, a, args...) = a > 0 ? os2s_contribute1(seed, a, args...) : 0.0
 
 @fastpow function sample(sampler::OpenSimplex2S{3,O}, x::T, y::T, z::T) where {O,T<:Real}
     seed = sampler.random_state.seed
@@ -139,7 +139,7 @@ end
     if xf3 > 0
         result += os2s_contribute1(seed, xf3, X3, Y1, Z1, x3, y1, z1)
     else
-        os2s_contribute2(seed, yf1 + zf1 + a0, X1, Y3, Z3, x1, y3, z3)
+        result += os2s_contribute2(seed, yf1 + zf1 + a0, X1, Y3, Z3, x1, y3, z3)
         if xf4 > 0
             result += os2s_contribute1(seed2, xf4, X5, Y2, Z2, x4, y2, z2)
             skip1 = true
