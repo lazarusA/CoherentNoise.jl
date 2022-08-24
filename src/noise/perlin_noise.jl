@@ -1,14 +1,14 @@
-struct PerlinImproved{N} <: NoiseSampler{N}
+struct Perlin{N} <: NoiseSampler{N}
     random_state::RandomState
     state::PerlinState
 end
 
 @inline function _perlin(dims, seed)
     rs = RandomState(seed)
-    PerlinImproved{dims}(rs, PerlinState(rs))
+    Perlin{dims}(rs, PerlinState(rs))
 end
 
-HashTrait(::Type{<:PerlinImproved}) = IsPerlinHashed()
+HashTrait(::Type{<:Perlin}) = IsPerlinHashed()
 
 ### 1D
 
@@ -16,11 +16,11 @@ HashTrait(::Type{<:PerlinImproved}) = IsPerlinHashed()
 perlin_1d(; seed=0) = _perlin(1, seed)
 @deprecate perlin_improved_1d(; kwargs...) perlin_1d(; kwargs...)
 
-@inline function grad(S::Type{PerlinImproved{1}}, hash, x)
+@inline function grad(S::Type{Perlin{1}}, hash, x)
     hash_coords(S, hash, x)
 end
 
-function sample(sampler::S, x::T) where {S<:PerlinImproved{1},T<:Real}
+function sample(sampler::S, x::T) where {S<:Perlin{1},T<:Real}
     t = sampler.state.table
     X = floor(Int, x)
     x1 = x - X
@@ -35,13 +35,13 @@ end
 perlin_2d(; seed=0) = _perlin(2, seed)
 @deprecate perlin_improved_2d(; kwargs...) perlin_2d(; kwargs...)
 
-@inline function grad(S::Type{PerlinImproved{2}}, hash, x, y)
+@inline function grad(S::Type{Perlin{2}}, hash, x, y)
     h = hash & 7
     u, v = h < 4 ? (x, y) : (y, x)
     hash_coords(S, h, u, v)
 end
 
-function sample(sampler::S, x::T, y::T) where {S<:PerlinImproved{2},T<:Real}
+function sample(sampler::S, x::T, y::T) where {S<:Perlin{2},T<:Real}
     t = sampler.state.table
     X, Y = floor.(Int, (x, y))
     x1, y1 = (x, y) .- (X, Y)
@@ -60,14 +60,14 @@ end
 perlin_3d(; seed=0) = _perlin(3, seed)
 @deprecate perlin_improved_3d(; kwargs...) perlin_3d(; kwargs...)
 
-@inline function grad(S::Type{PerlinImproved{3}}, hash, x, y, z)
+@inline function grad(S::Type{Perlin{3}}, hash, x, y, z)
     h = hash & 15
     u = h < 8 ? x : y
     v = h < 4 ? y : h == 12 || h == 14 ? x : z
     hash_coords(S, h, u, v)
 end
 
-function sample(sampler::S, x::T, y::T, z::T) where {S<:PerlinImproved{3},T<:Real}
+function sample(sampler::S, x::T, y::T, z::T) where {S<:Perlin{3},T<:Real}
     t = sampler.state.table
     X, Y, Z = floor.(Int, (x, y, z))
     x1, y1, z1 = (x, y, z) .- (X, Y, Z)
@@ -88,7 +88,7 @@ end
 perlin_4d(; seed=0) = _perlin(4, seed)
 @deprecate perlin_improved_4d(; kwargs...) perlin_4d(; kwargs...)
 
-@inline function grad(S::Type{PerlinImproved{4}}, hash, x, y, z, w)
+@inline function grad(S::Type{Perlin{4}}, hash, x, y, z, w)
     h1 = hash & 31
     h2 = h1 >> 3
     if h2 == 1
@@ -100,7 +100,7 @@ perlin_4d(; seed=0) = _perlin(4, seed)
     end
 end
 
-function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:PerlinImproved{4},T<:Real}
+function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Perlin{4},T<:Real}
     t = sampler.state.table
     X, Y, Z, W = floor.(Int, (x, y, z, w))
     x1, y1, z1, w1 = (x, y, z, w) .- (X, Y, Z, W)

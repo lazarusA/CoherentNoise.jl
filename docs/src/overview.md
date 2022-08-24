@@ -57,7 +57,7 @@ or contribution by more experienced Julia developers that find value in Coherent
   important when working with fractal-based noises, composition of complex noises, and in general is
   something just expected when working with coherent noise.
 
-- The `PerlinImproved` noise implementation is [Ken Perlin's "Improved Noise"
+- The Perlin noise implementation is [Ken Perlin's "Improved Noise"
   algorithm](https://cs.nyu.edu/~perlin/noise/), unlike his classic Perlin noise algorithm found in
   libnoise, which is sometimes just called gradient noise.
 
