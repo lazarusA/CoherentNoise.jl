@@ -187,7 +187,7 @@ $(_doc_sampler_args)
     as creating height or bump maps, this will produce discontinuities visually identified by
     jarring creases in the generated noise.
 
-    This option changes the falloff in order to produce smooth continuous noise, however the
+    This option changes the falloff in order to produce smooth continuous noise, however, the
     resulting noise may look quite different than the non-smooth option, depending on the Simplex
     variant.
 
