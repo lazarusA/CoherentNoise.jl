@@ -610,7 +610,7 @@ function turbulence(
     y = ntuple(i -> rand(rng, Float64), N2)
     z = ntuple(i -> rand(rng, Float64), N2)
     w = ntuple(i -> rand(rng, Float64), N2)
-    s3 = FBMFractal{N1}(seed, s2, roughness, frequency, 2.0, 0.5)
+    s3 = FBM{N1}(seed, s2, roughness, frequency, 2.0, 0.5)
     S3 = typeof(s3)
     Turbulence{N,N1,N2,S1,S3}(s1.random_state, s1, s3, Float64(power), x, y, z, w)
 end

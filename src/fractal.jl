@@ -23,12 +23,12 @@ end
 
 ### fBm
 
-struct FBMFractal{N,S,O} <: FractalSampler{N}
+struct FBM{N,S,O} <: FractalSampler{N}
     random_state::RandomState
     state::FractalState{N,S,O}
 end
 
-@inline function FBMFractal{N}(
+@inline function FBM{N}(
     seed,
     source::S,
     octaves,
@@ -38,11 +38,11 @@ end
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
     rs = RandomState(seed)
-    fs = FractalState{N,FBMFractal,O}(source, frequency, lacunarity, persistence, 1.0)
-    FBMFractal{N,S,O}(rs, fs)
+    fs = FractalState{N,FBM,O}(source, frequency, lacunarity, persistence, 1.0)
+    FBM{N,S,O}(rs, fs)
 end
 
-@inline function scale_factor(::Type{FBMFractal}, octaves, persistence, _)
+@inline function scale_factor(::Type{FBM}, octaves, persistence, _)
     sum(persistence .^ (0:octaves-1))
 end
 
@@ -55,7 +55,7 @@ function fbm_fractal_1d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    FBMFractal{1}(seed, source, octaves, frequency, lacunarity, persistence)
+    FBM{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_fbm_fractal_2d
@@ -67,7 +67,7 @@ function fbm_fractal_2d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    FBMFractal{2}(seed, source, octaves, frequency, lacunarity, persistence)
+    FBM{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_fbm_fractal_3d
@@ -79,7 +79,7 @@ function fbm_fractal_3d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    FBMFractal{3}(seed, source, octaves, frequency, lacunarity, persistence)
+    FBM{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_fbm_fractal_4d
@@ -91,10 +91,10 @@ function fbm_fractal_4d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    FBMFractal{4}(seed, source, octaves, frequency, lacunarity, persistence)
+    FBM{4}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-function sample(sampler::FBMFractal{N}, coords::Vararg{Real,N}) where {N}
+function sample(sampler::FBM{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
     persistence = state.persistence
     lacunarity = state.lacunarity
@@ -111,12 +111,12 @@ end
 
 ### Billow
 
-struct BillowFractal{N,S,O} <: FractalSampler{N}
+struct Billow{N,S,O} <: FractalSampler{N}
     random_state::RandomState
     state::FractalState{N,S,O}
 end
 
-@inline function BillowFractal{N}(
+@inline function Billow{N}(
     seed,
     source::S,
     octaves,
@@ -126,11 +126,11 @@ end
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
     rs = RandomState(seed)
-    fs = FractalState{N,BillowFractal,O}(source, frequency, lacunarity, persistence, 1.0)
-    BillowFractal{N,S,O}(rs, fs)
+    fs = FractalState{N,Billow,O}(source, frequency, lacunarity, persistence, 1.0)
+    Billow{N,S,O}(rs, fs)
 end
 
-@inline function scale_factor(::Type{BillowFractal}, octaves, persistence, _)
+@inline function scale_factor(::Type{Billow}, octaves, persistence, _)
     sum(persistence .^ (0:octaves-1))
 end
 
@@ -143,7 +143,7 @@ function billow_fractal_1d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    BillowFractal{1}(seed, source, octaves, frequency, lacunarity, persistence)
+    Billow{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_billow_fractal_2d
@@ -155,7 +155,7 @@ function billow_fractal_2d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    BillowFractal{2}(seed, source, octaves, frequency, lacunarity, persistence)
+    Billow{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_billow_fractal_3d
@@ -167,7 +167,7 @@ function billow_fractal_3d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    BillowFractal{3}(seed, source, octaves, frequency, lacunarity, persistence)
+    Billow{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_billow_fractal_4d
@@ -179,10 +179,10 @@ function billow_fractal_4d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    BillowFractal{4}(seed, source, octaves, frequency, lacunarity, persistence)
+    Billow{4}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-function sample(sampler::BillowFractal{N}, coords::Vararg{Real,N}) where {N}
+function sample(sampler::Billow{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
     persistence = state.persistence
     lacunarity = state.lacunarity
@@ -199,12 +199,12 @@ end
 
 ### Multifractal
 
-struct MultiFractal{N,S,O} <: FractalSampler{N}
+struct Multi{N,S,O} <: FractalSampler{N}
     random_state::RandomState
     state::FractalState{N,S,O}
 end
 
-@inline function MultiFractal{N}(
+@inline function Multi{N}(
     seed,
     source::S,
     octaves::Int,
@@ -214,11 +214,11 @@ end
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
     rs = RandomState(seed)
-    fs = FractalState{N,MultiFractal,O}(source, frequency, lacunarity, persistence, 1.0)
-    MultiFractal{N,S,O}(rs, fs)
+    fs = FractalState{N,Multi,O}(source, frequency, lacunarity, persistence, 1.0)
+    Multi{N,S,O}(rs, fs)
 end
 
-@inline function scale_factor(::Type{MultiFractal}, octaves, persistence, _)
+@inline function scale_factor(::Type{Multi}, octaves, persistence, _)
     reduce(1:octaves-1, init=1) do result, i
         result += result * persistence^i
     end
@@ -233,7 +233,7 @@ function multi_fractal_1d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    MultiFractal{1}(seed, source, octaves, frequency, lacunarity, persistence)
+    Multi{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_multi_fractal_2d
@@ -245,7 +245,7 @@ function multi_fractal_2d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    MultiFractal{2}(seed, source, octaves, frequency, lacunarity, persistence)
+    Multi{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_multi_fractal_3d
@@ -257,7 +257,7 @@ function multi_fractal_3d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    MultiFractal{3}(seed, source, octaves, frequency, lacunarity, persistence)
+    Multi{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_multi_fractal_4d
@@ -269,10 +269,10 @@ function multi_fractal_4d(;
     lacunarity=2.0,
     persistence=0.5,
 )
-    MultiFractal{4}(seed, source, octaves, frequency, lacunarity, persistence)
+    Multi{4}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-function sample(sampler::MultiFractal{N}, coords::Vararg{Real,N}) where {N}
+function sample(sampler::Multi{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
     sources = state.sources
     persistence = state.persistence
@@ -290,12 +290,12 @@ end
 
 ### Hybrid
 
-struct HybridFractal{N,S,O} <: FractalSampler{N}
+struct Hybrid{N,S,O} <: FractalSampler{N}
     random_state::RandomState
     state::FractalState{N,S,O}
 end
 
-@inline function HybridFractal{N}(
+@inline function Hybrid{N}(
     seed,
     source::S,
     octaves::Int,
@@ -305,11 +305,11 @@ end
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
     rs = RandomState(seed)
-    fs = FractalState{N,HybridFractal,O}(source, frequency, lacunarity, persistence, 1.0)
-    HybridFractal{N,S,O}(rs, fs)
+    fs = FractalState{N,Hybrid,O}(source, frequency, lacunarity, persistence, 1.0)
+    Hybrid{N,S,O}(rs, fs)
 end
 
-@inline function scale_factor(::Type{HybridFractal}, octaves, persistence, _)
+@inline function scale_factor(::Type{Hybrid}, octaves, persistence, _)
     amplitude = persistence
     weight = persistence^2
     result = persistence + weight
@@ -331,7 +331,7 @@ function hybrid_fractal_1d(;
     lacunarity=2.0,
     persistence=0.25,
 )
-    HybridFractal{1}(seed, source, octaves, frequency, lacunarity, persistence)
+    Hybrid{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_hybrid_fractal_2d
@@ -343,7 +343,7 @@ function hybrid_fractal_2d(;
     lacunarity=2.0,
     persistence=0.25,
 )
-    HybridFractal{2}(seed, source, octaves, frequency, lacunarity, persistence)
+    Hybrid{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_hybrid_fractal_3d
@@ -355,7 +355,7 @@ function hybrid_fractal_3d(;
     lacunarity=2.0,
     persistence=0.25,
 )
-    HybridFractal{3}(seed, source, octaves, frequency, lacunarity, persistence)
+    Hybrid{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
 @doc doc_hybrid_fractal_4d
@@ -367,10 +367,10 @@ function hybrid_fractal_4d(;
     lacunarity=2.0,
     persistence=0.25,
 )
-    HybridFractal{4}(seed, source, octaves, frequency, lacunarity, persistence)
+    Hybrid{4}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-function sample(sampler::HybridFractal{N}, coords::Vararg{Real,N}) where {N}
+function sample(sampler::Hybrid{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
     sources = state.sources
     persistence = state.persistence
@@ -391,12 +391,12 @@ end
 
 ### Ridged
 
-struct RidgedFractal{N,S,O} <: FractalSampler{N}
+struct Ridged{N,S,O} <: FractalSampler{N}
     random_state::RandomState
     state::FractalState{N,S,O}
 end
 
-@inline function RidgedFractal{N}(
+@inline function Ridged{N}(
     seed,
     source::S,
     octaves::Int,
@@ -407,11 +407,11 @@ end
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
     rs = RandomState(seed)
-    fs = FractalState{N,RidgedFractal,O}(source, frequency, lacunarity, persistence, attenuation)
-    RidgedFractal{N,S,O}(rs, fs)
+    fs = FractalState{N,Ridged,O}(source, frequency, lacunarity, persistence, attenuation)
+    Ridged{N,S,O}(rs, fs)
 end
 
-@inline function scale_factor(::Type{RidgedFractal}, octaves, persistence, attenuation)
+@inline function scale_factor(::Type{Ridged}, octaves, persistence, attenuation)
     amplitude = 1.0
     weight = 1.0
     result = 0.0
@@ -434,7 +434,7 @@ function ridged_fractal_1d(;
     persistence=1.0,
     attenuation=2.0,
 )
-    RidgedFractal{1}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
+    Ridged{1}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
 end
 
 @doc doc_ridged_fractal_2d
@@ -447,7 +447,7 @@ function ridged_fractal_2d(;
     persistence=1.0,
     attenuation=2.0,
 )
-    RidgedFractal{2}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
+    Ridged{2}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
 end
 
 @doc doc_ridged_fractal_3d
@@ -460,7 +460,7 @@ function ridged_fractal_3d(;
     persistence=1.0,
     attenuation=2.0,
 )
-    RidgedFractal{3}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
+    Ridged{3}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
 end
 
 @doc doc_ridged_fractal_4d
@@ -473,10 +473,10 @@ function ridged_fractal_4d(;
     persistence=1.0,
     attenuation=2.0,
 )
-    RidgedFractal{4}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
+    Ridged{4}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
 end
 
-function sample(sampler::RidgedFractal{N}, coords::Vararg{Real,N}) where {N}
+function sample(sampler::Ridged{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
     persistence = state.persistence
     lacunarity = state.lacunarity

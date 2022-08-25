@@ -15,6 +15,47 @@ abstract type FractalSampler{N} <: AbstractSampler{N} end
 "Supertype for all modifier samplers."
 abstract type ModifierSampler{N} <: AbstractSampler{N} end
 
+### Printing
+
+function Base.show(io::IO, x::S) where {N,S<:AbstractSampler{N}}
+    print(io, "$(nameof(S))$(N)D (seed: $(x.random_state.seed))")
+end
+
+function Base.show(io::IO, ::MIME"text/plain", x::S) where {N,S<:PatternSampler{N}}
+    print(
+        io,
+        """
+        $(nameof(S)):
+          type: pattern
+          dimensions: $(N)
+          seed: $(x.random_state.seed)
+        """)
+end
+
+function Base.show(io::IO, ::MIME"text/plain", x::S) where {N,S<:NoiseSampler{N}}
+    print(
+        io,
+        """
+        $(nameof(S)):
+          type: noise
+          dimensions: $(N)
+          seed: $(x.random_state.seed)
+        """)
+end
+
+function Base.show(io::IO, ::MIME"text/plain", x::S) where {N,S<:FractalSampler{N}}
+    print(
+        io,
+        """
+        $(nameof(S)):
+          type: fractal
+          dimensions: $(N)
+          seed: $(x.random_state.seed)
+          octaves: $(x.state.sources |> length)
+          source: $(x.state.sources |> first)
+        """)
+end
+
 ### Constants shared by multiple samplers
 
 const HASH1 = 668_265_261
