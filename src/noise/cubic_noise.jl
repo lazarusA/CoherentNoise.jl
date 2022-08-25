@@ -82,7 +82,7 @@ function sample(sampler::S, x::T, y::T, z::T) where {S<:Cubic{3},T<:Real}
     r2 = cubic_interpolate(c5, c6, c7, c8, y1)
     r3 = cubic_interpolate(c9, c10, c11, c12, y1)
     r4 = cubic_interpolate(c13, c14, c15, c16, y1)
-    (cubic_interpolate(r1, r2, r3, r4, z1) - 1) / 2.25
+    (cubic_interpolate(r1, r2, r3, r4, z1) - 1) / 3.375
 end
 
 ### 4D
@@ -183,5 +183,5 @@ function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Cubic{4},T<:Real}
     r2 = cubic_interpolate(r2a, r2b, r2c, r2d, z1)
     r3 = cubic_interpolate(r3a, r3b, r3c, r3d, z1)
     r4 = cubic_interpolate(r4a, r4b, r4c, r4d, z1)
-    (cubic_interpolate(r1, r2, r3, r4, w1) - 1) / 2.25
+    (cubic_interpolate(r1, r2, r3, r4, w1) - 1) / 5.0625
 end
