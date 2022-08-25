@@ -29,6 +29,7 @@ export AbstractSampler, sample, gen_image
 # Noise
 export NoiseSampler
 export value_1d, value_2d, value_3d, value_4d
+export cubic_1d, cubic_2d, cubic_3d, cubic_4d
 export perlin_1d, perlin_2d, perlin_3d, perlin_4d
 export simplex_1d, simplex_2d, simplex_3d, simplex_4d
 export opensimplex_2d, opensimplex_3d, opensimplex_4d

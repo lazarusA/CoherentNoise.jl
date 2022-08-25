@@ -91,7 +91,7 @@ end
     x = (d - c) - (a - b)
     y = (a - b) - x
     z = c - a
-    x * pow3(t) + y * t^2 + z * t + t
+    x * pow3(t) + y * t^2 + z * t + b
 end
 
 ### Public interface functions

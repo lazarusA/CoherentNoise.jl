@@ -42,7 +42,7 @@ or contribution by more experienced Julia developers that find value in Coherent
 
 - Many more noise algorithms than libnoise supported, and well-tested.
 
-- Algorithms are consistently implemented in 2, 3, and 4 dimensions, whereas libnoise only has
+- Algorithms are consistently implemented in multiple dimensions, whereas libnoise only has
   3-dimensional gradient noise.
 
 - Some terminology corrections. For example, libnoise refers to multiple octaves of gradient noise
@@ -107,6 +107,7 @@ for other algorithms, please file an issue or submit a pull request.
 ### Noise samplers
 
 - Value: (1D, 2D, 3D, 4D)
+- Cubic: (1D, 2D, 3D, 4D)
 - Perlin: (1D, 2D, 3D, 4D)
 - Simplex: (1D, 2D, 3D, 4D)
 - OpenSimplex: (2D, 3D, 4D)

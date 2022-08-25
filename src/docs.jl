@@ -121,6 +121,38 @@ Construct a sampler that outputs 4-dimensonal value noise when it is sampled fro
 $(_doc_sampler_args)
 """
 
+const doc_cubic_1d = """
+    cubic_1d(; seed=0)
+
+Construct a sampler that outputs 1-dimensonal cubic noise when it is sampled from.
+
+$(_doc_sampler_args)
+"""
+
+const doc_cubic_2d = """
+    cubic_2d(; seed=0)
+
+Construct a sampler that outputs 2-dimensonal cubic noise when it is sampled from.
+
+$(_doc_sampler_args)
+"""
+
+const doc_cubic_3d = """
+    cubic_3d(; seed=0)
+
+Construct a sampler that outputs 3-dimensonal cubic noise when it is sampled from.
+
+$(_doc_sampler_args)
+"""
+
+const doc_cubic_4d = """
+    cubic_4d(; seed=0)
+
+Construct a sampler that outputs 4-dimensonal cubic noise when it is sampled from.
+
+$(_doc_sampler_args)
+"""
+
 const doc_perlin_1d = """
     perlin_1d(; seed=0)
     perlin_improved_1d(; seed=0)
