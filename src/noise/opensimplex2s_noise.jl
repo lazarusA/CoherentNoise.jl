@@ -90,7 +90,7 @@ end
 const OS2S_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> CircularVector
 
 @doc doc_opensimplex2s_3d
-pensimplex2s_3d(; seed=0, orient=nothing, smooth=false) = _opensimplex2s(3, seed, orient, smooth)
+opensimplex2s_3d(; seed=0, orient=nothing, smooth=false) = _opensimplex2s(3, seed, orient, smooth)
 
 @inline function orient(::OpenSimplex2S{3,OrientStandard}, x, y, z)
     OS2_FALLBACK_ROTATE_3D * (x + y + z) .- (x, y, z)
