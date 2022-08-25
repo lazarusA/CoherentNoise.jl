@@ -66,6 +66,13 @@ or contribution by more experienced Julia developers that find value in Coherent
 
 - Additional modifier samplers.
 
+- Traditional Simplex noise variants, even the original Simplex by Ken Perlin, all overshoot the
+  radial extent used for the signal reconstruction kernel. This results in unwanted artifacts when
+  the noise is used for certain applications. CoherentNoise adds an option to use a more correct
+  kernel to remove these artifacts. This is disabled by default. See the documentation for the
+  respective Simplex noise variant for more details. To the best of my knowledge, CoherentNoise is
+  the only library that offers this option for all Simplex noise variants.
+
 ### How is it used?
 
 In summary, you call a function corresponding to the coherent noise algorithm and dimensionality you

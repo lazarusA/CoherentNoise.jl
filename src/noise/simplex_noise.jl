@@ -1,35 +1,46 @@
 struct Simplex{N} <: NoiseSampler{N}
     random_state::RandomState
-    state::PerlinState
+    perlin_state::PerlinState
+    simplex_state::SimplexState
 end
 
-@inline function _simplex(dims, seed)
+@inline function _simplex(dims, seed, smooth)
+    T = Simplex{dims}
     rs = RandomState(seed)
-    Simplex{dims}(rs, PerlinState(rs))
+    T(rs, PerlinState(rs), SimplexState(T, Val(smooth)))
 end
 
 HashTrait(::Type{<:Simplex}) = IsPerlinHashed()
 
+SimplexState(::Type{<:Simplex{1}}, ::Val) = SimplexState(1.0, 0.395)
+SimplexState(::Type{<:Simplex{2}}, ::Val) = SimplexState(0.5, 45.23065)
+SimplexState(::Type{<:Simplex{3}}, ::Val{true}) = SimplexState(0.5, 76.88075002223152)
+SimplexState(::Type{<:Simplex{3}}, ::Val{false}) = SimplexState(0.6, 32.69428328944204)
+SimplexState(::Type{<:Simplex{4}}, ::Val{true}) = SimplexState(0.5, 62.0)
+SimplexState(::Type{<:Simplex{4}}, ::Val{false}) = SimplexState(0.6, 27.0)
+
 # 1D
 
 @doc doc_simplex_1d
-simplex_1d(; seed=0) = _simplex(1, seed)
+simplex_1d(; seed=0, smooth=false) = _simplex(1, seed, smooth)
 
-@inline function grad(::Type{Simplex{1}}, hash, x)
-    s = 1 - x^2
+@inline function grad(::Type{Simplex{1}}, falloff, hash, x)
+    s = falloff - x^2
     h = hash & 15
     u = (h & 7) + 1
-    g = iszero(h & 8) ? u * x : -u * x
-    s > 0 ? pow4(s) * g : 0.0
+    g = iszero(h & 8) ? -u * x : u * x
+    pow4(s) * g
 end
 
 function sample(sampler::S, x::Real) where {S<:Simplex{1}}
-    t = sampler.state.table
+    t = sampler.perlin_state.table
+    state = sampler.simplex_state
+    falloff = state.falloff
     X = floor(Int, x)
     x1 = x - X
-    p1 = grad(S, t[X], x1)
-    p2 = grad(S, t[X+1], x1 - 1)
-    (p1 + p2) * 0.395
+    p1 = grad(S, falloff, t[X], x1)
+    p2 = grad(S, falloff, t[X+1], x1 - 1)
+    (p1 + p2) * state.scale_factor
 end
 
 # 2D
@@ -38,29 +49,31 @@ const SIMPLEX_SKEW_2D = (sqrt(3) - 1) / 2
 const SIMPLEX_UNSKEW_2D = (3 - sqrt(3)) / 6
 
 @doc doc_simplex_2d
-simplex_2d(; seed=0) = _simplex(2, seed)
+simplex_2d(; seed=0, smooth=false) = _simplex(2, seed, smooth)
 
-@inline function grad(::Type{Simplex{2}}, hash, x, y)
-    s = 0.5 - x^2 - y^2
+@inline function grad(::Type{Simplex{2}}, falloff, hash, x, y)
+    s = falloff - x^2 - y^2
     h = hash & 7
     u, v = h < 4 ? (x, y) : (y, x)
-    g = (iszero(h & 1) ? u : -u) + (iszero(h & 2) ? 2v : -2v)
+    g = (iszero(h & 1) ? -u : u) + (iszero(h & 2) ? -2v : 2v)
     s > 0 ? pow4(s) * g : 0.0
 end
 
 @inline get_simplex(::Type{Simplex{2}}, x, y) = x > y ? (1, 0) : (0, 1)
 
 function sample(sampler::S, x::T, y::T) where {S<:Simplex{2},T<:Real}
-    t = sampler.state.table
+    t = sampler.perlin_state.table
+    state = sampler.simplex_state
+    falloff = state.falloff
     s = (x + y) * SIMPLEX_SKEW_2D
     X, Y = floor.(Int, (x, y) .+ s)
     tx = (X + Y) * SIMPLEX_UNSKEW_2D
     xy = (x, y) .- (X, Y) .+ tx
     X1, Y1 = get_simplex(S, xy...)
-    p1 = grad(S, t[t[X]+Y], xy...)
-    p2 = grad(S, t[t[X+X1]+Y+Y1], xy .- (X1, Y1) .+ SIMPLEX_UNSKEW_2D...)
-    p3 = grad(S, t[t[X+1]+Y+1], xy .- 1 .+ 2SIMPLEX_UNSKEW_2D...)
-    (p1 + p2 + p3) * 45.23065
+    p1 = grad(S, falloff, t[t[X]+Y], xy...)
+    p2 = grad(S, falloff, t[t[X+X1]+Y+Y1], xy .- (X1, Y1) .+ SIMPLEX_UNSKEW_2D...)
+    p3 = grad(S, falloff, t[t[X+1]+Y+1], xy .- 1 .+ 2SIMPLEX_UNSKEW_2D...)
+    (p1 + p2 + p3) * state.scale_factor
 end
 
 # 3D
@@ -69,10 +82,10 @@ const SIMPLEX_SKEW_3D = 1 / 3
 const SIMPLEX_UNSKEW_3D = 1 / 6
 
 @doc doc_simplex_3d
-simplex_3d(; seed=0) = _simplex(3, seed)
+simplex_3d(; seed=0, smooth=false) = _simplex(3, seed, smooth)
 
-@inline function grad(S::Type{Simplex{3}}, hash, x, y, z)
-    s = 0.6 - x^2 - y^2 - z^2
+@inline function grad(S::Type{Simplex{3}}, falloff, hash, x, y, z)
+    s = falloff - x^2 - y^2 - z^2
     h = hash & 15
     u = h < 8 ? x : y
     v = h < 4 ? y : h == 12 || h == 14 ? x : z
@@ -89,17 +102,19 @@ end
 end
 
 function sample(sampler::S, x::T, y::T, z::T) where {S<:Simplex{3},T<:Real}
-    t = sampler.state.table
+    t = sampler.perlin_state.table
+    state = sampler.simplex_state
+    falloff = state.falloff
     s = (x + y + z) * SIMPLEX_SKEW_3D
     X, Y, Z = floor.(Int, (x, y, z) .+ s)
     tx = (X + Y + Z) * SIMPLEX_UNSKEW_3D
     xyz = (x, y, z) .- (X, Y, Z) .+ tx
     X1, Y1, Z1, X2, Y2, Z2 = get_simplex(S, xyz...)
-    p1 = grad(S, t[t[t[Z]+Y]+X], xyz...)
-    p2 = grad(S, t[t[t[Z+Z1]+Y+Y1]+X+X1], xyz .- (X1, Y1, Z1) .+ SIMPLEX_UNSKEW_3D...)
-    p3 = grad(S, t[t[t[Z+Z2]+Y+Y2]+X+X2], xyz .- (X2, Y2, Z2) .+ 2SIMPLEX_UNSKEW_3D...)
-    p4 = grad(S, t[t[t[Z+1]+Y+1]+X+1], xyz .- 1 .+ 3SIMPLEX_UNSKEW_3D...)
-    (p1 + p2 + p3 + p4) * 32
+    p1 = grad(S, falloff, t[t[t[Z]+Y]+X], xyz...)
+    p2 = grad(S, falloff, t[t[t[Z+Z1]+Y+Y1]+X+X1], xyz .- (X1, Y1, Z1) .+ SIMPLEX_UNSKEW_3D...)
+    p3 = grad(S, falloff, t[t[t[Z+Z2]+Y+Y2]+X+X2], xyz .- (X2, Y2, Z2) .+ 2SIMPLEX_UNSKEW_3D...)
+    p4 = grad(S, falloff, t[t[t[Z+1]+Y+1]+X+1], xyz .- 1 .+ 3SIMPLEX_UNSKEW_3D...)
+    (p1 + p2 + p3 + p4) * state.scale_factor
 end
 
 # 4D
@@ -124,10 +139,10 @@ const SIMPLEX_GRADIENTS_4D = [
     0x3, 0x2, 0x1, 0x0]
 
 @doc doc_simplex_4d
-simplex_4d(; seed=0) = _simplex(4, seed)
+simplex_4d(; seed=0, smooth=false) = _simplex(4, seed, smooth)
 
-@inline function grad(S::Type{Simplex{4}}, hash, x, y, z, w)
-    s = 0.6 - x^2 - y^2 - z^2 - w^2
+@inline function grad(S::Type{Simplex{4}}, falloff, hash, x, y, z, w)
+    s = falloff - x^2 - y^2 - z^2 - w^2
     h = hash & 31
     u = h < 24 ? x : y
     v = h < 16 ? y : z
@@ -154,7 +169,9 @@ end
 end
 
 function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Simplex{4},T<:Real}
-    t = sampler.state.table
+    t = sampler.perlin_state.table
+    state = sampler.simplex_state
+    falloff = state.falloff
     s = (x + y + z + w) * SIMPLEX_SKEW_4D
     X, Y, Z, W = floor.(Int, (x, y, z, w) .+ s)
     tx = (X + Y + Z + W) * SIMPLEX_UNSKEW_4D
@@ -164,10 +181,10 @@ function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Simplex{4},T<:Real
     v3 = v1 .- (X2, Y2, Z2, W2) .+ 2SIMPLEX_UNSKEW_4D
     v4 = v1 .- (X3, Y3, Z3, W3) .+ 3SIMPLEX_UNSKEW_4D
     v5 = v1 .- 1 .+ 4SIMPLEX_UNSKEW_4D
-    p1 = grad(S, t[t[t[t[W]+Z]+Y]+X], v1...)
-    p2 = grad(S, t[t[t[t[W+W1]+Z+Z1]+Y+Y1]+X+X1], v2...)
-    p3 = grad(S, t[t[t[t[W+W2]+Z+Z2]+Y+Y2]+X+X2], v3...)
-    p4 = grad(S, t[t[t[t[W+W3]+Z+Z3]+Y+Y3]+X+X3], v4...)
-    p5 = grad(S, t[t[t[t[W+1]+Z+1]+Y+1]+X+1], v5...)
-    (p1 + p2 + p3 + p4 + p5) * 27
+    p1 = grad(S, falloff, t[t[t[t[W]+Z]+Y]+X], v1...)
+    p2 = grad(S, falloff, t[t[t[t[W+W1]+Z+Z1]+Y+Y1]+X+X1], v2...)
+    p3 = grad(S, falloff, t[t[t[t[W+W2]+Z+Z2]+Y+Y2]+X+X2], v3...)
+    p4 = grad(S, falloff, t[t[t[t[W+W3]+Z+Z3]+Y+Y3]+X+X3], v4...)
+    p5 = grad(S, falloff, t[t[t[t[W+1]+Z+1]+Y+1]+X+1], v5...)
+    (p1 + p2 + p3 + p4 + p5) * state.scale_factor
 end

@@ -43,6 +43,13 @@ struct PerlinState
     PerlinState(rs) = new(shuffle(rs.rng, 0x00:0xff) |> CircularVector)
 end
 
+### State for Simplex-based samplers
+
+struct SimplexState
+    falloff::Float64
+    scale_factor::Float64
+end
+
 ### Trait to decide how some samplers should generate hash values
 
 abstract type HashTrait end
@@ -52,15 +59,15 @@ struct IsValueHashed <: HashTrait end
 @inline hash_coords(sampler::S, args...) where {S} = hash_coords(HashTrait(sampler), args...)
 
 @inline function hash_coords(::IsPerlinHashed, hash, u)
-    iszero(hash & 1) ? u : -u
+    iszero(hash & 1) ? -u : u
 end
 
 @inline function hash_coords(::IsPerlinHashed, hash, u, v)
-    (iszero(hash & 1) ? u : -u) + (iszero(hash & 2) ? v : -v)
+    (iszero(hash & 1) ? -u : u) + (iszero(hash & 2) ? -v : v)
 end
 
 @inline function hash_coords(::IsPerlinHashed, hash, u, v, w)
-    (iszero(hash & 1) ? u : -u) + (iszero(hash & 2) ? v : -v) + (iszero(hash & 4) ? w : -w)
+    (iszero(hash & 1) ? -u : u) + (iszero(hash & 2) ? -v : v) + (iszero(hash & 4) ? -w : w)
 end
 
 @inline function hash_coords(::IsValueHashed, seed, coords...)
@@ -71,6 +78,7 @@ end
 ### Utility functions
 
 @inline pow3(x) = x * x * x
+
 @inline pow4(x) = x * x * x * x
 
 @inline curve3(t) = t^2 * (3 - 2t)

@@ -177,44 +177,61 @@ Construct a sampler that outputs 4-dimensional Perlin "Improved" noise when it i
 $(_doc_sampler_args)
 """
 
+const _doc_simplex_args = """
+$(_doc_sampler_args)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+"""
+
 const doc_simplex_1d = """
-    simplex_1d(; seed=0)
+    simplex_1d(; seed=0, smooth=false)
 
 Construct a sampler that outputs 1-dimensional Perlin Simplex noise when it is sampled from.
 
-$(_doc_sampler_args)
+$(_doc_simplex_args)
 """
 
 const doc_simplex_2d = """
-    simplex_2d(; seed=0)
+    simplex_2d(; seed=0, smooth=false)
 
 Construct a sampler that outputs 2-dimensional Perlin Simplex noise when it is sampled from.
 
-$(_doc_sampler_args)
+$(_doc_simplex_args)
 """
 
 const doc_simplex_3d = """
-    simplex_3d(; seed=0)
+    simplex_3d(; seed=0, smooth=false)
 
 Construct a sampler that outputs 3-dimensional Perlin Simplex noise when it is sampled from.
 
-$(_doc_sampler_args)
+$(_doc_simplex_args)
 """
 
 const doc_simplex_4d = """
-    simplex_4d(; seed=0)
+    simplex_4d(; seed=0, smooth=false)
 
 Construct a sampler that outputs 4-dimensional Perlin Simplex noise when it is sampled from.
 
-$(_doc_sampler_args)
+$(_doc_simplex_args)
 """
 
 const doc_opensimplex_2d = """
-    opensimplex_2d(; seed=0)
+    opensimplex_2d(; seed=0, smooth=false)
 
 Construct a sampler that outputs 2-dimensional legacy OpenSimplex noise when it is sampled from.
 
-$(_doc_sampler_args)
+$(_doc_simplex_args)
 
 # See also:
 
@@ -223,11 +240,11 @@ $(_doc_sampler_args)
 """
 
 const doc_opensimplex_3d = """
-    opensimplex_3d(; seed=0)
+    opensimplex_3d(; seed=0, smooth=false)
 
 Construct a sampler that outputs 3-dimensional legacy OpenSimplex noise when it is sampled from.
 
-$(_doc_sampler_args)
+$(_doc_simplex_args)
 
 # See also:
 
@@ -236,11 +253,11 @@ $(_doc_sampler_args)
 """
 
 const doc_opensimplex_4d = """
-    opensimplex_4d(; seed=0)
+    opensimplex_4d(; seed=0, smooth=false)
 
 Construct a sampler that outputs 4-dimensional legacy OpenSimplex noise when it is sampled from.
 
-$(_doc_sampler_args)
+$(_doc_simplex_args)
 
 # See also:
 
@@ -249,7 +266,7 @@ $(_doc_sampler_args)
 """
 
 const _doc_opensimplex2_2d_args = """
-$(_doc_sampler_args)
+$(_doc_simplex_args)
 
   - `orient`: Either the symbol `:x` or the value `nothing`:
 
