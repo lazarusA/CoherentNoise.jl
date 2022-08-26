@@ -53,9 +53,9 @@ const OS2_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.01001634121365712 |> C
 @doc doc_opensimplex2_2d
 opensimplex2_2d(; seed=0, orient=nothing, smooth=false) = _opensimplex2(2, seed, orient, smooth)
 
-@inline orient(::OpenSimplex2{2,OrientStandard}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
+@inline orient(::Type{OpenSimplex2{2,OrientStandard}}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
 
-@inline function orient(::OpenSimplex2{2,OrientX}, x, y)
+@inline function orient(::Type{OpenSimplex2{2,OrientX}}, x, y)
     xx = x * ROOT_2_OVER_2
     yy = y * ROOT_2_OVER_2 * (2OS2_SKEW_2D + 1)
     (yy + xx, yy - xx)
@@ -69,12 +69,12 @@ end
     sum((t .* (x, y)))
 end
 
-function sample(sampler::OpenSimplex2{2,O}, x::T, y::T) where {O,T<:Real}
+function sample(sampler::S, x::T, y::T) where {O,S<:OpenSimplex2{2,O},T<:Real}
     seed = sampler.random_state.seed
     state = sampler.simplex_state
     falloff = state.falloff
     primes = (PRIME_X, PRIME_Y)
-    tr = orient(sampler, x, y)
+    tr = orient(S, x, y)
     XY = floor.(Int, tr)
     vtr = tr .- XY
     t = sum(vtr) * OS2_UNSKEW_2D
@@ -171,11 +171,11 @@ const OS2_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.07969837668935331 |> C
 @doc doc_opensimplex2_3d
 opensimplex2_3d(; seed=0, orient=nothing, smooth=false) = _opensimplex2(3, seed, orient, smooth)
 
-@inline function orient(::OpenSimplex2{3,OrientStandard}, x, y, z)
+@inline function orient(::Type{OpenSimplex2{3,OrientStandard}}, x, y, z)
     OS2_FALLBACK_ROTATE_3D * (x + y + z) .- (x, y, z)
 end
 
-@inline function orient(::OpenSimplex2{3,OrientXY}, x, y, z)
+@inline function orient(::Type{OpenSimplex2{3,OrientXY}}, x, y, z)
     xy = x + y
     zz = z * ROOT_3_OVER_3
     xr, yr = (x, y) .+ xy .* OS2_ROTATE_3D_ORTHONORMALIZER .+ zz
@@ -183,7 +183,9 @@ end
     (xr, yr, zr)
 end
 
-@inline orient(::OpenSimplex2{3,OrientXZ}, x, y, z) = orient(OrientXY, x, z, y)
+@inline function orient(::Type{OpenSimplex2{3,OrientXZ}}, x, y, z)
+    orient(OpenSimplex2{3,OrientXY}, x, z, y)
+end
 
 @inline function grad(table, seed, X, Y, Z, x, y, z)
     hash = ((seed ⊻ X) ⊻ (Y ⊻ Z)) * HASH_MULTIPLIER
@@ -212,12 +214,12 @@ end
     a > 1 ? pow4(a - 1) * grad(OS2_GRADIENTS_3D, seed, args...) : 0.0
 end
 
-function sample(sampler::OpenSimplex2{3,O}, x::T, y::T, z::T) where {O,T<:Real}
+function sample(sampler::S, x::T, y::T, z::T) where {O,S<:OpenSimplex2{3,O},T<:Real}
     seed = sampler.random_state.seed
     state = sampler.simplex_state
     falloff = state.falloff
     primes = (PRIME_X, PRIME_Y, PRIME_Z)
-    tr = orient(sampler, x, y, z)
+    tr = orient(S, x, y, z)
     V = round.(Int, tr)
     XYZ = V .* primes
     x1, y1, z1 = tr .- V
@@ -407,11 +409,11 @@ const OS2_GRADIENTS_4D = OS2_GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897 |> Ci
 @doc doc_opensimplex2_4d
 opensimplex2_4d(; seed=0, orient=nothing, smooth=false) = _opensimplex2(4, seed, orient, smooth)
 
-@inline function orient(::OpenSimplex2{4,OrientStandard}, x, y, z, w)
+@inline function orient(::Type{OpenSimplex2{4,OrientStandard}}, x, y, z, w)
     (x, y, z, w) .+ OS2_SKEW_4D .* (x + y + z + w)
 end
 
-@inline function orient(::OpenSimplex2{4,OrientXY}, x, y, z, w)
+@inline function orient(::Type{OpenSimplex2{4,OrientXY}}, x, y, z, w)
     xy = x + y
     ww = w * 0.2236067977499788
     zw = z * 0.28867513459481294226 + ww
@@ -421,9 +423,11 @@ end
     (xr, yr, zr, wr)
 end
 
-@inline orient(::OpenSimplex2{4,OrientXZ}, x, y, z, w) = orient(OrientXY, x, z, y, w)
+@inline function orient(::Type{OpenSimplex2{4,OrientXZ}}, x, y, z, w)
+    orient(OpenSimplex2{4,OrientXY}, x, z, y, w)
+end
 
-@inline function orient(::OpenSimplex2{4,OrientXYZ}, x, y, z, w)
+@inline function orient(::Type{OpenSimplex2{4,OrientXYZ}}, x, y, z, w)
     xyz = -(x + y + z)
     ww = w * 0.2236067977499788
     s = xyz / 6 + ww
@@ -440,12 +444,12 @@ end
     sum((t .* (x, y, z, w)))
 end
 
-function sample(sampler::OpenSimplex2{4,O}, x::T, y::T, z::T, w::T) where {O,T<:Real}
+function sample(sampler::S, x::T, y::T, z::T, w::T) where {O,S<:OpenSimplex2{4,O},T<:Real}
     seed = sampler.random_state.seed
     state = sampler.simplex_state
     falloff = state.falloff
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
-    tr = orient(sampler, x, y, z, w)
+    tr = orient(S, x, y, z, w)
     X1, Y1, Z1, W1 = floor.(Int, tr)
     X2, Y2, Z2, W2 = (X1, Y1, Z1, W1) .* primes
     v = tr .- (X1, Y1, Z1, W1)
