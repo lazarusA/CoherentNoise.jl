@@ -25,7 +25,7 @@ const WORLEY_JITTER2 = 0.39614353
 
 @inline function Worley{N,M,F}(seed, jitter) where {N,M,F}
     rs = RandomState(seed)
-    table = rand(rs.rng, Uniform(-1.0, 1.0), worley_table_size(Val(N)))
+    table = rand(rs.rng, Uniform(-1.0, 1.0), N * 256)
     Worley{N,M,F}(rs, table, jitter)
 end
 
@@ -50,11 +50,6 @@ end
 @inline worley_output_type(::Val{:/}) = CellDiv
 @inline worley_output_type(::Val{:value}) = CellValue
 @inline worley_output_type(x::Any) = @error "invalid Worley noise output type: " x
-
-@inline worley_table_size(::Val{1}) = 256
-@inline worley_table_size(::Val{2}) = 512
-@inline worley_table_size(::Val{3}) = 1024
-@inline worley_table_size(::Val{4}) = 2048
 
 @inline cell_distance(::Type{Manhattan}, v...) = sum(abs, v)
 @inline cell_distance(::Type{Euclidean}, v...) = cell_distance(Euclidean², v...)
