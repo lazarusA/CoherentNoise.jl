@@ -12,7 +12,8 @@ end
     T(rs, PerlinState(rs), SimplexState(T, Val(smooth)), table)
 end
 
-SimplexState(::Type{<:OpenSimplex{2}}, ::Val) = SimplexState(2, 1 / 40.7)
+SimplexState(::Type{<:OpenSimplex{2}}, ::Val{true}) = SimplexState(1, 0.8923035729617332)
+SimplexState(::Type{<:OpenSimplex{2}}, ::Val{false}) = SimplexState(2, 1 / 40.7)
 SimplexState(::Type{<:OpenSimplex{3}}, ::Val{true}) = SimplexState(1, 0.3777736183312849)
 SimplexState(::Type{<:OpenSimplex{3}}, ::Val{false}) = SimplexState(2, 1 / 103)
 SimplexState(::Type{<:OpenSimplex{4}}, ::Val{true}) = SimplexState(1, 1.4485981091431033)
