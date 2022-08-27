@@ -85,10 +85,8 @@ function sample(sampler::Worley{1,M,F}, x::Real) where {M,F}
     maxf = minf
     closest_hash::UInt32 = 0
     @inbounds for xi in 0:2
-        xri = xr + xi
-        sxp = seed ⊻ xp * HASH1
-        hash = sxp % UInt32
-        vx = table[(hash+1)&511] * jitter + xri
+        hash = ⊻(seed, xp) * HASH1 % UInt32
+        vx = table[(hash+1)&511] * jitter + xr + xi
         d = cell_distance(M, vx)
         maxf = clamp(d, minf, maxf)
         if d < minf
@@ -120,9 +118,8 @@ function sample(sampler::Worley{2,M,F}, x::T, y::T) where {M,F,T<:Real}
     @inbounds for xi in 0:2
         xri = xr + xi
         yp = yp_base
-        sxp = seed ⊻ xp * HASH1
         for yi in 0:2
-            hash = (sxp ⊻ yp) % UInt32
+            hash = ⊻(seed, xp, yp) * HASH1 % UInt32
             vx = table[(hash+1)&511] * jitter + xri
             vy = table[((hash|1)+1)&511] * jitter + yr + yi
             d = cell_distance(M, vx, vy)
@@ -158,14 +155,13 @@ function sample(sampler::Worley{3,M,F}, x::T, y::T, z::T) where {M,F,T<:Real}
     @inbounds for xi in 0:2
         xri = xr + xi
         yp = yp_base
-        sxp = seed ⊻ xp * HASH1
         for yi in 0:2
+            yri = yr + yi
             zp = zp_base
-            syp = sxp ⊻ yp
-            hash = (syp ⊻ zp) % UInt32
-            vx = table[(hash+1)&1023] * jitter + xri
-            vy = table[((hash|1)+1)&1023] * jitter + yr + yi
             for zi in 0:2
+                hash = ⊻(seed, xp, yp, zp) * HASH1 % UInt32
+                vx = table[(hash+1)&1023] * jitter + xri
+                vy = table[((hash|1)+1)&1023] * jitter + yri
                 vz = table[((hash|2)+1)&1023] * jitter + zr + zi
                 d = cell_distance(M, vx, vy, vz)
                 maxf = clamp(d, minf, maxf)
@@ -202,18 +198,17 @@ function sample(sampler::Worley{4,M,F}, x::T, y::T, z::T, w::T) where {M,F,T<:Re
     @inbounds for xi in 0:2
         xri = xr + xi
         yp = yp_base
-        sxp = seed ⊻ xp * HASH1
         for yi in 0:2
+            yri = yr + yi
             zp = zp_base
-            syp = sxp ⊻ yp
-            szp = syp ⊻ zp
-            wp = wp_base
-            hash = (szp ⊻ wp) % UInt32
-            vx = table[(hash+1)&2047] * jitter + xri
-            vy = table[((hash|1)+1)&2047] * jitter + yr + yi
             for zi in 0:2
-                vz = table[((hash|2)+1)&2047] * jitter + zr + zi
+                zri = zr + zi
+                wp = wp_base
                 for wi in 0:2
+                    hash = ⊻(seed, xp, yp, zp, wp) * HASH1 % UInt32
+                    vx = table[(hash+1)&2047] * jitter + xri
+                    vy = table[((hash|1)+1)&2047] * jitter + yri
+                    vz = table[((hash|2)+1)&2047] * jitter + zri
                     vw = table[((hash|3)+1)&2047] * jitter + wr + wi
                     d = cell_distance(M, vx, vy, vz, vw)
                     maxf = clamp(d, minf, maxf)
