@@ -25,7 +25,7 @@ const WORLEY_JITTER2 = 0.39614353
 
 @inline function Worley{N,M,F}(seed, jitter) where {N,M,F}
     rs = RandomState(seed)
-    table = rand(rs.rng, Uniform(-1.0, 1.0), N * 256)
+    table = rand(rs.rng, Uniform(-1.0, 1.0), 2^(N - 1) * 256)
     Worley{N,M,F}(rs, table, jitter)
 end
 
