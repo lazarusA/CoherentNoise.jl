@@ -29,7 +29,7 @@ const WORLEY_JITTER2 = 0.39614353
     Worley{N,M,F}(rs, table, jitter)
 end
 
-@inline function _worley(dims, seed, metric, output, jitter)
+@inline function _worley(dims, seed, jitter, output, metric=:euclidean)
     metric = worley_metric_type(Val(metric))
     output = worley_output_type(Val(output))
     Worley{dims,metric,output}(seed, jitter)
@@ -70,8 +70,8 @@ end
 # 1D
 
 @doc doc_worley_1d
-function worley_1d(; seed=0, metric=:euclidean, output=:f1, jitter=1.0)
-    _worley(1, seed, metric, output, jitter)
+function worley_1d(; seed=0, jitter=1.0, output=:f1)
+    _worley(1, seed, jitter, output)
 end
 
 function sample(sampler::Worley{1,M,F}, x::Real) where {M,F}
@@ -101,8 +101,8 @@ end
 # 2D
 
 @doc doc_worley_2d
-function worley_2d(; seed=0, metric=:euclidean, output=:f1, jitter=1.0)
-    _worley(2, seed, metric, output, jitter)
+function worley_2d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+    _worley(2, seed, jitter, output, metric)
 end
 
 function sample(sampler::Worley{2,M,F}, x::T, y::T) where {M,F,T<:Real}
@@ -138,8 +138,8 @@ end
 # 3D
 
 @doc doc_worley_3d
-function worley_3d(; seed=0, metric=:euclidean, output=:f1, jitter=1.0)
-    _worley(3, seed, metric, output, jitter)
+function worley_3d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+    _worley(3, seed, jitter, output, metric)
 end
 
 function sample(sampler::Worley{3,M,F}, x::T, y::T, z::T) where {M,F,T<:Real}
@@ -181,8 +181,8 @@ end
 # 4D
 
 @doc doc_worley_4d
-function worley_4d(; seed=0, metric=:euclidean, output=:f1, jitter=1.0)
-    _worley(4, seed, metric, output, jitter)
+function worley_4d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+    _worley(4, seed, jitter, output, metric)
 end
 
 function sample(sampler::Worley{4,M,F}, x::T, y::T, z::T, w::T) where {M,F,T<:Real}
