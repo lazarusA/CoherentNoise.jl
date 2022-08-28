@@ -22,7 +22,7 @@ SimplexState(::Type{<:Simplex{4}}, ::Val{false}) = SimplexState(0.6, 27.0)
 # 1D
 
 @doc doc_simplex_1d
-simplex_1d(; seed=0, smooth=false) = _simplex(1, seed, smooth)
+simplex_1d(; seed=0) = _simplex(1, seed, false)
 
 @inline function grad(::Type{Simplex{1}}, falloff, hash, x)
     s = falloff - x^2
@@ -49,7 +49,7 @@ const SIMPLEX_SKEW_2D = (sqrt(3) - 1) / 2
 const SIMPLEX_UNSKEW_2D = (3 - sqrt(3)) / 6
 
 @doc doc_simplex_2d
-simplex_2d(; seed=0, smooth=false) = _simplex(2, seed, smooth)
+simplex_2d(; seed=0) = _simplex(2, seed, false)
 
 @inline function grad(::Type{Simplex{2}}, falloff, hash, x, y)
     s = falloff - x^2 - y^2
