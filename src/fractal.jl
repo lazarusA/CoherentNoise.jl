@@ -239,7 +239,7 @@ end
 @doc doc_multi_fractal_2d
 function multi_fractal_2d(;
     seed=0,
-    source=opensimplex2_2d(seed=seed),
+    source=opensimplex2s_2d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
@@ -251,7 +251,7 @@ end
 @doc doc_multi_fractal_3d
 function multi_fractal_3d(;
     seed=0,
-    source=opensimplex2_3d(seed=seed),
+    source=opensimplex2s_3d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
@@ -263,7 +263,7 @@ end
 @doc doc_multi_fractal_4d
 function multi_fractal_4d(;
     seed=0,
-    source=opensimplex2_4d(seed=seed),
+    source=opensimplex2s_4d(seed=seed),
     octaves=4,
     frequency=1.0,
     lacunarity=2.0,
