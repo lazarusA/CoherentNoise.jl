@@ -38,12 +38,6 @@ file.
     `nothing`.
 """
 
-const _doc_sampler_args = """
-# Arguments
-
-  - `seed`: $(_doc_seed)
-"""
-
 const doc_constant_1d = """
     constant_1d(; seed=0, value=0.0)
 
@@ -51,7 +45,9 @@ Construct a sampler that constantly outputs `value` each time it is sampled from
 
 This is useful for debugging and applications where you need to combine a constant value.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 
   - `value`: A constant value to emit each time this sampler is sampled from.
 """
@@ -63,7 +59,9 @@ Construct a sampler that outputs values in a checkerboard-like pattern when it i
 
 That is, output values will only ever be -1.0 or 1.0.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_cylinders_2d = """
@@ -72,7 +70,9 @@ const doc_cylinders_2d = """
 Construct a sampler that outputs values that form a pattern representing concentric cylinders when
 it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 
   - `frequency`: The frequency of the signal, which controls how small or large the cylinders
     are.
@@ -84,7 +84,9 @@ const doc_spheres_3d = """
 Construct a sampler that outputs values that form a pattern representing concentric spheres when it
 is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 
   - `frequency`: The frequency of the signal, which controls how small or large the spheres are.
 """
@@ -94,7 +96,9 @@ const doc_value_1d = """
 
 Construct a sampler that outputs 1-dimensonal value noise when it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_value_2d = """
@@ -102,7 +106,9 @@ const doc_value_2d = """
 
 Construct a sampler that outputs 2-dimensonal value noise when it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_value_3d = """
@@ -110,7 +116,9 @@ const doc_value_3d = """
 
 Construct a sampler that outputs 3-dimensonal value noise when it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_value_4d = """
@@ -118,7 +126,9 @@ const doc_value_4d = """
 
 Construct a sampler that outputs 4-dimensonal value noise when it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_cubic_1d = """
@@ -126,7 +136,9 @@ const doc_cubic_1d = """
 
 Construct a sampler that outputs 1-dimensonal cubic noise when it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_cubic_2d = """
@@ -134,7 +146,9 @@ const doc_cubic_2d = """
 
 Construct a sampler that outputs 2-dimensonal cubic noise when it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_cubic_3d = """
@@ -142,7 +156,9 @@ const doc_cubic_3d = """
 
 Construct a sampler that outputs 3-dimensonal cubic noise when it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_cubic_4d = """
@@ -150,7 +166,9 @@ const doc_cubic_4d = """
 
 Construct a sampler that outputs 4-dimensonal cubic noise when it is sampled from.
 
-$(_doc_sampler_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
 """
 
 const doc_perlin_1d = """
@@ -159,12 +177,14 @@ const doc_perlin_1d = """
 
 Construct a sampler that outputs 1-dimensional Perlin "Improved" noise when it is sampled from.
 
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
 # Notes:
 
   - `perlin_improved_1d` is deprecated and will be removed in favor of `perlin_1d` in a future
     major version release.
-
-$(_doc_sampler_args)
 """
 
 const doc_perlin_2d = """
@@ -173,12 +193,14 @@ const doc_perlin_2d = """
 
 Construct a sampler that outputs 2-dimensional Perlin "Improved" noise when it is sampled from.
 
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
 # Notes:
 
   - `perlin_improved_2d` is deprecated and will be removed in favor of `perlin_2d` in a future
     major version release.
-
-$(_doc_sampler_args)
 """
 
 const doc_perlin_3d = """
@@ -187,12 +209,14 @@ const doc_perlin_3d = """
 
 Construct a sampler that outputs 3-dimensional Perlin "Improved" noise when it is sampled from.
 
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
 # Notes:
 
   - `perlin_improved_3d` is deprecated and will be removed in favor of `perlin_3d` in a future
     major version release.
-
-$(_doc_sampler_args)
 """
 
 const doc_perlin_4d = """
@@ -201,16 +225,44 @@ const doc_perlin_4d = """
 
 Construct a sampler that outputs 4-dimensional Perlin "Improved" noise when it is sampled from.
 
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
 # Notes:
 
   - `perlin_improved_4d` is deprecated and will be removed in favor of `perlin_4d` in a future
     major version release.
-
-$(_doc_sampler_args)
 """
 
-const _doc_simplex_args = """
-$(_doc_sampler_args)
+const doc_simplex_1d = """
+    simplex_1d(; seed=0)
+
+Construct a sampler that outputs 1-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: $(_doc_seed)
+"""
+
+const doc_simplex_2d = """
+    simplex_2d(; seed=0)
+
+Construct a sampler that outputs 2-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: $(_doc_seed)
+"""
+
+const doc_simplex_3d = """
+    simplex_3d(; seed=0, smooth=false)
+
+Construct a sampler that outputs 3-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: $(_doc_seed)
 
   - `smooth`: Specify whether to have continuous gradients.
     Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
@@ -226,36 +278,27 @@ $(_doc_sampler_args)
     The default value is `false`, in order to be true to the original implementation.
 """
 
-const doc_simplex_1d = """
-    simplex_1d(; seed=0, smooth=false)
-
-Construct a sampler that outputs 1-dimensional Perlin Simplex noise when it is sampled from.
-
-$(_doc_simplex_args)
-"""
-
-const doc_simplex_2d = """
-    simplex_2d(; seed=0, smooth=false)
-
-Construct a sampler that outputs 2-dimensional Perlin Simplex noise when it is sampled from.
-
-$(_doc_simplex_args)
-"""
-
-const doc_simplex_3d = """
-    simplex_3d(; seed=0, smooth=false)
-
-Construct a sampler that outputs 3-dimensional Perlin Simplex noise when it is sampled from.
-
-$(_doc_simplex_args)
-"""
-
 const doc_simplex_4d = """
     simplex_4d(; seed=0, smooth=false)
 
 Construct a sampler that outputs 4-dimensional Perlin Simplex noise when it is sampled from.
 
-$(_doc_simplex_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
 """
 
 const doc_opensimplex_2d = """
@@ -263,7 +306,22 @@ const doc_opensimplex_2d = """
 
 Construct a sampler that outputs 2-dimensional legacy OpenSimplex noise when it is sampled from.
 
-$(_doc_simplex_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
 
 # See also:
 
@@ -276,7 +334,22 @@ const doc_opensimplex_3d = """
 
 Construct a sampler that outputs 3-dimensional legacy OpenSimplex noise when it is sampled from.
 
-$(_doc_simplex_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
 
 # See also:
 
@@ -289,7 +362,22 @@ const doc_opensimplex_4d = """
 
 Construct a sampler that outputs 4-dimensional legacy OpenSimplex noise when it is sampled from.
 
-$(_doc_simplex_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
 
 # See also:
 
@@ -297,8 +385,14 @@ $(_doc_simplex_args)
   - [`opensimplex2s_4d`](@ref opensimplex2s_4d)
 """
 
-const _doc_opensimplex2_2d_args = """
-$(_doc_simplex_args)
+const doc_opensimplex2_2d = """
+    opensimplex2_2d(; seed=0, orient=nothing)
+
+Construct a sampler that outputs 2-dimensional OpenSimplex2 noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: $(_doc_seed)
 
   - `orient`: Either the symbol `:x` or the value `nothing`:
 
@@ -307,40 +401,68 @@ $(_doc_simplex_args)
         improve visual isotropy.
 """
 
-const _doc_opensimplex2_3d_args = """
-  $(_doc_opensimplex2_2d_args)
+const doc_opensimplex2_3d = """
+    opensimplex2_3d(; seed=0, smooth=false, orient=nothing)
+
+Construct a sampler that outputs 3-dimensional OpenSimplex2 noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+
+  - `orient`: Either the symbol `:x` or the value `nothing`:
+
+      + `nothing`: Use the standard orientation.
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
       + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
       + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
 """
 
-const _doc_opensimplex2_4d_args = """
-  $(_doc_opensimplex2_3d_args)
-      + `:xyz`: Re-orient the noise space to be better suited for time-varied animations, where
-        the W axis is time.
-"""
-
-const doc_opensimplex2_2d = """
-    opensimplex2_2d(; seed=0, orient=nothing)
-
-Construct a sampler that outputs 2-dimensional OpenSimplex2 noise when it is sampled from.
-
-$(_doc_opensimplex2_2d_args)
-"""
-
-const doc_opensimplex2_3d = """
-    opensimplex2_3d(; seed=0, orient=nothing)
-
-Construct a sampler that outputs 3-dimensional OpenSimplex2 noise when it is sampled from.
-
-$(_doc_opensimplex2_3d_args)
-"""
-
 const doc_opensimplex2_4d = """
-    opensimplex2_4d(; seed=0, orient=nothing)
+    opensimplex2_4d(; seed=0, smooth=false, orient=nothing)
 
 Construct a sampler that outputs 4-dimensional OpenSimplex2 noise when it is sampled from.
 
-$(_doc_opensimplex2_4d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+
+  - `orient`: Either the symbol `:x` or the value `nothing`:
+
+      + `nothing`: Use the standard orientation.
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
+      + `:xyz`: Re-orient the noise space to be better suited for time-varied animations, where
+        the W axis is time.
 """
 
 const doc_opensimplex2s_2d = """
@@ -348,38 +470,92 @@ const doc_opensimplex2s_2d = """
 
 Construct a sampler that outputs 2-dimensional OpenSimplex2S noise when it is sampled from.
 
-$(_doc_opensimplex2_2d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `orient`: Either the symbol `:x` or the value `nothing`:
+
+      + `nothing`: Use the standard orientation.
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
 """
 
 const doc_opensimplex2s_3d = """
-    opensimplex2s_3d(; seed=0, orient=nothing)
+    opensimplex2s_3d(; seed=0, smooth=false, orient=nothing)
 
 Construct a sampler that outputs 3-dimensional OpenSimplex2S noise when it is sampled from.
 
-$(_doc_opensimplex2_3d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+
+  - `orient`: Either the symbol `:x` or the value `nothing`:
+
+      + `nothing`: Use the standard orientation.
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
 """
 
 const doc_opensimplex2s_4d = """
-    opensimplex2s_4d(; seed=0, orient=nothing)
+    opensimplex2s_4d(; seed=0, smooth=false, orient=nothing)
 
 Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sampled from.
 
-$(_doc_opensimplex2_4d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+
+  - `orient`: Either the symbol `:x` or the value `nothing`:
+
+      + `nothing`: Use the standard orientation.
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
+      + `:xyz`: Re-orient the noise space to be better suited for time-varied animations, where
+        the W axis is time.
 """
 
-const _doc_worley_args = """
-$(_doc_sampler_args)
+const doc_worley_1d = """
+    worley_1d(; seed=0, jitter=1.0, output=:f1)
+
+Construct a sampler that outputs 1-dimensional Worley noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: $(_doc_seed)
 
   - `jitter`: A `Real` number between 0.0 and 1.0, with values closer to one randomly distributing
     cells away from their grid alignment.
-
-  - `metric`: One of the following symbols:
-      + `:manhattan`: Use the Manhattan distance to the next cell (Minkowski metric ``p = 2^0``).
-      + `:euclidean`: Use the Euclidean distance to the next cell (Minkowski metric ``p = 2^1``).
-      + `:euclidean²`: Same as `:euclidean` but slighter faster due to no ``\\sqrt{}``.
-      + `:minkowski4`: Use Minkowski metric with ``p = 2^4`` for the distance to the next cell.
-      + `:chebyshev`: Use the Chebyshev distance to the next cell (Minkowski metric ``p =
-        2^\\infty``).
 
   - `output`: One of the following symbols:
       + `:f1`: Calculate the distance to the nearest cell as the output.
@@ -391,40 +567,108 @@ $(_doc_sampler_args)
       + `:value`: Use the cell's hash value as the output.
 """
 
-const doc_worley_1d = """
-    worley_1d(; seed=0, jitter=1.0, metric=:euclidean, output=:f1)
-
-Construct a sampler that outputs 1-dimensional Worley noise when it is sampled from.
-
-$(_doc_worley_args)
-"""
-
 const doc_worley_2d = """
-    worley_2d(; seed=0, jitter=1.0, metric=:euclidean, output=:f1)
+    worley_2d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
 
 Construct a sampler that outputs 2-dimensional Worley noise when it is sampled from.
 
-$(_doc_worley_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `jitter`: A `Real` number between 0.0 and 1.0, with values closer to one randomly distributing
+    cells away from their grid alignment.
+
+  - `output`: One of the following symbols:
+      + `:f1`: Calculate the distance to the nearest cell as the output.
+      + `:f2`: Calculate the distance to the second-nearest cell as the output.
+      + `:+`: Calculate `:f1` + `:f2` as the output.
+      + `:-`: Calculate `:f2` - `:f1` as the output.
+      + `:*`: Calculate `:f1` * `:f2` as the output.
+      + `:/`: Calculate `:f1` / `:f2` as the output.
+      + `:value`: Use the cell's hash value as the output.
+
+  - `metric`: One of the following symbols:
+      + `:manhattan`: Use the Manhattan distance to the next cell (Minkowski metric ``p = 2^0``).
+      + `:euclidean`: Use the Euclidean distance to the next cell (Minkowski metric ``p = 2^1``).
+      + `:euclidean²`: Same as `:euclidean` but slighter faster due to no ``\\sqrt{}``.
+      + `:minkowski4`: Use Minkowski metric with ``p = 2^4`` for the distance to the next cell.
+      + `:chebyshev`: Use the Chebyshev distance to the next cell (Minkowski metric ``p =
+        2^\\infty``).
 """
 
 const doc_worley_3d = """
-    worley_3d(; seed=0, jitter=1.0, metric=:euclidean, output=:f1)
+    worley_3d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
 
 Construct a sampler that outputs 3-dimensional Worley noise when it is sampled from.
 
-$(_doc_worley_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `jitter`: A `Real` number between 0.0 and 1.0, with values closer to one randomly distributing
+    cells away from their grid alignment.
+
+  - `output`: One of the following symbols:
+      + `:f1`: Calculate the distance to the nearest cell as the output.
+      + `:f2`: Calculate the distance to the second-nearest cell as the output.
+      + `:+`: Calculate `:f1` + `:f2` as the output.
+      + `:-`: Calculate `:f2` - `:f1` as the output.
+      + `:*`: Calculate `:f1` * `:f2` as the output.
+      + `:/`: Calculate `:f1` / `:f2` as the output.
+      + `:value`: Use the cell's hash value as the output.
+
+  - `metric`: One of the following symbols:
+      + `:manhattan`: Use the Manhattan distance to the next cell (Minkowski metric ``p = 2^0``).
+      + `:euclidean`: Use the Euclidean distance to the next cell (Minkowski metric ``p = 2^1``).
+      + `:euclidean²`: Same as `:euclidean` but slighter faster due to no ``\\sqrt{}``.
+      + `:minkowski4`: Use Minkowski metric with ``p = 2^4`` for the distance to the next cell.
+      + `:chebyshev`: Use the Chebyshev distance to the next cell (Minkowski metric ``p =
+        2^\\infty``).
 """
 
 const doc_worley_4d = """
-    worley_4d(; seed=0, jitter=1.0, metric=:euclidean, output=:f1)
+    worley_4d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
 
 Construct a sampler that outputs 4-dimensional Worley noise when it is sampled from.
 
-$(_doc_worley_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `jitter`: A `Real` number between 0.0 and 1.0, with values closer to one randomly distributing
+    cells away from their grid alignment.
+
+  - `output`: One of the following symbols:
+      + `:f1`: Calculate the distance to the nearest cell as the output.
+      + `:f2`: Calculate the distance to the second-nearest cell as the output.
+      + `:+`: Calculate `:f1` + `:f2` as the output.
+      + `:-`: Calculate `:f2` - `:f1` as the output.
+      + `:*`: Calculate `:f1` * `:f2` as the output.
+      + `:/`: Calculate `:f1` / `:f2` as the output.
+      + `:value`: Use the cell's hash value as the output.
+
+  - `metric`: One of the following symbols:
+      + `:manhattan`: Use the Manhattan distance to the next cell (Minkowski metric ``p = 2^0``).
+      + `:euclidean`: Use the Euclidean distance to the next cell (Minkowski metric ``p = 2^1``).
+      + `:euclidean²`: Same as `:euclidean` but slighter faster due to no ``\\sqrt{}``.
+      + `:minkowski4`: Use Minkowski metric with ``p = 2^4`` for the distance to the next cell.
+      + `:chebyshev`: Use the Chebyshev distance to the next cell (Minkowski metric ``p =
+        2^\\infty``).
 """
 
-const _doc_fractal_args = """
-$(_doc_sampler_args)
+const doc_fbm_fractal_1d = """
+    fbm_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional fractional Brownian motion fractal noise when it
+is sampled from.
+
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
 
   - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
 
@@ -437,58 +681,28 @@ $(_doc_sampler_args)
     successive octaves.
 """
 
-const _doc_fractal_1d_args = """
-$(_doc_sampler_args)
-
-  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
-    the fractal.
-
-$(_doc_fractal_args)
-"""
-
-const _doc_fractal_2d_args = """
-$(_doc_sampler_args)
-
-  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
-    source of the fractal.
-
-$(_doc_fractal_args)
-"""
-
-const _doc_fractal_3d_args = """
-$(_doc_sampler_args)
-
-  - `source::AbstractSampler=opensimplex2s_3d()`: A 2-dimensional sampler instance to use as the
-    source of the fractal.
-
-$(_doc_fractal_args)
-"""
-
-const _doc_fractal_4d_args = """
-$(_doc_sampler_args)
-
-  - `source::AbstractSampler=opensimplex2s_4d()`: A 2-dimensional sampler instance to use as the
-    source of the fractal.
-
-$(_doc_fractal_args)
-"""
-
-const doc_fbm_fractal_1d = """
-    fbm_fractal_1d(; kwargs...)
-
-Construct a sampler that outputs a 1-dimensional fractional Brownian motion fractal noise when it
-is sampled from.
-
-$(_doc_fractal_1d_args)
-"""
-
 const doc_fbm_fractal_2d = """
     fbm_fractal_2d(; kwargs...)
 
 Construct a sampler that outputs a 2-dimensional fractional Brownian motion fractal noise when it
 is sampled from.
 
-$(_doc_fractal_2d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_fbm_fractal_3d = """
@@ -497,7 +711,22 @@ const doc_fbm_fractal_3d = """
 Construct a sampler that outputs a 3-dimensional fractional Brownian motion fractal noise when it
 is sampled from.
 
-$(_doc_fractal_3d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_fbm_fractal_4d = """
@@ -506,7 +735,22 @@ const doc_fbm_fractal_4d = """
 Construct a sampler that outputs a 4-dimensional fractional Brownian motion fractal noise when it
 is sampled from.
 
-$(_doc_fractal_4d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_billow_fractal_1d = """
@@ -514,7 +758,22 @@ const doc_billow_fractal_1d = """
 
 Construct a sampler that outputs a 1-dimensional billow fractal noise when it is sampled from.
 
-$(_doc_fractal_1d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_billow_fractal_2d = """
@@ -522,7 +781,22 @@ const doc_billow_fractal_2d = """
 
 Construct a sampler that outputs a 2-dimensional billow fractal noise when it is sampled from.
 
-$(_doc_fractal_2d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_billow_fractal_3d = """
@@ -530,7 +804,22 @@ const doc_billow_fractal_3d = """
 
 Construct a sampler that outputs a 3-dimensional billow fractal noise when it is sampled from.
 
-$(_doc_fractal_2d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_billow_fractal_4d = """
@@ -538,7 +827,22 @@ const doc_billow_fractal_4d = """
 
 Construct a sampler that outputs a 4-dimensional billow fractal noise when it is sampled from.
 
-$(_doc_fractal_4d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_multi_fractal_1d = """
@@ -546,7 +850,22 @@ const doc_multi_fractal_1d = """
 
 Construct a sampler that outputs a 1-dimensional multifractal noise when it is sampled from.
 
-$(_doc_fractal_1d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_multi_fractal_2d = """
@@ -554,7 +873,22 @@ const doc_multi_fractal_2d = """
 
 Construct a sampler that outputs a 2-dimensional multifractal noise when it is sampled from.
 
-$(_doc_fractal_2d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_multi_fractal_3d = """
@@ -562,7 +896,22 @@ const doc_multi_fractal_3d = """
 
 Construct a sampler that outputs a 3-dimensional multifractal noise when it is sampled from.
 
-$(_doc_fractal_3d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_multi_fractal_4d = """
@@ -570,7 +919,22 @@ const doc_multi_fractal_4d = """
 
 Construct a sampler that outputs a 4-dimensional multifractal noise when it is sampled from.
 
-$(_doc_fractal_4d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_hybrid_fractal_1d = """
@@ -578,7 +942,22 @@ const doc_hybrid_fractal_1d = """
 
 Construct a sampler that outputs a 1-dimensional hybrid multifractal noise when it is sampled from.
 
-$(_doc_fractal_1d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_hybrid_fractal_2d = """
@@ -586,7 +965,22 @@ const doc_hybrid_fractal_2d = """
 
 Construct a sampler that outputs a 2-dimensional hybrid multifractal noise when it is sampled from.
 
-$(_doc_fractal_2d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_hybrid_fractal_3d = """
@@ -594,7 +988,22 @@ const doc_hybrid_fractal_3d = """
 
 Construct a sampler that outputs a 3-dimensional hybrid multifractal noise when it is sampled from.
 
-$(_doc_fractal_3d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_hybrid_fractal_4d = """
@@ -602,7 +1011,22 @@ const doc_hybrid_fractal_4d = """
 
 Construct a sampler that outputs a 4-dimensional hybrid multifractal noise when it is sampled from.
 
-$(_doc_fractal_4d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 """
 
 const doc_ridged_fractal_1d = """
@@ -610,7 +1034,22 @@ const doc_ridged_fractal_1d = """
 
 Construct a sampler that outputs a 1-dimensional ridged multifractal noise when it is sampled from.
 
-$(_doc_fractal_1d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=1.0`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 
    - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
 """
@@ -620,7 +1059,22 @@ const doc_ridged_fractal_2d = """
 
 Construct a sampler that outputs a 2-dimensional ridged multifractal noise when it is sampled from.
 
-$(_doc_fractal_2d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=1.0`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 
    - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
 """
@@ -630,7 +1084,22 @@ const doc_ridged_fractal_3d = """
 
 Construct a sampler that outputs a 3-dimensional ridged multifractal noise when it is sampled from.
 
-$(_doc_fractal_3d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=1.0`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 
    - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
 """
@@ -640,7 +1109,22 @@ const doc_ridged_fractal_4d = """
 
 Construct a sampler that outputs a 4-dimensional ridged multifractal noise when it is sampled from.
 
-$(_doc_fractal_4d_args)
+# Arguments
+
+  - `seed`: $(_doc_seed)
+
+  - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=1.0`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
 
    - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
 """
