@@ -37,8 +37,11 @@ coordinate along the X axis, and one for the coordinate along the Y axis.
     Perlin Noise or Perlin "Improved Noise"), will return zero for integral coordinates.
 
 All samplers have their own distinct random number generator, and it is how we can retrieve
-different results with the same input coordinates. By default, a sampler's seed is set to `0`. We
-can change the seed on a per-sampler basis, by passing the `seed` keyword argument:
+different results with the same input coordinates. By default, a sampler's seed is set to `nothing`,
+which corresponds to using your machine's hardware random number generator to create a seed. This
+will result in non-deterministic results, as each instance of a sampler will produce different
+results when sampled from. We can change the seed on a per-sampler basis, by passing the `seed`
+keyword argument, in order to have reproducible results:
 
 ```@example getting-started
 sampler = perlin_2d(seed=42)

@@ -48,7 +48,7 @@ end
 
 @doc doc_fbm_fractal_1d
 function fbm_fractal_1d(;
-    seed=0,
+    seed=nothing,
     source=simplex_1d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -60,7 +60,7 @@ end
 
 @doc doc_fbm_fractal_2d
 function fbm_fractal_2d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2_2d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -72,7 +72,7 @@ end
 
 @doc doc_fbm_fractal_3d
 function fbm_fractal_3d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2_3d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -84,7 +84,7 @@ end
 
 @doc doc_fbm_fractal_4d
 function fbm_fractal_4d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2_4d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -136,7 +136,7 @@ end
 
 @doc doc_billow_fractal_1d
 function billow_fractal_1d(;
-    seed=0,
+    seed=nothing,
     source=simplex_1d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -148,7 +148,7 @@ end
 
 @doc doc_billow_fractal_2d
 function billow_fractal_2d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_2d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -160,7 +160,7 @@ end
 
 @doc doc_billow_fractal_3d
 function billow_fractal_3d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_3d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -172,7 +172,7 @@ end
 
 @doc doc_billow_fractal_4d
 function billow_fractal_4d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_4d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -226,7 +226,7 @@ end
 
 @doc doc_multi_fractal_1d
 function multi_fractal_1d(;
-    seed=0,
+    seed=nothing,
     source=simplex_1d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -238,7 +238,7 @@ end
 
 @doc doc_multi_fractal_2d
 function multi_fractal_2d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_2d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -250,7 +250,7 @@ end
 
 @doc doc_multi_fractal_3d
 function multi_fractal_3d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_3d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -262,7 +262,7 @@ end
 
 @doc doc_multi_fractal_4d
 function multi_fractal_4d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_4d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -324,7 +324,7 @@ end
 
 @doc doc_hybrid_fractal_1d
 function hybrid_fractal_1d(;
-    seed=0,
+    seed=nothing,
     source=simplex_1d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -336,7 +336,7 @@ end
 
 @doc doc_hybrid_fractal_2d
 function hybrid_fractal_2d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_2d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -348,7 +348,7 @@ end
 
 @doc doc_hybrid_fractal_3d
 function hybrid_fractal_3d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_3d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -360,7 +360,7 @@ end
 
 @doc doc_hybrid_fractal_4d
 function hybrid_fractal_4d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_4d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -426,7 +426,7 @@ end
 
 @doc doc_ridged_fractal_1d
 function ridged_fractal_1d(;
-    seed=0,
+    seed=nothing,
     source=simplex_1d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -439,7 +439,7 @@ end
 
 @doc doc_ridged_fractal_2d
 function ridged_fractal_2d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_2d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -452,7 +452,7 @@ end
 
 @doc doc_ridged_fractal_3d
 function ridged_fractal_3d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_3d(seed=seed),
     octaves=4,
     frequency=1.0,
@@ -465,7 +465,7 @@ end
 
 @doc doc_ridged_fractal_4d
 function ridged_fractal_4d(;
-    seed=0,
+    seed=nothing,
     source=opensimplex2s_4d(seed=seed),
     octaves=4,
     frequency=1.0,

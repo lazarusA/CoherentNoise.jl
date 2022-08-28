@@ -21,7 +21,7 @@ SimplexState(::Type{<:OpenSimplex2S{4}}, ::Val{false}) = SimplexState(4 / 5, 1.0
 const OS2S_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118 |> CircularVector
 
 @doc doc_opensimplex2s_2d
-opensimplex2s_2d(; seed=0, orient=nothing) = _opensimplex2s(2, seed, orient, false)
+opensimplex2s_2d(; seed=nothing, orient=nothing) = _opensimplex2s(2, seed, orient, false)
 
 @inline orient(::Type{OpenSimplex2S{2,OrientStandard}}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
 
@@ -90,7 +90,9 @@ end
 const OS2S_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> CircularVector
 
 @doc doc_opensimplex2s_3d
-opensimplex2s_3d(; seed=0, orient=nothing, smooth=false) = _opensimplex2s(3, seed, orient, smooth)
+function opensimplex2s_3d(; seed=nothing, orient=nothing, smooth=false)
+    _opensimplex2s(3, seed, orient, smooth)
+end
 
 @inline function orient(::Type{OpenSimplex2S{3,OrientStandard}}, x, y, z)
     OS2_FALLBACK_ROTATE_3D * (x + y + z) .- (x, y, z)
@@ -488,7 +490,9 @@ const OS2S_LOOKUP_4D_A, OS2S_LOOKUP_4D_B = let
 end
 
 @doc doc_opensimplex2s_4d
-opensimplex2s_4d(; seed=0, orient=nothing, smooth=false) = _opensimplex2s(4, seed, orient, smooth)
+function opensimplex2s_4d(; seed=nothing, orient=nothing, smooth=false)
+    _opensimplex2s(4, seed, orient, smooth)
+end
 
 @inline function orient(::Type{OpenSimplex2S{4,OrientStandard}}, x, y, z, w)
     (x, y, z, w) .+ OS2S_SKEW_4D .* (x + y + z + w)

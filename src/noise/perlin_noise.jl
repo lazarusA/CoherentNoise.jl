@@ -13,7 +13,7 @@ HashTrait(::Type{<:Perlin}) = IsPerlinHashed()
 ### 1D
 
 @doc doc_perlin_1d
-perlin_1d(; seed=0) = _perlin(1, seed)
+perlin_1d(; seed=nothing) = _perlin(1, seed)
 @deprecate perlin_improved_1d(; kwargs...) perlin_1d(; kwargs...)
 
 @inline function grad(S::Type{Perlin{1}}, hash, x)
@@ -32,7 +32,7 @@ end
 ### 2D
 
 @doc doc_perlin_2d
-perlin_2d(; seed=0) = _perlin(2, seed)
+perlin_2d(; seed=nothing) = _perlin(2, seed)
 @deprecate perlin_improved_2d(; kwargs...) perlin_2d(; kwargs...)
 
 @inline function grad(S::Type{Perlin{2}}, hash, x, y)
@@ -57,7 +57,7 @@ end
 ### 3D
 
 @doc doc_perlin_3d
-perlin_3d(; seed=0) = _perlin(3, seed)
+perlin_3d(; seed=nothing) = _perlin(3, seed)
 @deprecate perlin_improved_3d(; kwargs...) perlin_3d(; kwargs...)
 
 @inline function grad(S::Type{Perlin{3}}, hash, x, y, z)
@@ -85,7 +85,7 @@ end
 ### 4D
 #
 @doc doc_perlin_4d
-perlin_4d(; seed=0) = _perlin(4, seed)
+perlin_4d(; seed=nothing) = _perlin(4, seed)
 @deprecate perlin_improved_4d(; kwargs...) perlin_4d(; kwargs...)
 
 @inline function grad(S::Type{Perlin{4}}, hash, x, y, z, w)

@@ -70,7 +70,7 @@ end
 # 1D
 
 @doc doc_worley_1d
-function worley_1d(; seed=0, jitter=1.0, output=:f1)
+function worley_1d(; seed=nothing, jitter=1.0, output=:f1)
     _worley(1, seed, jitter, output)
 end
 
@@ -101,7 +101,7 @@ end
 # 2D
 
 @doc doc_worley_2d
-function worley_2d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+function worley_2d(; seed=nothing, jitter=1.0, output=:f1, metric=:euclidean)
     _worley(2, seed, jitter, output, metric)
 end
 
@@ -138,7 +138,7 @@ end
 # 3D
 
 @doc doc_worley_3d
-function worley_3d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+function worley_3d(; seed=nothing, jitter=1.0, output=:f1, metric=:euclidean)
     _worley(3, seed, jitter, output, metric)
 end
 
@@ -181,7 +181,7 @@ end
 # 4D
 
 @doc doc_worley_4d
-function worley_4d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+function worley_4d(; seed=nothing, jitter=1.0, output=:f1, metric=:euclidean)
     _worley(4, seed, jitter, output, metric)
 end
 

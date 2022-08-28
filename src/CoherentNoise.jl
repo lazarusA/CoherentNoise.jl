@@ -3,7 +3,7 @@ module CoherentNoise
 ### Dependencies
 
 # Language dependencies
-using Random: shuffle
+using Random: RandomDevice, shuffle
 
 # Third-party dependencies
 using CircularArrays: CircularVector

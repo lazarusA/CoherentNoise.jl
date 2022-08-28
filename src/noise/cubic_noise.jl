@@ -2,7 +2,7 @@ struct Cubic{N} <: NoiseSampler{N}
     random_state::RandomState
 end
 
-@inline _cubic(dims, seed=0) = Cubic{dims}(RandomState(seed))
+@inline _cubic(dims, seed) = Cubic{dims}(RandomState(seed))
 
 HashTrait(::Type{<:Cubic}) = IsValueHashed()
 
@@ -17,7 +17,7 @@ end
 ### 1D
 
 @doc doc_cubic_1d
-cubic_1d(; seed=0) = _cubic(1, seed)
+cubic_1d(; seed=nothing) = _cubic(1, seed)
 
 function sample(sampler::S, x::Real) where {S<:Cubic{1}}
     seed = sampler.random_state.seed
@@ -30,7 +30,7 @@ end
 ### 2D
 
 @doc doc_cubic_2d
-cubic_2d(; seed=0) = _cubic(2, seed)
+cubic_2d(; seed=nothing) = _cubic(2, seed)
 
 function sample(sampler::S, x::T, y::T) where {S<:Cubic{2},T<:Real}
     seed = sampler.random_state.seed
@@ -51,7 +51,7 @@ end
 ### 3D
 
 @doc doc_cubic_3d
-cubic_3d(; seed=0) = _cubic(3, seed)
+cubic_3d(; seed=nothing) = _cubic(3, seed)
 
 function sample(sampler::S, x::T, y::T, z::T) where {S<:Cubic{3},T<:Real}
     seed = sampler.random_state.seed
@@ -88,7 +88,7 @@ end
 ### 4D
 
 @doc doc_cubic_4d
-cubic_4d(; seed=0) = _cubic(4, seed)
+cubic_4d(; seed=nothing) = _cubic(4, seed)
 
 function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Cubic{4},T<:Real}
     seed = sampler.random_state.seed

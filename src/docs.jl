@@ -1,4 +1,7 @@
-const _doc_seed = "An integer used to seed the random number generator for this sampler."
+const _doc_seed = """
+An unsigned integer used to seed the random number generator for this sampler, or `nothing` for
+non-deterministic results.
+"""
 
 const doc_sampler = """
     sample(sampler::AbstractSampler, x::Real)
@@ -39,7 +42,7 @@ file.
 """
 
 const doc_constant_1d = """
-    constant_1d(; seed=0, value=0.0)
+    constant_1d(; seed=nothing, value=0.0)
 
 Construct a sampler that constantly outputs `value` each time it is sampled from.
 
@@ -53,7 +56,7 @@ This is useful for debugging and applications where you need to combine a consta
 """
 
 const doc_checkered_2d = """
-    checkered_2d(; seed=0)
+    checkered_2d(; seed=nothing)
 
 Construct a sampler that outputs values in a checkerboard-like pattern when it is sampled from.
 
@@ -65,7 +68,7 @@ That is, output values will only ever be -1.0 or 1.0.
 """
 
 const doc_cylinders_2d = """
-    cylinders_2d(; seed=0, frequency=1.0)
+    cylinders_2d(; seed=nothing, frequency=1.0)
 
 Construct a sampler that outputs values that form a pattern representing concentric cylinders when
 it is sampled from.
@@ -79,7 +82,7 @@ it is sampled from.
 """
 
 const doc_spheres_3d = """
-    spheres_3d(; seed=0, frequency=1.0)
+    spheres_3d(; seed=nothing, frequency=1.0)
 
 Construct a sampler that outputs values that form a pattern representing concentric spheres when it
 is sampled from.
@@ -92,7 +95,7 @@ is sampled from.
 """
 
 const doc_value_1d = """
-    value_1d(; seed=0)
+    value_1d(; seed=nothing)
 
 Construct a sampler that outputs 1-dimensonal value noise when it is sampled from.
 
@@ -102,7 +105,7 @@ Construct a sampler that outputs 1-dimensonal value noise when it is sampled fro
 """
 
 const doc_value_2d = """
-    value_2d(; seed=0)
+    value_2d(; seed=nothing)
 
 Construct a sampler that outputs 2-dimensonal value noise when it is sampled from.
 
@@ -112,7 +115,7 @@ Construct a sampler that outputs 2-dimensonal value noise when it is sampled fro
 """
 
 const doc_value_3d = """
-    value_3d(; seed=0)
+    value_3d(; seed=nothing)
 
 Construct a sampler that outputs 3-dimensonal value noise when it is sampled from.
 
@@ -122,7 +125,7 @@ Construct a sampler that outputs 3-dimensonal value noise when it is sampled fro
 """
 
 const doc_value_4d = """
-    value_4d(; seed=0)
+    value_4d(; seed=nothing)
 
 Construct a sampler that outputs 4-dimensonal value noise when it is sampled from.
 
@@ -132,7 +135,7 @@ Construct a sampler that outputs 4-dimensonal value noise when it is sampled fro
 """
 
 const doc_cubic_1d = """
-    cubic_1d(; seed=0)
+    cubic_1d(; seed=nothing)
 
 Construct a sampler that outputs 1-dimensonal cubic noise when it is sampled from.
 
@@ -142,7 +145,7 @@ Construct a sampler that outputs 1-dimensonal cubic noise when it is sampled fro
 """
 
 const doc_cubic_2d = """
-    cubic_2d(; seed=0)
+    cubic_2d(; seed=nothing)
 
 Construct a sampler that outputs 2-dimensonal cubic noise when it is sampled from.
 
@@ -152,7 +155,7 @@ Construct a sampler that outputs 2-dimensonal cubic noise when it is sampled fro
 """
 
 const doc_cubic_3d = """
-    cubic_3d(; seed=0)
+    cubic_3d(; seed=nothing)
 
 Construct a sampler that outputs 3-dimensonal cubic noise when it is sampled from.
 
@@ -162,7 +165,7 @@ Construct a sampler that outputs 3-dimensonal cubic noise when it is sampled fro
 """
 
 const doc_cubic_4d = """
-    cubic_4d(; seed=0)
+    cubic_4d(; seed=nothing)
 
 Construct a sampler that outputs 4-dimensonal cubic noise when it is sampled from.
 
@@ -172,8 +175,8 @@ Construct a sampler that outputs 4-dimensonal cubic noise when it is sampled fro
 """
 
 const doc_perlin_1d = """
-    perlin_1d(; seed=0)
-    perlin_improved_1d(; seed=0)
+    perlin_1d(; seed=nothing)
+    perlin_improved_1d(; seed=nothing)
 
 Construct a sampler that outputs 1-dimensional Perlin "Improved" noise when it is sampled from.
 
@@ -188,8 +191,8 @@ Construct a sampler that outputs 1-dimensional Perlin "Improved" noise when it i
 """
 
 const doc_perlin_2d = """
-    perlin_2d(; seed=0)
-    perlin_improved_2d(; seed=0)
+    perlin_2d(; seed=nothing)
+    perlin_improved_2d(; seed=nothing)
 
 Construct a sampler that outputs 2-dimensional Perlin "Improved" noise when it is sampled from.
 
@@ -204,8 +207,8 @@ Construct a sampler that outputs 2-dimensional Perlin "Improved" noise when it i
 """
 
 const doc_perlin_3d = """
-    perlin_3d(; seed=0)
-    perlin_improved_3d(; seed=0)
+    perlin_3d(; seed=nothing)
+    perlin_improved_3d(; seed=nothing)
 
 Construct a sampler that outputs 3-dimensional Perlin "Improved" noise when it is sampled from.
 
@@ -220,8 +223,8 @@ Construct a sampler that outputs 3-dimensional Perlin "Improved" noise when it i
 """
 
 const doc_perlin_4d = """
-    perlin_4d(; seed=0)
-    perlin_improved_4d(; seed=0)
+    perlin_4d(; seed=nothing)
+    perlin_improved_4d(; seed=nothing)
 
 Construct a sampler that outputs 4-dimensional Perlin "Improved" noise when it is sampled from.
 
@@ -236,7 +239,7 @@ Construct a sampler that outputs 4-dimensional Perlin "Improved" noise when it i
 """
 
 const doc_simplex_1d = """
-    simplex_1d(; seed=0)
+    simplex_1d(; seed=nothing)
 
 Construct a sampler that outputs 1-dimensional Perlin Simplex noise when it is sampled from.
 
@@ -246,7 +249,7 @@ Construct a sampler that outputs 1-dimensional Perlin Simplex noise when it is s
 """
 
 const doc_simplex_2d = """
-    simplex_2d(; seed=0)
+    simplex_2d(; seed=nothing)
 
 Construct a sampler that outputs 2-dimensional Perlin Simplex noise when it is sampled from.
 
@@ -256,7 +259,7 @@ Construct a sampler that outputs 2-dimensional Perlin Simplex noise when it is s
 """
 
 const doc_simplex_3d = """
-    simplex_3d(; seed=0, smooth=false)
+    simplex_3d(; seed=nothing, smooth=false)
 
 Construct a sampler that outputs 3-dimensional Perlin Simplex noise when it is sampled from.
 
@@ -279,7 +282,7 @@ Construct a sampler that outputs 3-dimensional Perlin Simplex noise when it is s
 """
 
 const doc_simplex_4d = """
-    simplex_4d(; seed=0, smooth=false)
+    simplex_4d(; seed=nothing, smooth=false)
 
 Construct a sampler that outputs 4-dimensional Perlin Simplex noise when it is sampled from.
 
@@ -302,7 +305,7 @@ Construct a sampler that outputs 4-dimensional Perlin Simplex noise when it is s
 """
 
 const doc_opensimplex_2d = """
-    opensimplex_2d(; seed=0, smooth=false)
+    opensimplex_2d(; seed=nothing, smooth=false)
 
 Construct a sampler that outputs 2-dimensional legacy OpenSimplex noise when it is sampled from.
 
@@ -330,7 +333,7 @@ Construct a sampler that outputs 2-dimensional legacy OpenSimplex noise when it 
 """
 
 const doc_opensimplex_3d = """
-    opensimplex_3d(; seed=0, smooth=false)
+    opensimplex_3d(; seed=nothing, smooth=false)
 
 Construct a sampler that outputs 3-dimensional legacy OpenSimplex noise when it is sampled from.
 
@@ -358,7 +361,7 @@ Construct a sampler that outputs 3-dimensional legacy OpenSimplex noise when it 
 """
 
 const doc_opensimplex_4d = """
-    opensimplex_4d(; seed=0, smooth=false)
+    opensimplex_4d(; seed=nothing, smooth=false)
 
 Construct a sampler that outputs 4-dimensional legacy OpenSimplex noise when it is sampled from.
 
@@ -386,7 +389,7 @@ Construct a sampler that outputs 4-dimensional legacy OpenSimplex noise when it 
 """
 
 const doc_opensimplex2_2d = """
-    opensimplex2_2d(; seed=0, orient=nothing)
+    opensimplex2_2d(; seed=nothing, orient=nothing)
 
 Construct a sampler that outputs 2-dimensional OpenSimplex2 noise when it is sampled from.
 
@@ -402,7 +405,7 @@ Construct a sampler that outputs 2-dimensional OpenSimplex2 noise when it is sam
 """
 
 const doc_opensimplex2_3d = """
-    opensimplex2_3d(; seed=0, smooth=false, orient=nothing)
+    opensimplex2_3d(; seed=nothing, smooth=false, orient=nothing)
 
 Construct a sampler that outputs 3-dimensional OpenSimplex2 noise when it is sampled from.
 
@@ -433,7 +436,7 @@ Construct a sampler that outputs 3-dimensional OpenSimplex2 noise when it is sam
 """
 
 const doc_opensimplex2_4d = """
-    opensimplex2_4d(; seed=0, smooth=false, orient=nothing)
+    opensimplex2_4d(; seed=nothing, smooth=false, orient=nothing)
 
 Construct a sampler that outputs 4-dimensional OpenSimplex2 noise when it is sampled from.
 
@@ -466,7 +469,7 @@ Construct a sampler that outputs 4-dimensional OpenSimplex2 noise when it is sam
 """
 
 const doc_opensimplex2s_2d = """
-    opensimplex2s_2d(; seed=0, orient=nothing)
+    opensimplex2s_2d(; seed=nothing, orient=nothing)
 
 Construct a sampler that outputs 2-dimensional OpenSimplex2S noise when it is sampled from.
 
@@ -482,7 +485,7 @@ Construct a sampler that outputs 2-dimensional OpenSimplex2S noise when it is sa
 """
 
 const doc_opensimplex2s_3d = """
-    opensimplex2s_3d(; seed=0, smooth=false, orient=nothing)
+    opensimplex2s_3d(; seed=nothing, smooth=false, orient=nothing)
 
 Construct a sampler that outputs 3-dimensional OpenSimplex2S noise when it is sampled from.
 
@@ -513,7 +516,7 @@ Construct a sampler that outputs 3-dimensional OpenSimplex2S noise when it is sa
 """
 
 const doc_opensimplex2s_4d = """
-    opensimplex2s_4d(; seed=0, smooth=false, orient=nothing)
+    opensimplex2s_4d(; seed=nothing, smooth=false, orient=nothing)
 
 Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sampled from.
 
@@ -546,7 +549,7 @@ Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sa
 """
 
 const doc_worley_1d = """
-    worley_1d(; seed=0, jitter=1.0, output=:f1)
+    worley_1d(; seed=nothing, jitter=1.0, output=:f1)
 
 Construct a sampler that outputs 1-dimensional Worley noise when it is sampled from.
 
@@ -568,7 +571,7 @@ Construct a sampler that outputs 1-dimensional Worley noise when it is sampled f
 """
 
 const doc_worley_2d = """
-    worley_2d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+    worley_2d(; seed=nothing, jitter=1.0, output=:f1, metric=:euclidean)
 
 Construct a sampler that outputs 2-dimensional Worley noise when it is sampled from.
 
@@ -598,7 +601,7 @@ Construct a sampler that outputs 2-dimensional Worley noise when it is sampled f
 """
 
 const doc_worley_3d = """
-    worley_3d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+    worley_3d(; seed=nothing, jitter=1.0, output=:f1, metric=:euclidean)
 
 Construct a sampler that outputs 3-dimensional Worley noise when it is sampled from.
 
@@ -628,7 +631,7 @@ Construct a sampler that outputs 3-dimensional Worley noise when it is sampled f
 """
 
 const doc_worley_4d = """
-    worley_4d(; seed=0, jitter=1.0, output=:f1, metric=:euclidean)
+    worley_4d(; seed=nothing, jitter=1.0, output=:f1, metric=:euclidean)
 
 Construct a sampler that outputs 4-dimensional Worley noise when it is sampled from.
 

@@ -26,7 +26,7 @@ const OS_STRETCH_2D = (1 / sqrt(3) - 1) / 2
 const OS_SQUISH_2D = (sqrt(3) - 1) / 2
 
 @doc doc_opensimplex_2d
-opensimplex_2d(; seed=0, smooth=false) = _opensimplex(2, seed, smooth)
+opensimplex_2d(; seed=nothing, smooth=false) = _opensimplex(2, seed, smooth)
 
 @inline function contribute(sampler::OpenSimplex{2}, falloff, X, Y, x, y)
     t = sampler.perlin_state.table
@@ -98,7 +98,7 @@ const OS_GRADIENTS_3D =
     ))
 
 @doc doc_opensimplex_3d
-opensimplex_3d(; seed=0, smooth=false) = _opensimplex(3, seed, smooth)
+opensimplex_3d(; seed=nothing, smooth=false) = _opensimplex(3, seed, smooth)
 
 @inline function contribute(sampler::OpenSimplex{3}, falloff, X, Y, Z, x, y, z)
     t = sampler.table
@@ -397,7 +397,7 @@ const OS_GRADIENTS_4D = [
     -3, -3, -1, -1, -1, -1, -3, -1, -1, -1, -1, 3, -1, -1, -1, -1, -3]
 
 @doc doc_opensimplex_4d
-opensimplex_4d(; seed=0, smooth=false) = _opensimplex(4, seed, smooth)
+opensimplex_4d(; seed=nothing, smooth=false) = _opensimplex(4, seed, smooth)
 
 @inline function contribute(sampler::OpenSimplex{4}, falloff, X, Y, Z, W, x, y, z, w)
     t = sampler.perlin_state.table

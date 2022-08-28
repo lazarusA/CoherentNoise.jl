@@ -22,7 +22,7 @@ SimplexState(::Type{<:Simplex{4}}, ::Val{false}) = SimplexState(0.6, 27.0)
 # 1D
 
 @doc doc_simplex_1d
-simplex_1d(; seed=0) = _simplex(1, seed, false)
+simplex_1d(; seed=nothing) = _simplex(1, seed, false)
 
 @inline function grad(::Type{Simplex{1}}, falloff, hash, x)
     s = falloff - x^2
@@ -49,7 +49,7 @@ const SIMPLEX_SKEW_2D = (sqrt(3) - 1) / 2
 const SIMPLEX_UNSKEW_2D = (3 - sqrt(3)) / 6
 
 @doc doc_simplex_2d
-simplex_2d(; seed=0) = _simplex(2, seed, false)
+simplex_2d(; seed=nothing) = _simplex(2, seed, false)
 
 @inline function grad(::Type{Simplex{2}}, falloff, hash, x, y)
     s = falloff - x^2 - y^2
@@ -82,7 +82,7 @@ const SIMPLEX_SKEW_3D = 1 / 3
 const SIMPLEX_UNSKEW_3D = 1 / 6
 
 @doc doc_simplex_3d
-simplex_3d(; seed=0, smooth=false) = _simplex(3, seed, smooth)
+simplex_3d(; seed=nothing, smooth=false) = _simplex(3, seed, smooth)
 
 @inline function grad(S::Type{Simplex{3}}, falloff, hash, x, y, z)
     s = falloff - x^2 - y^2 - z^2
@@ -139,7 +139,7 @@ const SIMPLEX_GRADIENTS_4D = [
     0x3, 0x2, 0x1, 0x0]
 
 @doc doc_simplex_4d
-simplex_4d(; seed=0, smooth=false) = _simplex(4, seed, smooth)
+simplex_4d(; seed=nothing, smooth=false) = _simplex(4, seed, smooth)
 
 @inline function grad(S::Type{Simplex{4}}, falloff, hash, x, y, z, w)
     s = falloff - x^2 - y^2 - z^2 - w^2

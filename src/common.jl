@@ -75,7 +75,10 @@ struct RandomState
     rng::Xoroshiro128Star
 end
 
-@inline RandomState(seed) = RandomState(seed, Xoroshiro128Star(seed))
+@inline function RandomState(seed)
+    seed = isnothing(seed) ? rand(RandomDevice(), UInt) : seed
+    RandomState(seed, Xoroshiro128Star(seed))
+end
 
 ### State for Perlin-based samplers
 

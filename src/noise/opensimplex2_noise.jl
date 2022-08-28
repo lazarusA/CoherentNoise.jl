@@ -51,7 +51,7 @@ const OS2_GRADIENTS_NORMALIZED_2D = [
 const OS2_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.01001634121365712 |> CircularVector
 
 @doc doc_opensimplex2_2d
-opensimplex2_2d(; seed=0, orient=nothing) = _opensimplex2(2, seed, orient, false)
+opensimplex2_2d(; seed=nothing, orient=nothing) = _opensimplex2(2, seed, orient, false)
 
 @inline orient(::Type{OpenSimplex2{2,OrientStandard}}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
 
@@ -169,7 +169,9 @@ const OS2_GRADIENTS_NORMALIZED_3D = [
 const OS2_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.07969837668935331 |> CircularVector
 
 @doc doc_opensimplex2_3d
-opensimplex2_3d(; seed=0, orient=nothing, smooth=false) = _opensimplex2(3, seed, orient, smooth)
+function opensimplex2_3d(; seed=nothing, orient=nothing, smooth=false)
+    _opensimplex2(3, seed, orient, smooth)
+end
 
 @inline function orient(::Type{OpenSimplex2{3,OrientStandard}}, x, y, z)
     OS2_FALLBACK_ROTATE_3D * (x + y + z) .- (x, y, z)
@@ -407,7 +409,9 @@ const OS2_GRADIENTS_NORMALIZED_4D = [
 const OS2_GRADIENTS_4D = OS2_GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897 |> CircularVector
 
 @doc doc_opensimplex2_4d
-opensimplex2_4d(; seed=0, orient=nothing, smooth=false) = _opensimplex2(4, seed, orient, smooth)
+function opensimplex2_4d(; seed=nothing, orient=nothing, smooth=false)
+    _opensimplex2(4, seed, orient, smooth)
+end
 
 @inline function orient(::Type{OpenSimplex2{4,OrientStandard}}, x, y, z, w)
     (x, y, z, w) .+ OS2_SKEW_4D .* (x + y + z + w)
