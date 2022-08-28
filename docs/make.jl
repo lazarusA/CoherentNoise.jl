@@ -19,6 +19,7 @@ makedocs(;
     pages=[
         "Home" => "index.md",
         "Overview" => "overview.md",
+        "Algorithms" => "algorithms.md",
         "Getting Started" => "getting_started.md",
         "Tutorial" => "tutorial.md",
         "Gallery" => "gallery.md",
