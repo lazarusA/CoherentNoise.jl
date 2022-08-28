@@ -24,7 +24,7 @@ function sample(sampler::S, x::Real) where {S<:Cubic{1}}
     X = floor.(Int, x)
     X1 = X .* PRIME_X
     X2 = X1 + PRIME_X
-    (_hash(S, seed, x - X, X1 - PRIME_X, X1, X2, X2 + PRIME_X * 2) - 1) / 1.5
+    (_hash(S, seed, x - X, X1 - PRIME_X, X1, X2, X2 + PRIME_X) - 1) / 1.5
 end
 
 ### 2D
