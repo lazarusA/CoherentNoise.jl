@@ -86,7 +86,7 @@ function sample(sampler::Worley{1,M,F}, x::Real) where {M,F}
     closest_hash::UInt32 = 0
     @inbounds for xi in 0:2
         hash = ⊻(seed, xp) * HASH1 % UInt32
-        vx = table[(hash+1)&511] * jitter + xr + xi
+        vx = table[(hash+1)&255] * jitter + xr + xi
         d = cell_distance(M, vx)
         maxf = clamp(d, minf, maxf)
         if d < minf
