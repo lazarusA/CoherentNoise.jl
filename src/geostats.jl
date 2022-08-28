@@ -62,7 +62,7 @@ function solvesingle(problem::SimulationProblem, covars::NamedTuple, ::CNS, prep
   grid   = CartesianGrid(start, finish, dims=dims)
 
   # loop over simulation variables
-  varreal = map(covars.names) do var
+  varvals = map(covars.names) do var
     # unpack preprocessed parameters
     sampler = preproc[var].sampler
 
@@ -76,5 +76,5 @@ function solvesingle(problem::SimulationProblem, covars::NamedTuple, ::CNS, prep
     var => vals
   end
 
-  Dict(varreal)
+  Dict(varvals)
 end
