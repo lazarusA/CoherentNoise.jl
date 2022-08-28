@@ -51,7 +51,7 @@ const OS2_GRADIENTS_NORMALIZED_2D = [
 const OS2_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.01001634121365712 |> CircularVector
 
 @doc doc_opensimplex2_2d
-opensimplex2_2d(; seed=0, orient=nothing, smooth=false) = _opensimplex2(2, seed, orient, smooth)
+opensimplex2_2d(; seed=0, orient=nothing) = _opensimplex2(2, seed, orient, false)
 
 @inline orient(::Type{OpenSimplex2{2,OrientStandard}}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
 
