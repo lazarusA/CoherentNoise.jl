@@ -21,6 +21,9 @@ include("noise.jl")
 include("fractal.jl")
 include("modifier.jl")
 
+# geostats api
+include("geostats.jl")
+
 ### Exports
 
 # Common
@@ -53,5 +56,8 @@ export constant_1d, checkered_2d, cylinders_2d, spheres_3d
 export ModifierSampler
 export cache, curve, mix, rotate, scale, select, terrace
 export translate, turbulence, warp
+
+# geostats api
+export CNS
 
 end
