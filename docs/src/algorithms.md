@@ -1,11 +1,11 @@
 ## Patterns
 
-Name | 1D (line view, Y=value) | 2D (surface view, Z=value) | 3D (surface view, Z=time) | 4D (not renderered)
-:--- | :---------------------: | :------------------------: | :-----------------------: | :-----------------:
-Constant | [![](assets/algorithms/constant_1d.png)](assets/algorithms/constant_1d_full.png) | N/A | N/A | N/A
-Checkered | N/A | [![](assets/algorithms/checkered_2d.png)](assets/algorithms/checkered_2d_full.png) | N/A | N/A
-Cylinders | N/A | [![](assets/algorithms/cylinders_2d.png)](assets/algorithms/cylinders_2d_full.png) | N/A | N/A
-Spheres | N/A | N/A | [![](assets/algorithms/spheres_3d.gif)](https://www.youtube.com/watch?v=SMp71xTHnDM) | N/A
+Name | 1D (line view, Y=value) | 2D (surface view, Z=value) | 3D (surface view, Z=time)
+:--- | :---------------------: | :------------------------: | :-----------------------:
+Constant | [![](assets/algorithms/constant_1d.png)](assets/algorithms/constant_1d_full.png) | N/A | N/A
+Checkered | N/A | [![](assets/algorithms/checkered_2d.png)](assets/algorithms/checkered_2d_full.png) | N/A
+Cylinders | N/A | [![](assets/algorithms/cylinders_2d.png)](assets/algorithms/cylinders_2d_full.png) | N/A
+Spheres | N/A | N/A | [![](assets/algorithms/spheres_3d.gif)](https://www.youtube.com/watch?v=SMp71xTHnDM)
 
 ## Noise
 
