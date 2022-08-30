@@ -1,12 +1,12 @@
-struct CubicValue{N} <: NoiseSampler{N}
+struct ValueCubic{N} <: NoiseSampler{N}
     random_state::RandomState
 end
 
-@inline _cubic_value(dims, seed) = CubicValue{dims}(RandomState(seed))
+@inline _value_cubic(dims, seed) = ValueCubic{dims}(RandomState(seed))
 
-HashTrait(::Type{<:CubicValue}) = IsValueHashed()
+HashTrait(::Type{<:ValueCubic}) = IsValueHashed()
 
-@inline function _hash(S::Type{<:CubicValue}, seed, t, c1, c2, c3, c4)
+@inline function _hash(S::Type{<:ValueCubic}, seed, t, c1, c2, c3, c4)
     h1 = hash_coords(S, seed, c1...)
     h2 = hash_coords(S, seed, c2...)
     h3 = hash_coords(S, seed, c3...)
@@ -16,11 +16,11 @@ end
 
 ### 1D
 
-@doc doc_cubic_value_1d
-cubic_value_1d(; seed=nothing) = _cubic_value(1, seed)
-@deprecate cubic_1d(; kwargs...) cubic_value_1d(; kwargs...)
+@doc doc_value_cubic_1d
+value_cubic_1d(; seed=nothing) = _value_cubic(1, seed)
+@deprecate cubic_1d(; kwargs...) value_cubic_1d(; kwargs...)
 
-function sample(sampler::S, x::Real) where {S<:CubicValue{1}}
+function sample(sampler::S, x::Real) where {S<:ValueCubic{1}}
     seed = sampler.random_state.seed
     X = floor.(Int, x)
     X1 = X .* PRIME_X
@@ -30,11 +30,11 @@ end
 
 ### 2D
 
-@doc doc_cubic_value_2d
-cubic_value_2d(; seed=nothing) = _cubic_value(2, seed)
-@deprecate cubic_2d(; kwargs...) cubic_value_2d(; kwargs...)
+@doc doc_value_cubic_2d
+value_cubic_2d(; seed=nothing) = _value_cubic(2, seed)
+@deprecate cubic_2d(; kwargs...) value_cubic_2d(; kwargs...)
 
-function sample(sampler::S, x::T, y::T) where {S<:CubicValue{2},T<:Real}
+function sample(sampler::S, x::T, y::T) where {S<:ValueCubic{2},T<:Real}
     seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y)
     XY = floor.(Int, (x, y))
@@ -52,11 +52,11 @@ end
 
 ### 3D
 
-@doc doc_cubic_value_3d
-cubic_value_3d(; seed=nothing) = _cubic_value(3, seed)
-@deprecate cubic_3d(; kwargs...) cubic_value_3d(; kwargs...)
+@doc doc_value_cubic_3d
+value_cubic_3d(; seed=nothing) = _value_cubic(3, seed)
+@deprecate cubic_3d(; kwargs...) value_cubic_3d(; kwargs...)
 
-function sample(sampler::S, x::T, y::T, z::T) where {S<:CubicValue{3},T<:Real}
+function sample(sampler::S, x::T, y::T, z::T) where {S<:ValueCubic{3},T<:Real}
     seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y, PRIME_Z)
     XYZ = floor.(Int, (x, y, z))
@@ -90,11 +90,11 @@ end
 
 ### 4D
 
-@doc doc_cubic_value_4d
-cubic_value_4d(; seed=nothing) = _cubic_value(4, seed)
-@deprecate cubic_4d(; kwargs...) cubic_value_4d(; kwargs...)
+@doc doc_value_cubic_4d
+value_cubic_4d(; seed=nothing) = _value_cubic(4, seed)
+@deprecate cubic_4d(; kwargs...) value_cubic_4d(; kwargs...)
 
-function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:CubicValue{4},T<:Real}
+function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:ValueCubic{4},T<:Real}
     seed = sampler.random_state.seed
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
     XYZW = floor.(Int, (x, y, z, w))

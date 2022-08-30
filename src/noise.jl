@@ -1,5 +1,5 @@
 include("noise/value_noise.jl")
-include("noise/cubic_value_noise.jl")
+include("noise/value_cubic_noise.jl")
 include("noise/perlin_noise.jl")
 include("noise/simplex_noise.jl")
 include("noise/opensimplex_noise.jl")
