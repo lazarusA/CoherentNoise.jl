@@ -134,40 +134,40 @@ Construct a sampler that outputs 4-dimensonal value noise when it is sampled fro
   - `seed`: $(_doc_seed)
 """
 
-const doc_cubic_1d = """
-    cubic_1d(; seed=nothing)
+const doc_cubic_value_1d = """
+    cubic_value_1d(; seed=nothing)
 
-Construct a sampler that outputs 1-dimensonal cubic noise when it is sampled from.
-
-# Arguments
-
-  - `seed`: $(_doc_seed)
-"""
-
-const doc_cubic_2d = """
-    cubic_2d(; seed=nothing)
-
-Construct a sampler that outputs 2-dimensonal cubic noise when it is sampled from.
+Construct a sampler that outputs 1-dimensonal cubic value noise when it is sampled from.
 
 # Arguments
 
   - `seed`: $(_doc_seed)
 """
 
-const doc_cubic_3d = """
-    cubic_3d(; seed=nothing)
+const doc_cubic_value_2d = """
+    cubic_value_2d(; seed=nothing)
 
-Construct a sampler that outputs 3-dimensonal cubic noise when it is sampled from.
+Construct a sampler that outputs 2-dimensonal cubic value noise when it is sampled from.
 
 # Arguments
 
   - `seed`: $(_doc_seed)
 """
 
-const doc_cubic_4d = """
-    cubic_4d(; seed=nothing)
+const doc_cubic_value_3d = """
+    cubic_value_3d(; seed=nothing)
 
-Construct a sampler that outputs 4-dimensonal cubic noise when it is sampled from.
+Construct a sampler that outputs 3-dimensonal cubic value noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: $(_doc_seed)
+"""
+
+const doc_cubic_value_4d = """
+    cubic_value_4d(; seed=nothing)
+
+Construct a sampler that outputs 4-dimensonal cubic value noise when it is sampled from.
 
 # Arguments
 

@@ -107,7 +107,7 @@ for other algorithms, please file an issue or submit a pull request.
 ### Noise samplers
 
 - Value: (1D, 2D, 3D, 4D)
-- Cubic: (1D, 2D, 3D, 4D)
+- Cubic value: (1D, 2D, 3D, 4D)
 - Perlin: (1D, 2D, 3D, 4D)
 - Simplex: (1D, 2D, 3D, 4D)
 - OpenSimplex: (2D, 3D, 4D)
