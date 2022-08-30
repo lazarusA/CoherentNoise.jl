@@ -1,6 +1,8 @@
 ### State composed into all fractal sampler types
 
 struct FractalState{N,S,O}
+    random_state::RandomState
+    offset::NTuple{N,Float64}
     sources::NTuple{O,S}
     scale::Float64
     frequency::Float64
@@ -10,21 +12,27 @@ struct FractalState{N,S,O}
 end
 
 @inline function FractalState{N,F,O}(
+    seed,
     source::S,
     frequency,
     lacunarity,
     persistence,
     attenuation,
 ) where {N,F<:FractalSampler,O,S<:AbstractSampler{N}}
+    rs = RandomState(seed)
+    offset = ntuple(i -> rand(rs.rng), N)
     sources = ntuple(_ -> deepcopy(source), O)
     scale = scale_factor(F, O, persistence, attenuation)
-    FractalState{N,S,O}(sources, scale, frequency, lacunarity, persistence, attenuation)
+    FractalState{N,S,O}(rs, offset, sources, scale, frequency, lacunarity, persistence, attenuation)
+end
+
+@inline function Base.getproperty(obj::FractalSampler, name::Symbol)
+    name === :random_state ? getfield(obj, :state).random_state : getfield(obj, name)
 end
 
 ### fBm
 
 struct FBM{N,S,O} <: FractalSampler{N}
-    random_state::RandomState
     state::FractalState{N,S,O}
 end
 
@@ -37,9 +45,8 @@ end
     persistence,
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
-    rs = RandomState(seed)
-    fs = FractalState{N,FBM,O}(source, frequency, lacunarity, persistence, 1.0)
-    FBM{N,S,O}(rs, fs)
+    fs = FractalState{N,FBM,O}(seed, source, frequency, lacunarity, persistence, 1.0)
+    FBM{N,S,O}(fs)
 end
 
 @inline function scale_factor(::Type{FBM}, octaves, persistence, _)
@@ -96,6 +103,7 @@ end
 
 function sample(sampler::FBM{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
+    offset = state.offset
     persistence = state.persistence
     lacunarity = state.lacunarity
     coords = coords .* state.frequency
@@ -104,7 +112,7 @@ function sample(sampler::FBM{N}, coords::Vararg{Real,N}) where {N}
     for source in state.sources
         result += sample(source, coords...) * amplitude
         amplitude *= persistence
-        coords = coords .* lacunarity
+        coords = coords .* lacunarity .+ offset
     end
     result / state.scale
 end
@@ -112,7 +120,6 @@ end
 ### Billow
 
 struct Billow{N,S,O} <: FractalSampler{N}
-    random_state::RandomState
     state::FractalState{N,S,O}
 end
 
@@ -125,9 +132,8 @@ end
     persistence,
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
-    rs = RandomState(seed)
-    fs = FractalState{N,Billow,O}(source, frequency, lacunarity, persistence, 1.0)
-    Billow{N,S,O}(rs, fs)
+    fs = FractalState{N,Billow,O}(seed, source, frequency, lacunarity, persistence, 1.0)
+    Billow{N,S,O}(fs)
 end
 
 @inline function scale_factor(::Type{Billow}, octaves, persistence, _)
@@ -184,6 +190,7 @@ end
 
 function sample(sampler::Billow{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
+    offset = state.offset
     persistence = state.persistence
     lacunarity = state.lacunarity
     coords = coords .* state.frequency
@@ -192,7 +199,7 @@ function sample(sampler::Billow{N}, coords::Vararg{Real,N}) where {N}
     for source in state.sources
         result += (abs(sample(source, coords...)) * 2 - 1) * amplitude
         amplitude *= persistence
-        coords = coords .* lacunarity
+        coords = coords .* lacunarity .+ offset
     end
     result / state.scale
 end
@@ -200,7 +207,6 @@ end
 ### Multifractal
 
 struct Multi{N,S,O} <: FractalSampler{N}
-    random_state::RandomState
     state::FractalState{N,S,O}
 end
 
@@ -213,9 +219,8 @@ end
     persistence,
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
-    rs = RandomState(seed)
-    fs = FractalState{N,Multi,O}(source, frequency, lacunarity, persistence, 1.0)
-    Multi{N,S,O}(rs, fs)
+    fs = FractalState{N,Multi,O}(seed, source, frequency, lacunarity, persistence, 1.0)
+    Multi{N,S,O}(fs)
 end
 
 @inline function scale_factor(::Type{Multi}, octaves, persistence, _)
@@ -274,6 +279,7 @@ end
 
 function sample(sampler::Multi{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
+    offset = state.offset
     sources = state.sources
     persistence = state.persistence
     lacunarity = state.lacunarity
@@ -282,7 +288,7 @@ function sample(sampler::Multi{N}, coords::Vararg{Real,N}) where {N}
     result = sample(sources[1], coords...)
     for source in sources[2:end]
         amplitude *= persistence
-        coords = coords .* lacunarity
+        coords = coords .* lacunarity .+ offset
         result += sample(source, coords...) * result * amplitude
     end
     result / state.scale
@@ -291,7 +297,6 @@ end
 ### Hybrid
 
 struct Hybrid{N,S,O} <: FractalSampler{N}
-    random_state::RandomState
     state::FractalState{N,S,O}
 end
 
@@ -304,9 +309,8 @@ end
     persistence,
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
-    rs = RandomState(seed)
-    fs = FractalState{N,Hybrid,O}(source, frequency, lacunarity, persistence, 1.0)
-    Hybrid{N,S,O}(rs, fs)
+    fs = FractalState{N,Hybrid,O}(seed, source, frequency, lacunarity, persistence, 1.0)
+    Hybrid{N,S,O}(fs)
 end
 
 @inline function scale_factor(::Type{Hybrid}, octaves, persistence, _)
@@ -372,6 +376,7 @@ end
 
 function sample(sampler::Hybrid{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
+    offset = state.offset
     sources = state.sources
     persistence = state.persistence
     amplitude = persistence
@@ -383,7 +388,7 @@ function sample(sampler::Hybrid{N}, coords::Vararg{Real,N}) where {N}
     for source in sources[3:end]
         amplitude *= persistence
         weight = max(weight, 1)
-        weight *= sample(source, coords...) * amplitude
+        weight *= sample(source, (coords .+ offset)...) * amplitude
         result += weight
     end
     result / state.scale
@@ -392,7 +397,6 @@ end
 ### Ridged
 
 struct Ridged{N,S,O} <: FractalSampler{N}
-    random_state::RandomState
     state::FractalState{N,S,O}
 end
 
@@ -406,9 +410,8 @@ end
     attenuation,
 ) where {N,S<:AbstractSampler{N}}
     O = octaves
-    rs = RandomState(seed)
-    fs = FractalState{N,Ridged,O}(source, frequency, lacunarity, persistence, attenuation)
-    Ridged{N,S,O}(rs, fs)
+    fs = FractalState{N,Ridged,O}(seed, source, frequency, lacunarity, persistence, attenuation)
+    Ridged{N,S,O}(fs)
 end
 
 @inline function scale_factor(::Type{Ridged}, octaves, persistence, attenuation)
@@ -478,6 +481,7 @@ end
 
 function sample(sampler::Ridged{N}, coords::Vararg{Real,N}) where {N}
     state = sampler.state
+    offset = state.offset
     persistence = state.persistence
     lacunarity = state.lacunarity
     attenuation = state.attenuation
@@ -488,7 +492,7 @@ function sample(sampler::Ridged{N}, coords::Vararg{Real,N}) where {N}
     for source in state.sources
         temp = (1 - abs(sample(source, coords...)))^2 * weight * amplitude
         amplitude *= persistence
-        coords = coords .* lacunarity
+        coords = coords .* lacunarity .+ offset
         weight = clamp(temp / attenuation, 0, 1)
         result += temp
     end
