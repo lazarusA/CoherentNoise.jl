@@ -28,13 +28,12 @@ export AbstractSampler, sample, gen_image
 
 # Noise
 export NoiseSampler
-export value_1d, value_2d, value_3d, value_4d
-export value_cubic_1d, value_cubic_2d, value_cubic_3d, value_cubic_4d
+export opensimplex_2d, opensimplex_3d, opensimplex_4d
+export opensimplex2s_2d, opensimplex2s_3d, opensimplex2s_4d
 export perlin_1d, perlin_2d, perlin_3d, perlin_4d
 export simplex_1d, simplex_2d, simplex_3d, simplex_4d
-export opensimplex_2d, opensimplex_3d, opensimplex_4d
-export opensimplex2_2d, opensimplex2_3d, opensimplex2_4d
-export opensimplex2s_2d, opensimplex2s_3d, opensimplex2s_4d
+export value_1d, value_2d, value_3d, value_4d
+export value_cubic_1d, value_cubic_2d, value_cubic_3d, value_cubic_4d
 export worley_1d, worley_2d, worley_3d, worley_4d
 
 # Fractals
@@ -51,7 +50,6 @@ export constant_1d, checkered_2d, cylinders_2d, spheres_3d
 
 # Modifiers
 export ModifierSampler
-export cache, curve, mix, rotate, scale, select, terrace
-export translate, turbulence, warp
+export cache, curve, mix, rotate, scale, select, terrace, translate, turbulence, warp
 
 end

@@ -106,13 +106,15 @@ for other algorithms, please file an issue or submit a pull request.
 
 ### Noise samplers
 
-- Value: (1D, 2D, 3D, 4D)
-- Cubic value: (1D, 2D, 3D, 4D)
-- Perlin: (1D, 2D, 3D, 4D)
-- Simplex: (1D, 2D, 3D, 4D)
-- OpenSimplex: (2D, 3D, 4D)
+In the order of "recommended to try first":
+
 - OpenSimplex2: (2D, 3D, 4D)
+- Simplex: (1D, 2D, 3D, 4D)
 - OpenSimplex2S: (2D, 3D, 4D)
+- OpenSimplex: (2D, 3D, 4D)
+- Perlin: (1D, 2D, 3D, 4D)
+- Value cubic: (1D, 2D, 3D, 4D)
+- Value: (1D, 2D, 3D, 4D)
 - Worley: (1D, 2D, 3D, 4D)
 
 ### Pattern samplers
