@@ -28,6 +28,7 @@ export AbstractSampler, sample, gen_image
 # Noise
 export NoiseSampler
 export opensimplex_2d, opensimplex_3d, opensimplex_4d
+export opensimplex2_2d, opensimplex2_3d, opensimplex2_4d
 export opensimplex2s_2d, opensimplex2s_3d, opensimplex2s_4d
 export perlin_1d, perlin_2d, perlin_3d, perlin_4d
 export simplex_1d, simplex_2d, simplex_3d, simplex_4d
