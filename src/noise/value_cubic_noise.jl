@@ -2,8 +2,6 @@ struct ValueCubic{N} <: NoiseSampler{N}
     random_state::RandomState
 end
 
-@inline _value_cubic(dims, seed) = ValueCubic{dims}(RandomState(seed))
-
 HashTrait(::Type{<:ValueCubic}) = IsValueHashed()
 
 @inline function _hash(S::Type{<:ValueCubic}, seed, t, c1, c2, c3, c4)
@@ -17,7 +15,7 @@ end
 ### 1D
 
 @doc doc_value_cubic_1d
-value_cubic_1d(; seed=nothing) = _value_cubic(1, seed)
+value_cubic_1d(; seed=nothing) = ValueCubic{1}(RandomState(seed))
 @deprecate cubic_1d(; kwargs...) value_cubic_1d(; kwargs...)
 
 function sample(sampler::S, x::Real) where {S<:ValueCubic{1}}
@@ -31,7 +29,7 @@ end
 ### 2D
 
 @doc doc_value_cubic_2d
-value_cubic_2d(; seed=nothing) = _value_cubic(2, seed)
+value_cubic_2d(; seed=nothing) = ValueCubic{2}(RandomState(seed))
 @deprecate cubic_2d(; kwargs...) value_cubic_2d(; kwargs...)
 
 function sample(sampler::S, x::T, y::T) where {S<:ValueCubic{2},T<:Real}
@@ -53,7 +51,7 @@ end
 ### 3D
 
 @doc doc_value_cubic_3d
-value_cubic_3d(; seed=nothing) = _value_cubic(3, seed)
+value_cubic_3d(; seed=nothing) = ValueCubic{3}(RandomState(seed))
 @deprecate cubic_3d(; kwargs...) value_cubic_3d(; kwargs...)
 
 function sample(sampler::S, x::T, y::T, z::T) where {S<:ValueCubic{3},T<:Real}
@@ -91,7 +89,7 @@ end
 ### 4D
 
 @doc doc_value_cubic_4d
-value_cubic_4d(; seed=nothing) = _value_cubic(4, seed)
+value_cubic_4d(; seed=nothing) = ValueCubic{4}(RandomState(seed))
 @deprecate cubic_4d(; kwargs...) value_cubic_4d(; kwargs...)
 
 function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:ValueCubic{4},T<:Real}
