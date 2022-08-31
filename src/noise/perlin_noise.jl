@@ -16,17 +16,11 @@ HashTrait(::Type{<:Perlin}) = IsPerlinHashed()
 perlin_1d(; seed=nothing) = _perlin(1, seed)
 @deprecate perlin_improved_1d(; kwargs...) perlin_1d(; kwargs...)
 
-@inline function grad(S::Type{Perlin{1}}, hash, x)
-    hash_coords(S, hash, x)
-end
-
 function sample(sampler::S, x::T) where {S<:Perlin{1},T<:Real}
     t = sampler.state.table
     X = floor(Int, x)
     x1 = x - X
-    x2 = x1 - 1
-    fx = curve5(x1)
-    lerp(grad(S, t[X], x1), grad(S, t[X+1], x2), fx) * 2
+    lerp(hash_coords(S, t[X], x1), hash_coords(S, t[X+1], x1 - 1), curve5(x1)) * 2
 end
 
 ### 2D
