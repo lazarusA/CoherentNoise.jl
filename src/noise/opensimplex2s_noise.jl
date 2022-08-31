@@ -20,7 +20,22 @@ SimplexState(::Type{<:OpenSimplex2S{4}}, ::Val{false}) = SimplexState(4 / 5, 1.0
 
 const OS2S_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118 |> CircularVector
 
-@doc doc_opensimplex2s_2d
+"""
+    opensimplex2s_2d(; seed=nothing, orient=nothing)
+
+Construct a sampler that outputs 2-dimensional OpenSimplex2S noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `orient`: Either the symbol `:x` or the value `nothing`:
+
+      + `nothing`: Use the standard orientation.
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+"""
 opensimplex2s_2d(; seed=nothing, orient=nothing) = _opensimplex2s(2, seed, orient, false)
 
 @inline orient(::Type{OpenSimplex2S{2,OrientStandard}}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
@@ -89,7 +104,37 @@ end
 
 const OS2S_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> CircularVector
 
-@doc doc_opensimplex2s_3d
+"""
+    opensimplex2s_3d(; seed=nothing, smooth=false, orient=nothing)
+
+Construct a sampler that outputs 3-dimensional OpenSimplex2S noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+
+  - `orient`: Either the symbol `:x` or the value `nothing`:
+
+      + `nothing`: Use the standard orientation.
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
+"""
 function opensimplex2s_3d(; seed=nothing, orient=nothing, smooth=false)
     _opensimplex2s(3, seed, orient, smooth)
 end
@@ -489,7 +534,39 @@ const OS2S_LOOKUP_4D_A, OS2S_LOOKUP_4D_B = let
     (a, b)
 end
 
-@doc doc_opensimplex2s_4d
+"""
+    opensimplex2s_4d(; seed=nothing, smooth=false, orient=nothing)
+
+Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+  `nothing` for non-deterministic results.
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+
+  - `orient`: Either the symbol `:x` or the value `nothing`:
+
+      + `nothing`: Use the standard orientation.
+      + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
+        improve visual isotropy.
+      + `:xy`: Re-orient the noise space to have better visual isotropy in the XY plane.
+      + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
+      + `:xyz`: Re-orient the noise space to be better suited for time-varied animations, where
+        the W axis is time.
+"""
 function opensimplex2s_4d(; seed=nothing, orient=nothing, smooth=false)
     _opensimplex2s(4, seed, orient, smooth)
 end

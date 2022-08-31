@@ -12,7 +12,30 @@ HashTrait(::Type{<:Perlin}) = IsPerlinHashed()
 
 ### 1D
 
-@doc doc_perlin_1d
+"""
+    perlin_1d(; seed=nothing)
+    perlin_improved_1d(; seed=nothing)
+
+Construct a sampler that outputs 1-dimensional Perlin "Improved" noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+# Notes:
+
+  - `perlin_improved_1d` is deprecated and will be removed in favor of `perlin_1d` in a future
+    major version release.
+
+  - It is *strongly* recommended not to use this function for quality noise; the results will be
+    very regular. There are many tricks people have done to combat this issue, but they all have
+    trade-offs that are not worth the burden.
+
+    The recommended alternatives are to either use [`simplex_1d`](@ref simplex_1d), or use
+    [`perlin_3d`](@ref perlin_3d) with 2 of the coordinates fixed, and not close to `0.0`, `0.5`, or
+    `1.0`.
+"""
 perlin_1d(; seed=nothing) = _perlin(1, seed)
 @deprecate perlin_improved_1d(; kwargs...) perlin_1d(; kwargs...)
 
@@ -25,7 +48,22 @@ end
 
 ### 2D
 
-@doc doc_perlin_2d
+"""
+    perlin_2d(; seed=nothing)
+    perlin_improved_2d(; seed=nothing)
+
+Construct a sampler that outputs 2-dimensional Perlin "Improved" noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+# Notes:
+
+  - `perlin_improved_2d` is deprecated and will be removed in favor of `perlin_2d` in a future
+    major version release.
+"""
 perlin_2d(; seed=nothing) = _perlin(2, seed)
 @deprecate perlin_improved_2d(; kwargs...) perlin_2d(; kwargs...)
 
@@ -50,7 +88,22 @@ end
 
 ### 3D
 
-@doc doc_perlin_3d
+"""
+    perlin_3d(; seed=nothing)
+    perlin_improved_3d(; seed=nothing)
+
+Construct a sampler that outputs 3-dimensional Perlin "Improved" noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+# Notes:
+
+  - `perlin_improved_3d` is deprecated and will be removed in favor of `perlin_3d` in a future
+    major version release.
+"""
 perlin_3d(; seed=nothing) = _perlin(3, seed)
 @deprecate perlin_improved_3d(; kwargs...) perlin_3d(; kwargs...)
 
@@ -78,7 +131,22 @@ end
 
 ### 4D
 #
-@doc doc_perlin_4d
+"""
+    perlin_4d(; seed=nothing)
+    perlin_improved_4d(; seed=nothing)
+
+Construct a sampler that outputs 4-dimensional Perlin "Improved" noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+# Notes:
+
+  - `perlin_improved_4d` is deprecated and will be removed in favor of `perlin_4d` in a future
+    major version release.
+"""
 perlin_4d(; seed=nothing) = _perlin(4, seed)
 @deprecate perlin_improved_4d(; kwargs...) perlin_4d(; kwargs...)
 

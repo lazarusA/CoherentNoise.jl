@@ -5,7 +5,20 @@ struct Constant <: PatternSampler{1}
     value::Float64
 end
 
-@doc doc_constant_1d
+"""
+    constant_1d(; seed=nothing, value=0.0)
+
+Construct a sampler that constantly outputs `value` each time it is sampled from.
+
+This is useful for debugging and applications where you need to combine a constant value.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `value`: A constant value to emit each time this sampler is sampled from.
+"""
 constant_1d(; seed=nothing, value=0.0) = Constant(RandomState(seed), value)
 
 sample(sampler::S, _) where {S<:Constant} = sampler.value
@@ -16,7 +29,18 @@ struct Checkered <: PatternSampler{2}
     random_state::RandomState
 end
 
-@doc doc_checkered_2d
+"""
+    checkered_2d(; seed=nothing)
+
+Construct a sampler that outputs values in a checkerboard-like pattern when it is sampled from.
+
+That is, output values will only ever be -1.0 or 1.0.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 checkered_2d(; seed=nothing) = Checkered(RandomState(seed))
 
 function sample(::S, x::T, y::T) where {S<:Checkered,T<:Real}
@@ -30,7 +54,20 @@ struct Cylinders <: PatternSampler{2}
     frequency::Float64
 end
 
-@doc doc_cylinders_2d
+"""
+    cylinders_2d(; seed=nothing, frequency=1.0)
+
+Construct a sampler that outputs values that form a pattern representing concentric cylinders when
+it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `frequency`: The frequency of the signal, which controls how small or large the cylinders
+    are.
+"""
 cylinders_2d(; seed=nothing, frequency=1.0) = Cylinders(RandomState(seed), frequency)
 
 function sample(sampler::S, x::T, y::T) where {S<:Cylinders,T<:Real}
@@ -49,7 +86,19 @@ struct Spheres <: PatternSampler{3}
     frequency::Float64
 end
 
-@doc doc_spheres_3d
+"""
+    spheres_3d(; seed=nothing, frequency=1.0)
+
+Construct a sampler that outputs values that form a pattern representing concentric spheres when it
+is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `frequency`: The frequency of the signal, which controls how small or large the spheres are.
+"""
 spheres_3d(; seed=nothing, frequency=1.0) = Spheres(RandomState(seed), frequency)
 
 function sample(sampler::S, x::T, y::T, z::T) where {S<:Spheres,T<:Real}

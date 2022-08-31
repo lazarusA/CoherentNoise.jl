@@ -14,7 +14,6 @@ using RandomNumbers.Xorshifts: Xoroshiro128Star
 
 ### Includes
 
-include("docs.jl")
 include("common.jl")
 include("pattern.jl")
 include("noise.jl")

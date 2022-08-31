@@ -53,7 +53,30 @@ end
     sum(persistence .^ (0:octaves-1))
 end
 
-@doc doc_fbm_fractal_1d
+"""
+    fbm_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional fractional Brownian motion fractal noise when it
+is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function fbm_fractal_1d(;
     seed=nothing,
     source=simplex_1d(seed=seed),
@@ -65,7 +88,30 @@ function fbm_fractal_1d(;
     FBM{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_fbm_fractal_2d
+"""
+    fbm_fractal_2d(; kwargs...)
+
+Construct a sampler that outputs a 2-dimensional fractional Brownian motion fractal noise when it
+is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function fbm_fractal_2d(;
     seed=nothing,
     source=opensimplex2_2d(seed=seed),
@@ -77,7 +123,30 @@ function fbm_fractal_2d(;
     FBM{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_fbm_fractal_3d
+"""
+    fbm_fractal_3d(; kwargs...)
+
+Construct a sampler that outputs a 3-dimensional fractional Brownian motion fractal noise when it
+is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function fbm_fractal_3d(;
     seed=nothing,
     source=opensimplex2_3d(seed=seed),
@@ -89,7 +158,30 @@ function fbm_fractal_3d(;
     FBM{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_fbm_fractal_4d
+"""
+    fbm_fractal_4d(; kwargs...)
+
+Construct a sampler that outputs a 4-dimensional fractional Brownian motion fractal noise when it
+is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function fbm_fractal_4d(;
     seed=nothing,
     source=opensimplex2_4d(seed=seed),
@@ -140,7 +232,29 @@ end
     sum(persistence .^ (0:octaves-1))
 end
 
-@doc doc_billow_fractal_1d
+"""
+    billow_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional billow fractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function billow_fractal_1d(;
     seed=nothing,
     source=simplex_1d(seed=seed),
@@ -152,7 +266,29 @@ function billow_fractal_1d(;
     Billow{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_billow_fractal_2d
+"""
+    billow_fractal_2d(; kwargs...)
+
+Construct a sampler that outputs a 2-dimensional billow fractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function billow_fractal_2d(;
     seed=nothing,
     source=opensimplex2s_2d(seed=seed),
@@ -164,7 +300,29 @@ function billow_fractal_2d(;
     Billow{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_billow_fractal_3d
+"""
+    billow_fractal_3d(; kwargs...)
+
+Construct a sampler that outputs a 3-dimensional billow fractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function billow_fractal_3d(;
     seed=nothing,
     source=opensimplex2s_3d(seed=seed),
@@ -176,7 +334,29 @@ function billow_fractal_3d(;
     Billow{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_billow_fractal_4d
+"""
+    billow_fractal_4d(; kwargs...)
+
+Construct a sampler that outputs a 4-dimensional billow fractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function billow_fractal_4d(;
     seed=nothing,
     source=opensimplex2s_4d(seed=seed),
@@ -229,7 +409,29 @@ end
     end
 end
 
-@doc doc_multi_fractal_1d
+"""
+    multi_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function multi_fractal_1d(;
     seed=nothing,
     source=simplex_1d(seed=seed),
@@ -241,7 +443,29 @@ function multi_fractal_1d(;
     Multi{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_multi_fractal_2d
+"""
+    multi_fractal_2d(; kwargs...)
+
+Construct a sampler that outputs a 2-dimensional multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function multi_fractal_2d(;
     seed=nothing,
     source=opensimplex2s_2d(seed=seed),
@@ -253,7 +477,29 @@ function multi_fractal_2d(;
     Multi{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_multi_fractal_3d
+"""
+    multi_fractal_3d(; kwargs...)
+
+Construct a sampler that outputs a 3-dimensional multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function multi_fractal_3d(;
     seed=nothing,
     source=opensimplex2s_3d(seed=seed),
@@ -265,7 +511,29 @@ function multi_fractal_3d(;
     Multi{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_multi_fractal_4d
+"""
+    multi_fractal_4d(; kwargs...)
+
+Construct a sampler that outputs a 4-dimensional multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.5`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function multi_fractal_4d(;
     seed=nothing,
     source=opensimplex2s_4d(seed=seed),
@@ -326,7 +594,29 @@ end
     result
 end
 
-@doc doc_hybrid_fractal_1d
+"""
+    hybrid_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional hybrid multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function hybrid_fractal_1d(;
     seed=nothing,
     source=simplex_1d(seed=seed),
@@ -338,7 +628,29 @@ function hybrid_fractal_1d(;
     Hybrid{1}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_hybrid_fractal_2d
+"""
+    hybrid_fractal_2d(; kwargs...)
+
+Construct a sampler that outputs a 2-dimensional hybrid multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function hybrid_fractal_2d(;
     seed=nothing,
     source=opensimplex2s_2d(seed=seed),
@@ -350,7 +662,29 @@ function hybrid_fractal_2d(;
     Hybrid{2}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_hybrid_fractal_3d
+"""
+    hybrid_fractal_3d(; kwargs...)
+
+Construct a sampler that outputs a 3-dimensional hybrid multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function hybrid_fractal_3d(;
     seed=nothing,
     source=opensimplex2s_3d(seed=seed),
@@ -362,7 +696,29 @@ function hybrid_fractal_3d(;
     Hybrid{3}(seed, source, octaves, frequency, lacunarity, persistence)
 end
 
-@doc doc_hybrid_fractal_4d
+"""
+    hybrid_fractal_4d(; kwargs...)
+
+Construct a sampler that outputs a 4-dimensional hybrid multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=0.25`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+"""
 function hybrid_fractal_4d(;
     seed=nothing,
     source=opensimplex2s_4d(seed=seed),
@@ -427,7 +783,31 @@ end
     2 / result
 end
 
-@doc doc_ridged_fractal_1d
+"""
+    ridged_fractal_1d(; kwargs...)
+
+Construct a sampler that outputs a 1-dimensional ridged multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=simplex_1d()`: A 1-dimensional sampler instance to use as the source of
+    the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=1.0`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+
+   - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
+"""
 function ridged_fractal_1d(;
     seed=nothing,
     source=simplex_1d(seed=seed),
@@ -440,7 +820,31 @@ function ridged_fractal_1d(;
     Ridged{1}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
 end
 
-@doc doc_ridged_fractal_2d
+"""
+    ridged_fractal_2d(; kwargs...)
+
+Construct a sampler that outputs a 2-dimensional ridged multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_2d()`: A 2-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=1.0`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+
+   - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
+"""
 function ridged_fractal_2d(;
     seed=nothing,
     source=opensimplex2s_2d(seed=seed),
@@ -453,7 +857,31 @@ function ridged_fractal_2d(;
     Ridged{2}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
 end
 
-@doc doc_ridged_fractal_3d
+"""
+    ridged_fractal_3d(; kwargs...)
+
+Construct a sampler that outputs a 3-dimensional ridged multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_3d()`: A 3-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=1.0`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+
+   - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
+"""
 function ridged_fractal_3d(;
     seed=nothing,
     source=opensimplex2s_3d(seed=seed),
@@ -466,7 +894,31 @@ function ridged_fractal_3d(;
     Ridged{3}(seed, source, octaves, frequency, lacunarity, persistence, attenuation)
 end
 
-@doc doc_ridged_fractal_4d
+"""
+    ridged_fractal_4d(; kwargs...)
+
+Construct a sampler that outputs a 4-dimensional ridged multifractal noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `source::AbstractSampler=opensimplex2s_4d()`: A 4-dimensional sampler instance to use as the
+    source of the fractal.
+
+  - `octaves=4`: An integer between 1 and 32, denoting the number of octaves to apply.
+
+  - `frequency=1.0`: The frequency of the first octave's signal.
+
+  - `lacunarity=2.0`: A multiplier that determines how quickly the frequency increases for
+    successive octaves.
+
+  - `persistence=1.0`: A multiplier that determines how quickly the amplitude diminishes for
+    successive octaves.
+
+   - `attenuation=2.0`: The attenuation to apply to the weight of each octave.
+"""
 function ridged_fractal_4d(;
     seed=nothing,
     source=opensimplex2s_4d(seed=seed),

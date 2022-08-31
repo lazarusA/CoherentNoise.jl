@@ -21,7 +21,16 @@ SimplexState(::Type{<:Simplex{4}}, ::Val{false}) = SimplexState(0.6, 27.0)
 
 # 1D
 
-@doc doc_simplex_1d
+"""
+    simplex_1d(; seed=nothing)
+
+Construct a sampler that outputs 1-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 simplex_1d(; seed=nothing) = _simplex(1, seed, false)
 
 @inline function grad(::Type{Simplex{1}}, falloff, hash, x)
@@ -48,7 +57,16 @@ end
 const SIMPLEX_SKEW_2D = (sqrt(3) - 1) / 2
 const SIMPLEX_UNSKEW_2D = (3 - sqrt(3)) / 6
 
-@doc doc_simplex_2d
+"""
+    simplex_2d(; seed=nothing)
+
+Construct a sampler that outputs 2-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 simplex_2d(; seed=nothing) = _simplex(2, seed, false)
 
 @inline function grad(::Type{Simplex{2}}, falloff, hash, x, y)
@@ -81,7 +99,29 @@ end
 const SIMPLEX_SKEW_3D = 1 / 3
 const SIMPLEX_UNSKEW_3D = 1 / 6
 
-@doc doc_simplex_3d
+"""
+    simplex_3d(; seed=nothing, smooth=false)
+
+Construct a sampler that outputs 3-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+"""
 simplex_3d(; seed=nothing, smooth=false) = _simplex(3, seed, smooth)
 
 @inline function grad(S::Type{Simplex{3}}, falloff, hash, x, y, z)
@@ -138,7 +178,29 @@ const SIMPLEX_GRADIENTS_4D = [
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x3, 0x1, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x3, 0x2, 0x0, 0x1,
     0x3, 0x2, 0x1, 0x0]
 
-@doc doc_simplex_4d
+"""
+    simplex_4d(; seed=nothing, smooth=false)
+
+Construct a sampler that outputs 4-dimensional Perlin Simplex noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+
+  - `smooth`: Specify whether to have continuous gradients.
+    Simplex variants, even the original Simplex noise by Ken Perlin, overshoot the radial extent for
+    the signal reconstruction kernel in order to improve the visual of the noise. Normally this is
+    okay, especially if layering multiple octaves of the noise. However, in some applications, such
+    as creating height or bump maps, this will produce discontinuities visually identified by
+    jarring creases in the generated noise.
+
+    This option changes the falloff in order to produce smooth continuous noise, however, the
+    resulting noise may look quite different than the non-smooth option, depending on the Simplex
+    variant.
+
+    The default value is `false`, in order to be true to the original implementation.
+"""
 simplex_4d(; seed=nothing, smooth=false) = _simplex(4, seed, smooth)
 
 @inline function grad(S::Type{Simplex{4}}, falloff, hash, x, y, z, w)

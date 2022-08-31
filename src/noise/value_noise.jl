@@ -6,7 +6,16 @@ HashTrait(::Type{<:Value}) = IsValueHashed()
 
 ### 1D
 
-@doc doc_value_1d
+"""
+    value_1d(; seed=nothing)
+
+Construct a sampler that outputs 1-dimensonal value noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 value_1d(; seed=nothing) = Value{1}(RandomState(seed))
 
 function sample(sampler::S, x::Real) where {S<:Value{1}}
@@ -20,7 +29,16 @@ end
 
 ### 2D
 
-@doc doc_value_2d
+"""
+    value_2d(; seed=nothing)
+
+Construct a sampler that outputs 2-dimensonal value noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 value_2d(; seed=nothing) = Value{2}(RandomState(seed))
 
 function sample(sampler::S, x::T, y::T) where {S<:Value{2},T<:Real}
@@ -37,7 +55,16 @@ end
 
 ### 3D
 
-@doc doc_value_3d
+"""
+    value_3d(; seed=nothing)
+
+Construct a sampler that outputs 3-dimensonal value noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 value_3d(; seed=nothing) = Value{3}(RandomState(seed))
 
 function sample(sampler::S, x::T, y::T, z::T) where {S<:Value{3},T<:Real}
@@ -56,7 +83,16 @@ end
 
 ### 4D
 
-@doc doc_value_4d
+"""
+    value_4d(; seed=nothing)
+
+Construct a sampler that outputs 4-dimensonal value noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 value_4d(; seed=nothing) = Value{4}(RandomState(seed))
 
 function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Value{4},T<:Real}

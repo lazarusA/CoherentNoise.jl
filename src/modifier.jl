@@ -5,7 +5,11 @@ struct Abs{N,S} <: ModifierSampler{N}
     source::S
 end
 
-@doc doc_mod_abs
+"""
+    abs(x::AbstractSampler)
+
+Construct a modifier sampler that outputs the absolute value of its source when it is sampled from.
+"""
 function Base.abs(x::S) where {N,S<:AbstractSampler{N}}
     Abs{N,S}(x.random_state, x)
 end
@@ -22,7 +26,11 @@ struct Add{N,S1,S2} <: ModifierSampler{N}
     source2::S2
 end
 
-@doc doc_mod_add
+"""
+    +(x::AbstractSampler, y::AbstractSampler)
+
+Construct a modifier sampler that outputs the sum of the outputs of samplers `x` and `y`.
+"""
 function Base.:+(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
     Add{N,S1,S2}(x.random_state, x, y)
@@ -37,7 +45,11 @@ end
     x + y
 end
 
-@doc doc_mod_add_scalar
+"""
+    +(x::AbstractSampler, y::Real)
+
+Construct a modifier sampler that outputs the sum of the output of sampler `x` and the scalar `y`.
+"""
 function Base.:+(x::S, y::Real) where {N,S<:AbstractSampler{N}}
     Add{N,S,Float64}(x.random_state, x, Float64(y))
 end
@@ -59,7 +71,17 @@ mutable struct Cache{N,S} <: ModifierSampler{N}
     value::Float64
 end
 
-@doc doc_mod_cache
+"""
+    cache(x::AbstractSampler)
+
+Construct a modifier sampler that caches the set of the input coordinates and their corresponding
+output value of its source sampler. If the input coordinates differs from the previously cached
+output, the cache is invalidated and the new output is cached.
+
+Caching is useful if a sampler is used as a source for multiple modifiers. Without caching, the
+duplicated input sources would redundantly compute the same outputs, which would be expensive,
+especially if long pipelines share a long subgraph.
+"""
 function cache(x::S) where {N,S<:AbstractSampler{N}}
     Cache{N,S}(x.random_state, x, false, ntuple(i -> 0.0, N), 0.0)
 end
@@ -82,7 +104,12 @@ struct Clamp{N,S,Lo,Hi} <: ModifierSampler{N}
     hi::Hi
 end
 
-@doc doc_mod_clamp
+"""
+    clamp(x::AbstractSampler, lo::AbstractSampler, hi::AbstractSampler)
+
+Construct a modifier sampler that clamps the output of sampler `x` to be within the range of of
+output values from samplers `lo` and `hi`.
+"""
 function Base.clamp(
     x::S,
     lo::L,
@@ -100,7 +127,12 @@ end
     clamp(sample(sampler.source, coords...), lo, hi)
 end
 
-@doc doc_mod_clamp_scalar
+"""
+    clamp(x::AbstractSampler, lo=-1.0, hi=1.0)
+
+Construct a modifier sampler that clamps the output of sampler `x` to be within the range of of the
+scalars `lo` and `hi`.
+"""
 function Base.clamp(x::S, lo=-1.0, hi=1.0) where {N,S<:AbstractSampler{N}}
     Clamp{N,S,Float64,Float64}(x.random_state, x, Float64(lo), Float64(hi))
 end
@@ -117,7 +149,12 @@ struct CopySign{N,S1,S2} <: ModifierSampler{N}
     source2::S2
 end
 
-@doc doc_mod_copysign
+"""
+    copysign(x::AbstractSampler, y::AbstractSampler)
+
+Construct a modifier sampler that outputs the value of sampling from `x` with the sign copied from
+the value of sampling from `y`.
+"""
 function Base.copysign(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
     CopySign{N,S1,S2}(x.random_state, x, y)
@@ -140,7 +177,19 @@ struct Curve{N,S} <: ModifierSampler{N}
     points::Vector{Pair{Float64,Float64}}
 end
 
-@doc doc_mod_curve
+"""
+    curve(x::AbstractSampler, points::Vector{Pair{Float64,Float64}})
+
+Construct a modifier sampler that outputs the result of sampling from `x` after remapping its output
+to an arbitrary curve.
+
+The curve is defined by a `Vector` of `Pair`s given by `points`. Each pair of points represents an
+input and output number. The curve is a cubic spline, and so `points` must contain a list of four
+point pairs at a minimum. Additionally, no two point pairs can contain the same input point value.
+
+When sampling from sampler `x`, the output is evaluated using the curve data, and maps it to a new
+output value.
+"""
 function curve(x::S, points::Vector{Pair{Float64,Float64}}) where {N,S<:AbstractSampler{N}}
     Curve{N,S}(x.random_state, x, sort(points, by=(p) -> p.first))
 end
@@ -173,7 +222,12 @@ struct Div{N,S1,S2} <: ModifierSampler{N}
     source2::S2
 end
 
-@doc doc_mod_div
+"""
+    /(x::AbstractSampler, y::AbstractSampler)
+
+Construct a modifier sampler that performs division of the output of sampler `x` by the output of
+sampler `y`.
+"""
 function Base.:/(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
     Div{N,S1,S2}(x.random_state, x, y)
@@ -188,7 +242,11 @@ end
     iszero(y) ? 0.0 : x / y
 end
 
-@doc doc_mod_div_scalar
+"""
+    /(x::AbstractSampler, y::Real)
+
+Construct a modifier sampler that performs division of the output of sampler `x` by the scalar `y`.
+"""
 function Base.:/(x::S, y::Real) where {N,S<:AbstractSampler{N}}
     Div{N,S,Float64}(x.random_state, x, Float64(y))
 end
@@ -208,7 +266,12 @@ struct Max{N,S1,S2} <: ModifierSampler{N}
     source2::S2
 end
 
-@doc doc_mod_max
+"""
+    max(x::AbstractSampler, y::AbstractSampler)
+
+Construct a modifier sampler that outputs the maximum value of the outputs of sampling from samplers
+`x` and `y`.
+"""
 function Base.max(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
     Max{N,S1,S2}(x.random_state, x, y)
@@ -231,7 +294,12 @@ struct Min{N,S1,S2} <: ModifierSampler{N}
     source2::S2
 end
 
-@doc doc_mod_min
+"""
+    min(x::AbstractSampler, y::AbstractSampler)
+
+Construct a modifier sampler that outputs the minimum value of the outputs of sampling from samplers
+`x` and `y`.
+"""
 function Base.min(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
     Min{N,S1,S2}(x.random_state, x, y)
@@ -255,7 +323,12 @@ struct Mix{N,S1,S2,C} <: ModifierSampler{N}
     control::C
 end
 
-@doc doc_mod_mix
+"""
+    mix(x::AbstractSampler, y::AbstractSampler, t::AbstractSampler)
+
+Construct a modifier sampler that outputs the result of linearly interpolating the output of
+samplers `x` and `y` by the output of sampler `t`.
+"""
 function mix(
     a::S1,
     b::S2,
@@ -265,7 +338,12 @@ function mix(
     Mix{N,S1,S2,C}(a.random_state, a, b, t)
 end
 
-@doc doc_mod_mix_scalar
+"""
+    mix(x::AbstractSampler, y::AbstractSampler, t::Real)
+
+Construct a modifier sampler that outputs the result of linearly interpolating the output of
+samplers `x` and `y` by the scalar `t`.
+"""
 function mix(a::S1, b::S2, t::Real) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
     Mix{N,S1,S2,Float64}(a.random_state, a, b, clamp(t, 0.0, 1.0))
@@ -298,7 +376,11 @@ struct Mul{N,S1,S2} <: ModifierSampler{N}
     source2::S2
 end
 
-@doc doc_mod_mul
+"""
+    *(x::AbstractSampler, y::AbstractSampler)
+
+Construct a modifier sampler that outputs the product of the outputs samplers `x` and `y`.
+"""
 function Base.:*(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
     Mul{N,S1,S2}(x.random_state, x, y)
@@ -313,7 +395,12 @@ end
     x * y
 end
 
-@doc doc_mod_mul_scalar
+"""
+    *(x::AbstractSampler, y::Real)
+
+Construct a modifier sampler that outputs the product of the output of sampler `x` by the scalar
+`y`.
+"""
 function Base.:*(x::S, y::Real) where {N,S<:AbstractSampler{N}}
     Mul{N,S,Float64}(x.random_state, x, Float64(y))
 end
@@ -334,7 +421,12 @@ struct Muladd{N,S} <: ModifierSampler{N}
     bias::Float64
 end
 
-@doc doc_mod_muladd
+"""
+    muladd(x::AbstractSampler, strength=1.0, bias=0.0)
+
+Construct a modifier sampler that performs multiplies the output of sampler `x` by the scalar
+`strength`, followed by adding the scalar `bias`. sampler `y`.
+"""
 function Base.muladd(x::S, strength=1.0, bias=0.0) where {N,S<:AbstractSampler{N}}
     Muladd{N,S}(x.random_state, x, Float64(strength), Float64(bias))
 end
@@ -355,7 +447,11 @@ struct Pow{N,S} <: ModifierSampler{N}
     power::Float64
 end
 
-@doc doc_mod_pow
+"""
+    ^(x::AbstractSampler, y::Real)
+
+Construct a modifier sampler that raises the output of sampler `x` to the power of the scalar `y`.
+"""
 Base.:^(x::S, y::Real) where {N,S<:AbstractSampler{N}} = Pow{N,S}(x.random_state, x, Float64(y))
 
 @inline function sample(sampler::Pow{N}, coords::Vararg{Real,N}) where {N}
@@ -373,7 +469,16 @@ struct Rotate{N,S} <: ModifierSampler{N}
     z::NTuple{3,Float64}
 end
 
-@doc doc_mod_rotate
+"""
+    rotate(source::AbstractSampler; x=0.0, y=0.0, z=0.0)
+
+Construct a modifier sampler that rotates the input coordinates of sampler `source` around the
+origin before sampling from it.
+
+The coordinate system is assumed to be left-handed.
+
+The angle of rotation is specified in radians for the corresponding axis given by `x`, `y`, and `z`.
+"""
 function rotate(source::S; x=0.0, y=0.0, z=0.0) where {N,S<:AbstractSampler{N}}
     cx, cy, cz = cos.((x, y, z))
     sx, sy, sz = sin.((x, y, z))
@@ -411,12 +516,24 @@ struct Scale{N,S} <: ModifierSampler{N}
     axes::NTuple{N,Float64}
 end
 
-@doc doc_mod_scale
+"""
+    scale(source::AbstractSampler; x=1.0, y=1.0, z=1.0, w=1.0)
+
+Construct a modifier sampler that scales the input coordinates of sampler `source` before sampling
+from it.
+
+Each axis can be scaled independently with `x`, `y`, `z`, or `w`.
+"""
 function scale(source::S; x=1.0, y=1.0, z=1.0, w=1.0) where {N,S<:AbstractSampler{N}}
     Scale{N,S}(source.random_state, source, Float64.((x, y, z, w))[1:N])
 end
 
-@doc doc_mod_scale_scalar
+"""
+    scale(source::AbstractSampler, scale::Real)
+
+Construct a modifier sampler that uniformly scales the input coordinates of sampler `source` by the
+scalar `scale` before sampling from it.
+"""
 function scale(source::S, scale::Real) where {N,S<:AbstractSampler{N}}
     Scale{N,S}(source.random_state, source, ntuple(i -> Float64(scale), N))
 end
@@ -437,7 +554,24 @@ struct Select{N,S1,S2,C} <: ModifierSampler{N}
     falloff::Float64
 end
 
-@doc doc_mod_select
+"""
+    select(x::AbstractSampler, y::AbstractSampler; kwargs...)
+
+Construct a modifier sampler that outputs either the out of sampler `x` or `y`, depending on the
+output of sampler `z`.
+
+If the output of sampler `z` is within the range denoted by `min` and `max`, the output of sampler
+`y` is chosen. If the output of sampler `z` is outside of this range, the output of sampler `x` is
+chosen.
+
+# Arguments
+
+  - `min`: A real number between -1.0 and 1.0 defining the lower bound of the selection range.
+
+  - `max`: A real number between -1.0 and 1.0 defining the upper bound of the selection range.
+
+  - `falloff`: A real number between 0.0 and 1.0 specifying the smoothness of the transition.
+"""
 function select(
     x::S1,
     y::S2,
@@ -485,7 +619,11 @@ struct Sub{N,S1,S2} <: ModifierSampler{N}
     source2::S2
 end
 
-@doc doc_mod_sub
+"""
+    -(x::AbstractSampler, y::AbstractSampler)
+
+Construct a modifier sampler that outputs the difference of the outputs of samplers `x` and `y`.
+"""
 function Base.:-(x::S1, y::S2) where {N1,N2,S1<:AbstractSampler{N1},S2<:AbstractSampler{N2}}
     N = max(N1, N2)
     Sub{N,S1,S2}(x.random_state, x, y)
@@ -500,7 +638,12 @@ end
     x - y
 end
 
-@doc doc_mod_sub_scalar
+"""
+    -(x::AbstractSampler, y::Real)
+
+Construct a modifier sampler that outputs the difference of the output of sampler `x` and the scalar
+`y`.
+"""
 function Base.:-(x::S, y::Real) where {N,S<:AbstractSampler{N}}
     Sub{N,S,Float64}(x.random_state, x, Float64(y))
 end
@@ -512,7 +655,11 @@ end
     sample(sampler.source1, coords...) - sampler.source2
 end
 
-@doc doc_mod_sub_unary
+"""
+    -(x::AbstractSampler)
+
+Construct a modifier sampler that outputs the negated output of sampler `x`.
+"""
 Base.:-(x::S) where {N,S<:AbstractSampler{N}} = Sub{N,S,Nothing}(x.random_state, x, nothing)
 
 @inline function sample(
@@ -531,7 +678,22 @@ struct Terrace{N,S} <: ModifierSampler{N}
     invert::Bool
 end
 
-@doc doc_mod_terrace
+"""
+    terrace(x::AbstractSampler, points::Vector{Pair{Float64,Float64}}; invert=false)
+
+Construct a modifier sampler that outputs the result of sampling from `x` after remapping its output
+to a terrace-forming curve.
+
+The curve is defined by a `Vector` of `Float64`s given by `points`. Each point represents an input
+and output number.
+
+When sampling from sampler `x`, the output is evaluated using the curve data, and maps it to a new
+output value.
+
+# Arguments
+
+  - `invert`: Specify whether the curve is inverted between control points.
+"""
 function terrace(
     x::S,
     points::Vector{Float64};
@@ -570,7 +732,12 @@ struct Translate{N,S} <: ModifierSampler{N}
     axes::NTuple{N,Float64}
 end
 
-@doc doc_mod_translate
+"""
+    translate(source::AbstractSampler; x=0.0, y=0.0, z=0.0, w=0.0)
+
+Construct a modifier sampler that translates the input coordinates of sampler `source` along a
+specified vector, with a direction and magnitude given by the coordinates `x`, `y`, `z`, and `w`.
+"""
 function translate(source::S; x=0.0, y=0.0, z=0.0, w=0.0) where {N,S<:AbstractSampler{N}}
     Translate{N,S}(source.random_state, source, Float64.((x, y, z, w))[1:N])
 end
@@ -595,7 +762,23 @@ struct Turbulence{N,N1,N2,S1,S2} <: ModifierSampler{N}
     w::NTuple{N2,Float64}
 end
 
-@doc doc_mod_turbulence
+"""
+    turbulence(s1::AbstractSampler; s2::AbstractSampler; kwargs...)
+
+Construct a modifier sampler that displaces the input coordinates of sampler `s1` by the output of
+sampler `s2` with a fractional Brownian motion fractal applied to it.
+
+Sampler `s2`'s input coordinates are randomly generated using the seed of sampler `s1`.
+
+# Arguments
+
+  - `frequency=1.0`: The frequency of the fractal signal to apply to sampler `s2`.
+
+  - `roughness=3`: The number of octaves of the fractal to apply to sampler `s2`.
+
+  - `power=1.0`: A scaling factor that is applied to the displaced result before sampling from
+    sampler `s1`.
+"""
 function turbulence(
     s1::S1,
     s2::S2;
@@ -634,7 +817,28 @@ struct Warp{N,N1,N2,N3,N4,S,SX,SY,SZ,SW} <: ModifierSampler{N}
     displacement::Tuple{SX,SY,SZ,SW}
 end
 
-@doc doc_mod_warp
+"""
+    warp(source::AbstractSampler; kwargs...)
+
+Construct a modifier sampler that performs domain warping of the sampler `source` before sampling
+from it.
+
+Domain warping feeds the output of other samplers to the input of a sampler. For this modifier, each
+input coordinate can specify a different sampler to warp with.
+
+If a sampler is not supplied for `x`, `y`, `z`, or `w`, a sampler that outputs a constant zero will
+be used instead.
+
+# Arguments
+
+  - `x::AbstractSampler=constant_1d()`: A sampler to warp the X axis by.
+
+  - `y::AbstractSampler=constant_1d()`: A sampler to warp the Y axis by.
+
+  - `z::AbstractSampler=constant_1d()`: A sampler to warp the Z axis by.
+
+  - `w::AbstractSampler=constant_1d()`: A sampler to warp the W axis by.
+"""
 function warp(
     source::S;
     x::SX=constant_1d(),

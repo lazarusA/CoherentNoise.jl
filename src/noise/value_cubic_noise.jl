@@ -14,7 +14,16 @@ end
 
 ### 1D
 
-@doc doc_value_cubic_1d
+"""
+    value_cubic_1d(; seed=nothing)
+
+Construct a sampler that outputs 1-dimensonal value cubic noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 value_cubic_1d(; seed=nothing) = ValueCubic{1}(RandomState(seed))
 @deprecate cubic_1d(; kwargs...) value_cubic_1d(; kwargs...)
 
@@ -28,7 +37,16 @@ end
 
 ### 2D
 
-@doc doc_value_cubic_2d
+"""
+    value_cubic_2d(; seed=nothing)
+
+Construct a sampler that outputs 2-dimensonal value cubic noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 value_cubic_2d(; seed=nothing) = ValueCubic{2}(RandomState(seed))
 @deprecate cubic_2d(; kwargs...) value_cubic_2d(; kwargs...)
 
@@ -50,7 +68,16 @@ end
 
 ### 3D
 
-@doc doc_value_cubic_3d
+"""
+    value_cubic_3d(; seed=nothing)
+
+Construct a sampler that outputs 3-dimensonal value cubic noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 value_cubic_3d(; seed=nothing) = ValueCubic{3}(RandomState(seed))
 @deprecate cubic_3d(; kwargs...) value_cubic_3d(; kwargs...)
 
@@ -88,7 +115,16 @@ end
 
 ### 4D
 
-@doc doc_value_cubic_4d
+"""
+    value_cubic_4d(; seed=nothing)
+
+Construct a sampler that outputs 4-dimensonal value cubic noise when it is sampled from.
+
+# Arguments
+
+  - `seed`: An unsigned integer used to seed the random number generator for this sampler, or
+    `nothing` for non-deterministic results.
+"""
 value_cubic_4d(; seed=nothing) = ValueCubic{4}(RandomState(seed))
 @deprecate cubic_4d(; kwargs...) value_cubic_4d(; kwargs...)
 
