@@ -26,7 +26,7 @@ function sample(sampler::S, x::T) where {S<:Perlin{1},T<:Real}
     x1 = x - X
     x2 = x1 - 1
     fx = curve5(x1)
-    lerp(grad(S, t[t[X]], x1), grad(S, t[t[X+1]], x2), fx) * 2
+    lerp(grad(S, t[X], x1), grad(S, t[X+1], x2), fx) * 2
 end
 
 ### 2D
