@@ -46,9 +46,12 @@ function sample(sampler::S, x::Real) where {S<:Simplex{1}}
     state = sampler.simplex_state
     falloff = state.falloff
     X = floor(Int, x)
+    X1 = X & 255 + 1
     x1 = x - X
-    p1 = grad(S, falloff, t[X], x1)
-    p2 = grad(S, falloff, t[X+1], x1 - 1)
+    @inbounds begin
+        p1 = grad(S, falloff, t[X1], x1)
+        p2 = grad(S, falloff, t[X1+1], x1 - 1)
+    end
     (p1 + p2) * state.scale_factor
 end
 
@@ -85,12 +88,15 @@ function sample(sampler::S, x::T, y::T) where {S<:Simplex{2},T<:Real}
     falloff = state.falloff
     s = (x + y) * SIMPLEX_SKEW_2D
     X, Y = floor.(Int, (x, y) .+ s)
+    X1, Y1 = (X, Y) .& 255 .+ 1
     tx = (X + Y) * SIMPLEX_UNSKEW_2D
     xy = (x, y) .- (X, Y) .+ tx
-    X1, Y1 = get_simplex(S, xy...)
-    p1 = grad(S, falloff, t[t[X]+Y], xy...)
-    p2 = grad(S, falloff, t[t[X+X1]+Y+Y1], xy .- (X1, Y1) .+ SIMPLEX_UNSKEW_2D...)
-    p3 = grad(S, falloff, t[t[X+1]+Y+1], xy .- 1 .+ 2SIMPLEX_UNSKEW_2D...)
+    X2, Y2 = get_simplex(S, xy...)
+    @inbounds begin
+        p1 = grad(S, falloff, t[t[X1]+Y1], xy...)
+        p2 = grad(S, falloff, t[t[X1+X2]+Y1+Y2], xy .- (X2, Y2) .+ SIMPLEX_UNSKEW_2D...)
+        p3 = grad(S, falloff, t[t[X1+1]+Y1+1], xy .- 1 .+ 2SIMPLEX_UNSKEW_2D...)
+    end
     (p1 + p2 + p3) * state.scale_factor
 end
 
@@ -147,13 +153,20 @@ function sample(sampler::S, x::T, y::T, z::T) where {S<:Simplex{3},T<:Real}
     falloff = state.falloff
     s = (x + y + z) * SIMPLEX_SKEW_3D
     X, Y, Z = floor.(Int, (x, y, z) .+ s)
+    X1, Y1, Z1 = (X, Y, Z) .& 255 .+ 1
     tx = (X + Y + Z) * SIMPLEX_UNSKEW_3D
     xyz = (x, y, z) .- (X, Y, Z) .+ tx
-    X1, Y1, Z1, X2, Y2, Z2 = get_simplex(S, xyz...)
-    p1 = grad(S, falloff, t[t[t[Z]+Y]+X], xyz...)
-    p2 = grad(S, falloff, t[t[t[Z+Z1]+Y+Y1]+X+X1], xyz .- (X1, Y1, Z1) .+ SIMPLEX_UNSKEW_3D...)
-    p3 = grad(S, falloff, t[t[t[Z+Z2]+Y+Y2]+X+X2], xyz .- (X2, Y2, Z2) .+ 2SIMPLEX_UNSKEW_3D...)
-    p4 = grad(S, falloff, t[t[t[Z+1]+Y+1]+X+1], xyz .- 1 .+ 3SIMPLEX_UNSKEW_3D...)
+    X2, Y2, Z2, X3, Y3, Z3 = get_simplex(S, xyz...)
+    @inbounds begin
+        hash1 = t[t[t[Z1]+Y1]+X1]
+        hash2 = t[t[t[Z1+Z2]+Y1+Y2]+X1+X2]
+        hash3 = t[t[t[Z1+Z3]+Y1+Y3]+X1+X3]
+        hash4 = t[t[t[Z1+1]+Y1+1]+X1+1]
+    end
+    p1 = grad(S, falloff, hash1, xyz...)
+    p2 = grad(S, falloff, hash2, xyz .- (X2, Y2, Z2) .+ SIMPLEX_UNSKEW_3D...)
+    p3 = grad(S, falloff, hash3, xyz .- (X3, Y3, Z3) .+ 2SIMPLEX_UNSKEW_3D...)
+    p4 = grad(S, falloff, hash4, xyz .- 1 .+ 3SIMPLEX_UNSKEW_3D...)
     (p1 + p2 + p3 + p4) * state.scale_factor
 end
 
@@ -236,17 +249,18 @@ function sample(sampler::S, x::T, y::T, z::T, w::T) where {S<:Simplex{4},T<:Real
     falloff = state.falloff
     s = (x + y + z + w) * SIMPLEX_SKEW_4D
     X, Y, Z, W = floor.(Int, (x, y, z, w) .+ s)
+    X1, Y1, Z1, W1 = (X, Y, Z, W) .& 255 .+ 1
     tx = (X + Y + Z + W) * SIMPLEX_UNSKEW_4D
     v1 = (x, y, z, w) .- (X, Y, Z, W) .+ tx
-    X1, Y1, Z1, W1, X2, Y2, Z2, W2, X3, Y3, Z3, W3 = get_simplex(S, v1...)
-    v2 = v1 .- (X1, Y1, Z1, W1) .+ SIMPLEX_UNSKEW_4D
-    v3 = v1 .- (X2, Y2, Z2, W2) .+ 2SIMPLEX_UNSKEW_4D
-    v4 = v1 .- (X3, Y3, Z3, W3) .+ 3SIMPLEX_UNSKEW_4D
+    X2, Y2, Z2, W2, X3, Y3, Z3, W3, X4, Y4, Z4, W4 = get_simplex(S, v1...)
+    v2 = v1 .- (X2, Y2, Z2, W2) .+ SIMPLEX_UNSKEW_4D
+    v3 = v1 .- (X3, Y3, Z3, W3) .+ 2SIMPLEX_UNSKEW_4D
+    v4 = v1 .- (X4, Y4, Z4, W4) .+ 3SIMPLEX_UNSKEW_4D
     v5 = v1 .- 1 .+ 4SIMPLEX_UNSKEW_4D
-    p1 = grad(S, falloff, t[t[t[t[W]+Z]+Y]+X], v1...)
-    p2 = grad(S, falloff, t[t[t[t[W+W1]+Z+Z1]+Y+Y1]+X+X1], v2...)
-    p3 = grad(S, falloff, t[t[t[t[W+W2]+Z+Z2]+Y+Y2]+X+X2], v3...)
-    p4 = grad(S, falloff, t[t[t[t[W+W3]+Z+Z3]+Y+Y3]+X+X3], v4...)
-    p5 = grad(S, falloff, t[t[t[t[W+1]+Z+1]+Y+1]+X+1], v5...)
+    p1 = grad(S, falloff, t[t[t[t[W1]+Z1]+Y1]+X1], v1...)
+    p2 = grad(S, falloff, t[t[t[t[W1+W2]+Z1+Z2]+Y1+Y2]+X1+X2], v2...)
+    p3 = grad(S, falloff, t[t[t[t[W1+W3]+Z1+Z3]+Y1+Y3]+X1+X3], v3...)
+    p4 = grad(S, falloff, t[t[t[t[W1+W4]+Z1+Z4]+Y1+Y4]+X1+X4], v4...)
+    p5 = grad(S, falloff, t[t[t[t[W1+1]+Z1+1]+Y1+1]+X1+1], v5...)
     (p1 + p2 + p3 + p4 + p5) * state.scale_factor
 end

@@ -83,8 +83,8 @@ end
 ### State for Perlin-based samplers
 
 struct PerlinState
-    table::CircularVector{UInt8,Vector{UInt8}}
-    PerlinState(rs) = new(shuffle(rs.rng, 0x00:0xff) |> CircularVector)
+    table::Vector{UInt8}
+    PerlinState(rs) = new(repeat(shuffle(rs.rng, 0x00:0xff), 2))
 end
 
 ### State for Simplex-based samplers

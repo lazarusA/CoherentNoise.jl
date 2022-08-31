@@ -6,7 +6,6 @@ module CoherentNoise
 using Random: RandomDevice, shuffle
 
 # Third-party dependencies
-using CircularArrays: CircularVector
 using ColorSchemes: ColorScheme
 using ColorTypes: RGB
 using Distributions: Uniform

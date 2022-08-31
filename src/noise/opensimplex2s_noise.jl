@@ -1,13 +1,18 @@
 struct OpenSimplex2S{N,O<:Orientation} <: NoiseSampler{N}
     random_state::RandomState
     simplex_state::SimplexState
+    table::Vector{Float64}
 end
 
-@inline function _opensimplex2s(dims, seed, orientation, smooth)
+@inline function _opensimplex2s(dims, seed, table_size, gradients, orientation, smooth)
     rs = RandomState(seed)
     orientation = os2_orientation_type(Val(orientation))
+    table = zeros(Float64, table_size)
+    @inbounds for (i, e) in zip(eachindex(table), Iterators.cycle(gradients))
+        table[i] = e
+    end
     T = OpenSimplex2S{dims,orientation}
-    T(rs, SimplexState(T, Val(smooth)))
+    T(rs, SimplexState(T, Val(smooth)), table)
 end
 
 SimplexState(::Type{<:OpenSimplex2S{2}}, ::Val) = SimplexState(2 / 3, 1.0)
@@ -17,8 +22,6 @@ SimplexState(::Type{<:OpenSimplex2S{4}}, ::Val{true}) = SimplexState(2 / 3, 2.74
 SimplexState(::Type{<:OpenSimplex2S{4}}, ::Val{false}) = SimplexState(4 / 5, 1.0)
 
 # 2D
-
-const OS2S_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118 |> CircularVector
 
 """
     opensimplex2s_2d(; seed=nothing, orient=nothing)
@@ -36,7 +39,11 @@ Construct a sampler that outputs 2-dimensional OpenSimplex2S noise when it is sa
       + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
         improve visual isotropy.
 """
-opensimplex2s_2d(; seed=nothing, orient=nothing) = _opensimplex2s(2, seed, orient, false)
+function opensimplex2s_2d(; seed=nothing, orient=nothing)
+    size = OS2_NUM_GRADIENTS_2D * 2
+    gradients = OS2_GRADIENTS_NORMALIZED_2D ./ 0.05481866495625118
+    _opensimplex2s(2, seed, size, gradients, orient, false)
+end
 
 @inline orient(::Type{OpenSimplex2S{2,OrientStandard}}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
 
@@ -46,13 +53,14 @@ opensimplex2s_2d(; seed=nothing, orient=nothing) = _opensimplex2s(2, seed, orien
     (yy + xx, yy - xx)
 end
 
-@inline function contribute(seed, falloff, X, Y, x, y)
+@inline function contribute(seed, table, falloff, X, Y, x, y)
     a = falloff - x^2 - y^2
-    a > 0 ? pow4(a) * grad(OS2S_GRADIENTS_2D, seed, X, Y, x, y) : 0.0
+    a > 0 ? pow4(a) * grad(table, seed, X, Y, x, y) : 0.0
 end
 
 function sample(sampler::S, x::T, y::T) where {O,S<:OpenSimplex2S{2,O},T<:Real}
     seed = sampler.random_state.seed
+    table = sampler.table
     state = sampler.simplex_state
     falloff = state.falloff
     primes = (PRIME_X, PRIME_Y)
@@ -68,41 +76,39 @@ function sample(sampler::S, x::T, y::T) where {O,S<:OpenSimplex2S{2,O},T<:Real}
     x1, y1 = (xs, ys) .+ t
     x2, y2 = (x1, y1) .- us2p1
     a1 = falloff - x1^2 - y1^2
-    c1 = pow4(a1) * grad(OS2S_GRADIENTS_2D, seed, X1, Y1, x1, y1)
+    c1 = pow4(a1) * grad(table, seed, X1, Y1, x1, y1)
     a2 = 2us2p1 * (1 / us + 2) * t + -2us2p1^2 + a1
-    c2 = pow4(a2) * grad(OS2S_GRADIENTS_2D, seed, X2, Y2, x2, y2)
+    c2 = pow4(a2) * grad(table, seed, X2, Y2, x2, y2)
     result = c1 + c2
     if t < OS2_UNSKEW_2D
         X3, Y3 = (X1, Y1) .+ (primes .<< 1)
         if xs + d > 1
-            result += contribute(seed, falloff, X3, Y2, x1 - 3us - 2, y1 - 3us - 1)
+            result += contribute(seed, table, falloff, X3, Y2, x1 - 3us - 2, y1 - 3us - 1)
         else
-            result += contribute(seed, falloff, X1, Y2, x1 - us, y1 - us - 1)
+            result += contribute(seed, table, falloff, X1, Y2, x1 - us, y1 - us - 1)
         end
         if ys - d > 1
-            result += contribute(seed, falloff, X2, Y3, x1 - 3us - 1, y1 - 3us - 2)
+            result += contribute(seed, table, falloff, X2, Y3, x1 - 3us - 1, y1 - 3us - 2)
         else
-            result += contribute(seed, falloff, X2, Y1, x1 - us - 1, y1 - us)
+            result += contribute(seed, table, falloff, X2, Y1, x1 - us - 1, y1 - us)
         end
     else
         X4, Y4 = (X1, Y1) .- primes
         if xs + d < 0
-            result += contribute(seed, falloff, X4, Y1, x1 + us + 1, y1 + us)
+            result += contribute(seed, table, falloff, X4, Y1, x1 + us + 1, y1 + us)
         else
-            result += contribute(seed, falloff, X2, Y1, x1 - us - 1, y1 - us)
+            result += contribute(seed, table, falloff, X2, Y1, x1 - us - 1, y1 - us)
         end
         if ys < d
-            result += contribute(seed, falloff, X1, Y4, x1 + us, y1 + us + 1)
+            result += contribute(seed, table, falloff, X1, Y4, x1 + us, y1 + us + 1)
         else
-            result += contribute(seed, falloff, X1, Y2, x1 - us, y1 - us - 1)
+            result += contribute(seed, table, falloff, X1, Y2, x1 - us, y1 - us - 1)
         end
     end
     result * state.scale_factor
 end
 
 # 3D
-
-const OS2S_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186 |> CircularVector
 
 """
     opensimplex2s_3d(; seed=nothing, smooth=false, orient=nothing)
@@ -136,7 +142,9 @@ Construct a sampler that outputs 3-dimensional OpenSimplex2S noise when it is sa
       + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
 """
 function opensimplex2s_3d(; seed=nothing, orient=nothing, smooth=false)
-    _opensimplex2s(3, seed, orient, smooth)
+    size = OS2_NUM_GRADIENTS_3D * 4
+    gradients = OS2_GRADIENTS_NORMALIZED_3D ./ 0.2781926117527186
+    _opensimplex2s(3, seed, size, gradients, orient, smooth)
 end
 
 @inline function orient(::Type{OpenSimplex2S{3,OrientStandard}}, x, y, z)
@@ -159,12 +167,15 @@ end
     (xr, yr, zr)
 end
 
-@inline os2s_contribute1(seed, a, args...) = pow4(a) * grad(OS2S_GRADIENTS_3D, seed, args...)
+@inline os2s_contribute1(seed, table, a, args...) = pow4(a) * grad(table, seed, args...)
 
-@inline os2s_contribute2(seed, a, args...) = a > 0 ? os2s_contribute1(seed, a, args...) : 0.0
+@inline function os2s_contribute2(seed, table, a, args...)
+    a > 0 ? os2s_contribute1(seed, table, a, args...) : 0.0
+end
 
 function sample(sampler::S, x::T, y::T, z::T) where {O,S<:OpenSimplex2S{3,O},T<:Real}
     seed = sampler.random_state.seed
+    table = sampler.table
     seed2 = seed ⊻ -OS2_SEED_FLIP_3D
     state = sampler.simplex_state
     falloff = state.falloff
@@ -179,7 +190,7 @@ function sample(sampler::S, x::T, y::T, z::T) where {O,S<:OpenSimplex2S{3,O},T<:
     X2, Y2, Z2 = Vp .+ primes
     X3, Y3, Z3 = Vp .+ .~mask1 .& primes
     X4, Y4, Z4 = Vp .+ mask1 .& primes .<< 1
-    X5 = Vp[1] + mask1[1] & PRIME_X * 2
+    @inbounds X5 = Vp[1] + mask1[1] & PRIME_X * 2
     x1, y1, z1 = Vr .+ mask1
     x2, y2, z2 = Vr .- 0.5
     x3, y3, z3 = (x1, y1, z1) .- mask2
@@ -191,43 +202,43 @@ function sample(sampler::S, x::T, y::T, z::T) where {O,S<:OpenSimplex2S{3,O},T<:
     xf3, yf3, zf3 = (xf1, yf1, zf1) .+ a0
     xf4, yf4, zf4 = (xf2, yf2, zf2) .+ a1
     skip1, skip2, skip3 = false, false, false
-    result = os2s_contribute1(seed, a0, X1, Y1, Z1, x1, y1, z1)
-    result += os2s_contribute1(seed2, a1, X2, Y2, Z2, x2, y2, z2)
+    result = os2s_contribute1(seed, table, a0, X1, Y1, Z1, x1, y1, z1)
+    result += os2s_contribute1(seed2, table, a1, X2, Y2, Z2, x2, y2, z2)
     if xf3 > 0
-        result += os2s_contribute1(seed, xf3, X3, Y1, Z1, x3, y1, z1)
+        result += os2s_contribute1(seed, table, xf3, X3, Y1, Z1, x3, y1, z1)
     else
-        result += os2s_contribute2(seed, yf1 + zf1 + a0, X1, Y3, Z3, x1, y3, z3)
+        result += os2s_contribute2(seed, table, yf1 + zf1 + a0, X1, Y3, Z3, x1, y3, z3)
         if xf4 > 0
-            result += os2s_contribute1(seed2, xf4, X5, Y2, Z2, x4, y2, z2)
+            result += os2s_contribute1(seed2, table, xf4, X5, Y2, Z2, x4, y2, z2)
             skip1 = true
         end
     end
     if yf3 > 0
-        result += os2s_contribute1(seed, yf3, X1, Y3, Z1, x1, y3, z1)
+        result += os2s_contribute1(seed, table, yf3, X1, Y3, Z1, x1, y3, z1)
     else
-        result += os2s_contribute2(seed, xf1 + zf1 + a0, X3, Y1, Z3, x3, y1, z3)
+        result += os2s_contribute2(seed, table, xf1 + zf1 + a0, X3, Y1, Z3, x3, y1, z3)
         if yf4 > 0
-            result += os2s_contribute1(seed2, yf4, X2, Y4, Z2, x2, y4, z2)
+            result += os2s_contribute1(seed2, table, yf4, X2, Y4, Z2, x2, y4, z2)
             skip2 = true
         end
     end
     if zf3 > 0
-        result += os2s_contribute1(seed, zf3, X1, Y1, Z3, x1, y1, z3)
+        result += os2s_contribute1(seed, table, zf3, X1, Y1, Z3, x1, y1, z3)
     else
-        result += os2s_contribute2(seed, xf1 + yf1 + a0, X3, Y3, Z1, x3, y3, z1)
+        result += os2s_contribute2(seed, table, xf1 + yf1 + a0, X3, Y3, Z1, x3, y3, z1)
         if zf4 > 0
-            result += os2s_contribute1(seed2, zf4, X2, Y2, Z4, x2, y2, z4)
+            result += os2s_contribute1(seed2, table, zf4, X2, Y2, Z4, x2, y2, z4)
             skip3 = true
         end
     end
     if !skip1
-        result += os2s_contribute2(seed2, yf2 + zf2 + a1, X2, Y4, Z4, x2, y4, z4)
+        result += os2s_contribute2(seed2, table, yf2 + zf2 + a1, X2, Y4, Z4, x2, y4, z4)
     end
     if !skip2
-        result += os2s_contribute2(seed2, xf2 + zf2 + a1, X5, Y2, Z4, x4, y2, z4)
+        result += os2s_contribute2(seed2, table, xf2 + zf2 + a1, X5, Y2, Z4, x4, y2, z4)
     end
     if !skip3
-        result += os2s_contribute2(seed2, xf2 + yf2 + a1, X4, Y4, Z2, x4, y4, z2)
+        result += os2s_contribute2(seed2, table, xf2 + yf2 + a1, X4, Y4, Z2, x4, y4, z2)
     end
     result * state.scale_factor
 end
@@ -247,7 +258,6 @@ end
 
 const OS2S_SKEW_4D = 0.309016994374947
 const OS2S_UNSKEW_4D = -0.138196601125011
-const OS2S_GRADIENTS_4D = OS2_GRADIENTS_NORMALIZED_4D ./ 0.11127401889945551 |> CircularVector
 const OS2S_VERTICES_4D = [
     [0x15 0x45 0x51 0x54 0x55 0x56 0x59 0x5a 0x65 0x66 0x69 0x6a 0x95 0x96 0x99 0x9a 0xa5 0xa6 0xa9 0xaa],
     [0x15 0x45 0x51 0x55 0x56 0x59 0x5a 0x65 0x66 0x6a 0x95 0x96 0x9a 0xa6 0xaa],
@@ -568,7 +578,9 @@ Construct a sampler that outputs 4-dimensional OpenSimplex2S noise when it is sa
         the W axis is time.
 """
 function opensimplex2s_4d(; seed=nothing, orient=nothing, smooth=false)
-    _opensimplex2s(4, seed, orient, smooth)
+    size = OS2_NUM_GRADIENTS_4D * 4
+    gradients = OS2_GRADIENTS_NORMALIZED_4D ./ 0.11127401889945551
+    _opensimplex2s(4, seed, size, gradients, orient, smooth)
 end
 
 @inline function orient(::Type{OpenSimplex2S{4,OrientStandard}}, x, y, z, w)
@@ -600,6 +612,7 @@ end
 
 function sample(sampler::S, x::T, y::T, z::T, w::T) where {O,S<:OpenSimplex2S{4,O},T<:Real}
     seed = sampler.random_state.seed
+    table = sampler.table
     state = sampler.simplex_state
     falloff = state.falloff
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
@@ -611,14 +624,14 @@ function sample(sampler::S, x::T, y::T, z::T, w::T) where {O,S<:OpenSimplex2S{4,
     ix, iy, iz, iw = floor.(Int, (tr .* 4)) .& 3
     index = ix << 0 | iy << 2 | iz << 4 | iw << 6
     result = 0.0
-    start, stop = OS2S_LOOKUP_4D_A[index+1]
-    for i in start:stop
+    @inbounds start, stop = OS2S_LOOKUP_4D_A[index+1]
+    @inbounds for i in start:stop
         c = OS2S_LOOKUP_4D_B[i]
         V = XYZWp .+ c.XYZW
         x, y, z, w = vs .+ c.xyzw
         a = (x^2 + y^2) + (z^2 + w^2)
         if a < falloff
-            result += pow4(a - falloff) * grad(OS2S_GRADIENTS_4D, seed, V..., x, y, z, w)
+            result += pow4(a - falloff) * grad(table, seed, V..., x, y, z, w)
         end
     end
     result * state.scale_factor

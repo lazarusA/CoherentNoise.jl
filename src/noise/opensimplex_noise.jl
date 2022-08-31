@@ -58,7 +58,7 @@ opensimplex_2d(; seed=nothing, smooth=false) = _opensimplex(2, seed, smooth)
 @inline function contribute(sampler::OpenSimplex{2}, falloff, X, Y, x, y)
     t = sampler.perlin_state.table
     g = OS_GRADIENTS_2D
-    @inbounds i = (t[t[X]+Y] & 14) + 1
+    @inbounds i = (t[t[X+1]+Y+1] & 14) + 1
     a = falloff - x^2 - y^2
     @inbounds a > 0 ? pow4(a) * (g[i] * x + g[i+1] * y) : 0.0
 end
@@ -67,11 +67,12 @@ function sample(sampler::OpenSimplex{2}, x::T, y::T) where {T<:Real}
     s = (x, y) .+ ((x + y) * OS_STRETCH_2D)
     state = sampler.simplex_state
     falloff = state.falloff
-    X1, Y1 = floor.(Int, s)
-    x1, y1 = (x, y) .- ((X1 + Y1) * OS_SQUISH_2D) .- (X1, Y1)
+    X0, Y0 = floor.(Int, s)
+    X1, Y1 = (X0, Y0) .& 255 .+ 1
+    x1, y1 = (x, y) .- ((X0 + Y0) * OS_SQUISH_2D) .- (X0, Y0)
     y2, x3 = (y1, x1) .- OS_SQUISH_2D
     x2, y3 = (x1, y1) .- 1 .- OS_SQUISH_2D
-    Xs, Ys = s .- (X1, Y1)
+    Xs, Ys = s .- (X0, Y0)
     XYs = Xs + Ys
     c1 = contribute(sampler, falloff, X1 + 1, Y1, x2, y2)
     c2 = contribute(sampler, falloff, X1, Y1 + 1, x3, y3)
@@ -166,9 +167,10 @@ function sample(sampler::OpenSimplex{3}, x::T, y::T, z::T) where {T<:Real}
     s = (x, y, z) .+ ((x + y + z) * OS_STRETCH_3D)
     state = sampler.simplex_state
     falloff = state.falloff
-    X1, Y1, Z1 = floor.(Int, s)
-    x1, y1, z1 = (x, y, z) .- ((X1 + Y1 + Z1) * OS_SQUISH_3D) .- (X1, Y1, Z1)
-    Xs, Ys, Zs = s .- (X1, Y1, Z1)
+    X0, Y0, Z0 = floor.(Int, s)
+    X1, Y1, Z1 = (X0, Y0, Z0) .& 255 .+ 1
+    x1, y1, z1 = (x, y, z) .- ((X0 + Y0 + Z0) * OS_SQUISH_3D) .- (X0, Y0, Z0)
+    Xs, Ys, Zs = s .- (X0, Y0, Z0)
     XYZs = Xs + Ys + Zs
     result = 0.0
     if XYZs ≤ 1
@@ -492,9 +494,10 @@ function sample(sampler::OpenSimplex{4}, x::T, y::T, z::T, w::T) where {T<:Real}
     s = (x, y, z, w) .+ ((x + y + z + w) * OS_STRETCH_4D)
     state = sampler.simplex_state
     falloff = state.falloff
-    X1, Y1, Z1, W1 = floor.(Int, s)
-    x1, y1, z1, w1 = (x, y, z, w) .- ((X1 + Y1 + Z1 + W1) * OS_SQUISH_4D) .- (X1, Y1, Z1, W1)
-    Xs, Ys, Zs, Ws = s .- (X1, Y1, Z1, W1)
+    X0, Y0, Z0, W0 = floor.(Int, s)
+    X1, Y1, Z1, W1 = (X0, Y0, Z0, W0) .& 255 .+ 1
+    x1, y1, z1, w1 = (x, y, z, w) .- ((X0 + Y0 + Z0 + W0) * OS_SQUISH_4D) .- (X0, Y0, Z0, W0)
+    Xs, Ys, Zs, Ws = s .- (X0, Y0, Z0, W0)
     XYZWs = Xs + Ys + Zs + Ws
     result = 0.0
     if XYZWs ≤ 1

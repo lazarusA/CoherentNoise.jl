@@ -8,13 +8,18 @@ struct OrientXYZ <: Orientation end
 struct OpenSimplex2{N,O<:Orientation} <: NoiseSampler{N}
     random_state::RandomState
     simplex_state::SimplexState
+    table::Vector{Float64}
 end
 
-@inline function _opensimplex2(dims, seed, orientation, smooth)
+@inline function _opensimplex2(dims, seed, table_size, gradients, orientation, smooth)
     rs = RandomState(seed)
     orientation = os2_orientation_type(Val(orientation))
+    table = zeros(Float64, table_size)
+    @inbounds for (i, e) in zip(eachindex(table), Iterators.cycle(gradients))
+        table[i] = e
+    end
     T = OpenSimplex2{dims,orientation}
-    T(rs, SimplexState(T, Val(smooth)))
+    T(rs, SimplexState(T, Val(smooth)), table)
 end
 
 @inline os2_orientation_type(::Val{nothing}) = OrientStandard
@@ -48,7 +53,6 @@ const OS2_GRADIENTS_NORMALIZED_2D = [
     -0.793353340291235, -0.608761429008721, -0.99144486137381, -0.130526192220052,
     -0.99144486137381, 0.130526192220051, -0.793353340291235, 0.608761429008721,
     -0.608761429008721, 0.793353340291235, -0.130526192220052, 0.99144486137381]
-const OS2_GRADIENTS_2D = OS2_GRADIENTS_NORMALIZED_2D ./ 0.01001634121365712 |> CircularVector
 
 """
     opensimplex2_2d(; seed=nothing, orient=nothing)
@@ -66,7 +70,11 @@ Construct a sampler that outputs 2-dimensional OpenSimplex2 noise when it is sam
       + `:x`: The noise space will be re-oriented with the Y axis pointing down the main diagonal to
         improve visual isotropy.
 """
-opensimplex2_2d(; seed=nothing, orient=nothing) = _opensimplex2(2, seed, orient, false)
+function opensimplex2_2d(; seed=nothing, orient=nothing)
+    size = OS2_NUM_GRADIENTS_2D * 2
+    gradients = OS2_GRADIENTS_NORMALIZED_2D ./ 0.01001634121365712
+    _opensimplex2(2, seed, size, gradients, orient, false)
+end
 
 @inline orient(::Type{OpenSimplex2{2,OrientStandard}}, x, y) = (x, y) .+ OS2_SKEW_2D .* (x + y)
 
@@ -80,12 +88,13 @@ end
     hash = (seed ⊻ X ⊻ Y) * HASH_MULTIPLIER
     hash ⊻= hash >> (64 - OS2_NUM_GRADIENTS_EXP_2D + 1)
     i = trunc(hash) & ((OS2_NUM_GRADIENTS_2D - 1) << 1)
-    t = (table[i+1], table[(i|1)+1])
+    @inbounds t = (table[i+1], table[(i|1)+1])
     sum((t .* (x, y)))
 end
 
 function sample(sampler::S, x::T, y::T) where {O,S<:OpenSimplex2{2,O},T<:Real}
     seed = sampler.random_state.seed
+    table = sampler.table
     state = sampler.simplex_state
     falloff = state.falloff
     primes = (PRIME_X, PRIME_Y)
@@ -100,26 +109,26 @@ function sample(sampler::S, x::T, y::T) where {O,S<:OpenSimplex2{2,O},T<:Real}
     result = 0.0
     a1 = falloff - x1^2 - y1^2
     if a1 > 0
-        result += pow4(a1) * grad(OS2_GRADIENTS_2D, seed, X1, Y1, x1, y1)
+        result += pow4(a1) * grad(table, seed, X1, Y1, x1, y1)
     end
     a2 = 2us1 * (1 / OS2_UNSKEW_2D + 2) * t + -2us1^2 + a1
     if a2 > 0
         x, y = (x1, y1) .- 2OS2_UNSKEW_2D .- 1
-        result += pow4(a2) * grad(OS2_GRADIENTS_2D, seed, X2, Y2, x, y)
+        result += pow4(a2) * grad(table, seed, X2, Y2, x, y)
     end
     if y1 > x1
         x = x1 - OS2_UNSKEW_2D
         y = y1 - OS2_UNSKEW_2D - 1
         a3 = falloff - x^2 - y^2
         if a3 > 0
-            result += pow4(a3) * grad(OS2_GRADIENTS_2D, seed, X1, Y2, x, y)
+            result += pow4(a3) * grad(table, seed, X1, Y2, x, y)
         end
     else
         x = x1 - OS2_UNSKEW_2D - 1
         y = y1 - OS2_UNSKEW_2D
         a4 = falloff - x^2 - y^2
         if a4 > 0
-            result += pow4(a4) * grad(OS2_GRADIENTS_2D, seed, X2, Y1, x, y)
+            result += pow4(a4) * grad(table, seed, X2, Y1, x, y)
         end
     end
     result * state.scale_factor
@@ -181,7 +190,6 @@ const OS2_GRADIENTS_NORMALIZED_3D = [
     2.22474487139, 1.0, 2.22474487139, 0.0,
     1.1721513422464978, 0.0, 3.0862664687972017, 0.0,
     3.0862664687972017, 0.0, 1.1721513422464978, 0.0]
-const OS2_GRADIENTS_3D = OS2_GRADIENTS_NORMALIZED_3D ./ 0.07969837668935331 |> CircularVector
 
 """
     opensimplex2_3d(; seed=nothing, smooth=false, orient=nothing)
@@ -215,7 +223,9 @@ Construct a sampler that outputs 3-dimensional OpenSimplex2 noise when it is sam
       + `:xz`: Re-orient the noise space to have better visual isotropy in the XZ plane.
 """
 function opensimplex2_3d(; seed=nothing, orient=nothing, smooth=false)
-    _opensimplex2(3, seed, orient, smooth)
+    size = OS2_NUM_GRADIENTS_3D * 4
+    gradients = OS2_GRADIENTS_NORMALIZED_3D ./ 0.07969837668935331
+    _opensimplex2(3, seed, size, gradients, orient, smooth)
 end
 
 @inline function orient(::Type{OpenSimplex2{3,OrientStandard}}, x, y, z)
@@ -238,31 +248,32 @@ end
     hash = ((seed ⊻ X) ⊻ (Y ⊻ Z)) * HASH_MULTIPLIER
     hash ⊻= hash >> (64 - OS2_NUM_GRADIENTS_EXP_3D + 2)
     i = trunc(hash) & ((OS2_NUM_GRADIENTS_3D - 1) << 2)
-    t = (table[i+1], table[(i|1)+1], table[(i|2)+1])
+    @inbounds t = (table[i+1], table[(i|1)+1], table[(i|2)+1])
     sum((t .* (x, y, z)))
 end
 
-@inline function os2_contribute1(seed, a, X, Y, Z, x1, y1, z1, x2, y2, z2, xs, ys, zs)
+@inline function os2_contribute1(seed, table, a, X, Y, Z, x1, y1, z1, x2, y2, z2, xs, ys, zs)
     result = 0.0
     if a > 0
-        result += pow4(a) * grad(OS2_GRADIENTS_3D, seed, X, Y, Z, x1, y1, z1)
+        result += pow4(a) * grad(table, seed, X, Y, Z, x1, y1, z1)
     end
     if x2 ≥ y2 && x2 ≥ z2
-        result += os2_contribute2(seed, a + 2x2, X - xs * PRIME_X, Y, Z, x1 + xs, y1, z1)
+        result += os2_contribute2(seed, table, a + 2x2, X - xs * PRIME_X, Y, Z, x1 + xs, y1, z1)
     elseif y2 ≥ x2 && y2 ≥ z2
-        result += os2_contribute2(seed, a + 2y2, X, Y - ys * PRIME_Y, Z, x1, y1 + ys, z1)
+        result += os2_contribute2(seed, table, a + 2y2, X, Y - ys * PRIME_Y, Z, x1, y1 + ys, z1)
     else
-        result += os2_contribute2(seed, a + 2z2, X, Y, Z - zs * PRIME_Z, x1, y1, z1 + zs)
+        result += os2_contribute2(seed, table, a + 2z2, X, Y, Z - zs * PRIME_Z, x1, y1, z1 + zs)
     end
     result
 end
 
-@inline function os2_contribute2(seed, a, args...)
-    a > 1 ? pow4(a - 1) * grad(OS2_GRADIENTS_3D, seed, args...) : 0.0
+@inline function os2_contribute2(seed, table, a, args...)
+    a > 1 ? pow4(a - 1) * grad(table, seed, args...) : 0.0
 end
 
 function sample(sampler::S, x::T, y::T, z::T) where {O,S<:OpenSimplex2{3,O},T<:Real}
     seed = sampler.random_state.seed
+    table = sampler.table
     state = sampler.simplex_state
     falloff = state.falloff
     primes = (PRIME_X, PRIME_Y, PRIME_Z)
@@ -276,9 +287,9 @@ function sample(sampler::S, x::T, y::T, z::T) where {O,S<:OpenSimplex2{3,O},T<:R
     x4, y4, z4 = 0.5 .- xyz2
     xyz3 = s .* (x4, y4, z4)
     a1 = falloff - x1^2 - (y1^2 + z1^2)
-    c1 = os2_contribute1(seed, a1, XYZ..., x1, y1, z1, xyz2..., s...)
+    c1 = os2_contribute1(seed, table, a1, XYZ..., x1, y1, z1, xyz2..., s...)
     a2 = a1 + 0.75 - x4 - (y4 + z4)
-    c2 = os2_contribute1(seed ⊻ OS2_SEED_FLIP_3D, a2, XYZ2..., xyz3..., x4, y4, z4, .-s...)
+    c2 = os2_contribute1(seed ⊻ OS2_SEED_FLIP_3D, table, a2, XYZ2..., xyz3..., x4, y4, z4, .-s...)
     (c1 + c2) * state.scale_factor
 end
 
@@ -451,7 +462,6 @@ const OS2_GRADIENTS_NORMALIZED_4D = [
     0.7821684431180708, 0.4321472685365301, -0.12128480194602098, 0.4321472685365301,
     0.7821684431180708, 0.4321472685365301, 0.4321472685365301, -0.12128480194602098,
     0.753341017856078, 0.37968289875261624, 0.37968289875261624, 0.37968289875261624]
-const OS2_GRADIENTS_4D = OS2_GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897 |> CircularVector
 
 """
     opensimplex2_4d(; seed=nothing, smooth=false, orient=nothing)
@@ -487,7 +497,9 @@ Construct a sampler that outputs 4-dimensional OpenSimplex2 noise when it is sam
         the W axis is time.
 """
 function opensimplex2_4d(; seed=nothing, orient=nothing, smooth=false)
-    _opensimplex2(4, seed, orient, smooth)
+    size = OS2_NUM_GRADIENTS_4D * 4
+    gradients = OS2_GRADIENTS_NORMALIZED_4D ./ 0.0220065933241897
+    _opensimplex2(4, seed, size, gradients, orient, smooth)
 end
 
 @inline function orient(::Type{OpenSimplex2{4,OrientStandard}}, x, y, z, w)
@@ -521,12 +533,13 @@ end
     hash = seed ⊻ (X ⊻ Y) ⊻ (Z ⊻ W) * HASH_MULTIPLIER
     hash ⊻= hash >> (64 - OS2_NUM_GRADIENTS_EXP_4D + 2)
     i = trunc(hash) & ((OS2_NUM_GRADIENTS_4D - 1) << 2)
-    t = (table[i+1], table[(i|1)+1], table[(i|2)+1], table[(i|3)+1])
+    @inbounds t = (table[i+1], table[(i|1)+1], table[(i|2)+1], table[(i|3)+1])
     sum((t .* (x, y, z, w)))
 end
 
 function sample(sampler::S, x::T, y::T, z::T, w::T) where {O,S<:OpenSimplex2{4,O},T<:Real}
     seed = sampler.random_state.seed
+    table = sampler.table
     state = sampler.simplex_state
     falloff = state.falloff
     primes = (PRIME_X, PRIME_Y, PRIME_Z, PRIME_W)
@@ -563,7 +576,7 @@ function sample(sampler::S, x::T, y::T, z::T, w::T) where {O,S<:OpenSimplex2{4,O
         xyzw = (x1, y1, z1, w1) .+ ssi
         a = sum(xyzw .^ 2)
         if a < falloff
-            result += pow4(a - falloff) * grad(OS2_GRADIENTS_4D, seed, X2, Y2, Z2, W2, xyzw...)
+            result += pow4(a - falloff) * grad(table, seed, X2, Y2, Z2, W2, xyzw...)
         end
         if i !== 4
             x1, y1, z1, w1 = (x1, y1, z1, w1) .+ OS2_LATTICE_STEP_4D

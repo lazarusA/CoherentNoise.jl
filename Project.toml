@@ -4,7 +4,6 @@ authors = ["Michael Fiano <mail@mfiano.net> and contributors"]
 version = "1.6.4"
 
 [deps]
-CircularArrays = "7a955b69-7140-5f4e-a0ed-f168c5e2e749"
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
 ColorTypes = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
@@ -12,7 +11,6 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 RandomNumbers = "e6cf234a-135c-5ec9-84dd-332b85af5143"
 
 [compat]
-CircularArrays = "1.3"
 ColorSchemes = "3.19"
 ColorTypes = "0.11"
 Distributions = "0.25"
