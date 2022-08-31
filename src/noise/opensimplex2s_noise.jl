@@ -7,10 +7,7 @@ end
 @inline function _opensimplex2s(dims, seed, table_size, gradients, orientation, smooth)
     rs = RandomState(seed)
     orientation = os2_orientation_type(Val(orientation))
-    table = zeros(Float64, table_size)
-    @inbounds for (i, e) in zip(eachindex(table), Iterators.cycle(gradients))
-        table[i] = e
-    end
+    table = Iterators.take(Iterators.cycle(gradients), table_size) |> collect
     T = OpenSimplex2S{dims,orientation}
     T(rs, SimplexState(T, Val(smooth)), table)
 end
