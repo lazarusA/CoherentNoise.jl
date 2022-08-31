@@ -1,7 +1,7 @@
 name = "CoherentNoise"
 uuid = "3547b4d8-3bdb-4c10-a099-d01a31e852e0"
 authors = ["Michael Fiano <mail@mfiano.net> and contributors"]
-version = "1.6.4"
+version = "1.6.5"
 
 [deps]
 ColorSchemes = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
