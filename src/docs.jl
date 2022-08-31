@@ -190,12 +190,12 @@ Construct a sampler that outputs 1-dimensional Perlin "Improved" noise when it i
     major version release.
 
   - It is *strongly* recommended not to use this function for quality noise; the results will be
-  very regular. There are many tricks people have done to combat this issue, but they all have
-  trade-offs that are not worth the burden.
+    very regular. There are many tricks people have done to combat this issue, but they all have
+    trade-offs that are not worth the burden.
 
-  The recommended alternatives are to either use [`simplex_1d`](@ref simplex_1d), or use
-  [`perlin_3d`](@ref perlin_3d) with 2 of the coordinates fixed, and not close to `0.0`, `0.5`, or
-  `1.0`.
+    The recommended alternatives are to either use [`simplex_1d`](@ref simplex_1d), or use
+    [`perlin_3d`](@ref perlin_3d) with 2 of the coordinates fixed, and not close to `0.0`, `0.5`, or
+    `1.0`.
 """
 
 const doc_perlin_2d = """
