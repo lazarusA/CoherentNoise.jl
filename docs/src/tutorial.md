@@ -7,12 +7,12 @@ function generate(file, sampler; xbounds=(-1.0, 1.0), ybounds=(-1.0, 1.0), color
 end
 ```
 
-# [First steps](@id first_steps)
+## [First steps](@id first_steps)
 
 Before following along with this tutorial, it is a good idea to get familiar with how to work with
 samplers. See [Getting Started](@ref installation).
 
-## Visualizing results
+### Visualizing results
 
 CoherentNoise provides basic support for generating 2-dimensional slices of noise data, which can be
 conveniently written to disk as an image file, or rendered with tools such as
@@ -41,7 +41,7 @@ Which, for this example, should produce something similar to the following image
 
 ![](assets/tutorial/tutorial01.png)
 
-## Modifiers
+### Modifiers
 
 Modifiers are the backbone of producing interesting noise results. Using a modifier, we can alter
 the input coordinates before sampling, or the output value after sampling. Modifiers are just
@@ -129,7 +129,7 @@ There are many more modifiers. It is recommended to check out the [API Reference
 list of modifiers (and other samplers). Also, be sure to check out the [Gallery](@ref
 user_creations) for more examples.
 
-## Pipelines
+### Pipelines
 
 Once you start composing different noises together with modifiers, the code gets a little
 un-manageable and harder to read. We can leverage Julia's builtin pipe operator, or more
@@ -155,7 +155,7 @@ this variable-free clear flow of control will be appealing. The remainder of thi
 @chain, but it's not a necessary part of the workflow. You can also write the pipeline code manually
 without it, if this style is not for you.
 
-## Fractals
+### Fractals
 
 A fractal is another type of sampler that applies multiple octaves of a given source sampler,
 varying their frequency. They make the noise much less regular looking, and offers a good starting
@@ -177,7 +177,7 @@ end # hide
 
 ![](assets/tutorial/tutorial09.png)
 
-### fBm (fractional Brownian motion)
+#### fBm (fractional Brownian motion)
 
 The most basic example is that with only a `source` argument supplied.
 
@@ -253,7 +253,7 @@ end # hide
 
 ![](assets/tutorial/tutorial14.png)
 
-### Billow
+#### Billow
 
 `Billow` is another fractal sampler type that produces a billowy appearance. It could be used as the
 basis for a clouds texture, among many other uses. It supports all of the same parameters as fBm.
@@ -272,7 +272,7 @@ end # hide
 
 ![](assets/tutorial/tutorial15.png)
 
-### Ridged
+#### Ridged
 
 `Ridged` is a fractal (actually a [multifractal](https://en.wikipedia.org/wiki/Multifractal_system))
 sampler type that produces ridges. It could be used as the basis for a mountainous terrain texture,
@@ -308,7 +308,7 @@ end # hide
 There are a couple other fractal types that we didn't go over, but feel free to experiment with
 them. Their interface is the same as any other fractal type.
 
-## Adding color
+### Adding color
 
 CoherentNoise works in combination with
 [ColorSchemes.jl](https://github.com/JuliaGraphics/ColorSchemes.jl) to add color to generated
