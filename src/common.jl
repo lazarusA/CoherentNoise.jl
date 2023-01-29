@@ -190,8 +190,8 @@ function gen_image(
     y1, y2 = ybounds
     xd = (x2 - x1) / w
     yd = (y2 - y1) / h
-    img = Array{RGB{Float64}}(undef, h, w)
-    zw = rand(sampler.random_state.rng, Float64, N - 2) * 1000
+    img = Matrix{RGB{Float64}}(undef, h, w)
+    zw = ntuple(_->rand(sampler.random_state.rng, Float64) * 1000, N - 2) 
     Threads.@threads for x in 1:h
         cx = x * xd + x1
         for y in 1:w

@@ -8,7 +8,8 @@ end
 @inline function _opensimplex(dims, seed, smooth)
     T = OpenSimplex{dims}
     rs = RandomState(seed)
-    table = shuffle(rs.rng, UInt8.([repeat(0:3:45, 11)..., repeat(48:3:69, 10)...]))
+    # 0:3:45 and 48:3:69
+    table = shuffle(rs.rng, [repeat(0x00:0x03:0x2d, 11); repeat(0x30:0x03:0x45, 10)])
     T(rs, PerlinState(rs), SimplexState(T, Val(smooth)), table)
 end
 
