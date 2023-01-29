@@ -811,10 +811,10 @@ end
 
 # warp
 
-struct Warp{N,N1,N2,N3,N4,S,SX,SY,SZ,SW} <: ModifierSampler{N}
+struct Warp{N,N1,N2,N3,N4,S,T<:Tuple} <: ModifierSampler{N}
     random_state::RandomState
     source::S
-    displacement::Tuple{SX,SY,SZ,SW}
+    displacement::T
 end
 
 """
@@ -841,19 +841,12 @@ be used instead.
 """
 function warp(
     source::S;
-    x::SX=constant_1d(),
-    y::SY=constant_1d(),
-    z::SZ=constant_1d(),
-    w::SW=constant_1d(),
-) where {
-    N,N1,N2,N3,N4,
-    S<:AbstractSampler{N},
-    SX<:AbstractSampler{N1},
-    SY<:AbstractSampler{N2},
-    SZ<:AbstractSampler{N3},
-    SW<:AbstractSampler{N4},
-}
-    Warp{N,N1,N2,N3,N4,S,SX,SY,SZ,SW}(source.random_state, source, (x, y, z, w))
+    x::AbstractSampler{N1}=constant_1d(),
+    y::AbstractSampler{N2}=constant_1d(),
+    z::AbstractSampler{N3}=constant_1d(),
+    w::AbstractSampler{N4}=constant_1d(),
+) where {N,S<:AbstractSampler{N},N1,N2,N3,N4}
+    Warp{N,N1,N2,N3,N4,S,typeof((x,y,z,w))}(source.random_state, source, (x, y, z, w))
 end
 
 function sample(sampler::Warp{N,N1,N2,N3,N4}, coords::Vararg{Real,N}) where {N,N1,N2,N3,N4}
