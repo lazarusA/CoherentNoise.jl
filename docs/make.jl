@@ -1,21 +1,26 @@
 using CoherentNoise
 using FileIO, Chain
 using Documenter
+using DocumenterVitepress
 
 DocMeta.setdocmeta!(CoherentNoise, :DocTestSetup, :(using CoherentNoise); recursive=true)
 
 makedocs(;
     modules=[CoherentNoise],
     authors="Michael Fiano <mail@mfiano.net> and contributors",
-    repo="https://github.com/mfiano/CoherentNoise.jl/blob/{commit}{path}#{line}",
     sitename="CoherentNoise.jl",
-    #= linkcheck=true, =#
-    format=Documenter.HTML(;
-        prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://mfiano.github.io/CoherentNoise.jl",
-        edit_link="main",
-        assets=String[]
+    clean=true,
+    doctest=true,
+    linkcheck=false,
+    warnonly=[:missing_docs],
+    format=DocumenterVitepress.MarkdownVitepress(;
+        repo="github.com/lazarusA/CoherentNoise.jl", # this must be the full URL!
+        devbranch="main",
+        devurl="dev",
     ),
+    draft=false,
+    source="src",
+    build="build",
     pages=[
         "Home" => "index.md",
         "Overview" => "overview.md",
@@ -28,6 +33,9 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/mfiano/CoherentNoise.jl",
-    devbranch="main"
+    repo="github.com/lazarusA/CoherentNoise.jl",
+    target = "build", # this is where Vitepress stores its output
+    branch = "gh-pages",
+    devbranch = "main",
+    push_preview = true
 )
