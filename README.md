@@ -75,5 +75,5 @@ In the order of "recommended to try first":
 - Hybrid: (1D, 2D, 3D, 4D)
 - Ridged: (1D, 2D, 3D, 4D)
 
-### [Modifier samplers](https://mfiano.github.io/CoherentNoise.jl/stable/overview/#Modifier-samplers)
+### [Modifier samplers](https://lazarusa.github.io/CoherentNoise.jl/stable/overview/#Modifier-samplers)
 
