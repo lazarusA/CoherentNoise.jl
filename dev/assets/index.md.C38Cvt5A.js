@@ -1,0 +1,16 @@
+import{_ as e,c as t,o as r,a7 as i}from"./chunks/framework.BZT1wHXU.js";const s="/CoherentNoise.jl/dev/assets/splash.C1f59Qi2.png",h=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"index.md","filePath":"index.md","lastUpdated":null}'),a={name:"index.md"},o=i('<p><img src="'+s+`" alt=""></p><ul><li><p><strong>Overview</strong></p><pre><code>                      - [What-is-coherent-noise?](overview#What-is-coherent-noise?)
+                          - [History](overview#History)
+                              - [What&#39;s-different-from-other-libraries?](overview#What&#39;s-different-from-other-libraries?)
+                                      - [Available-samplers](overview#Available-samplers)
+</code></pre></li><li><p><strong>Algorithms</strong></p></li><li><p><a href="./algorithms#Patterns">Patterns</a></p><ul><li><a href="./algorithms#Noise">Noise</a><ul><li><a href="./algorithms#Fractals">Fractals</a></li></ul></li></ul></li><li><p><strong>Getting Started</strong></p><pre><code>              - [installation](getting_started#installation)
+                  - [Basic-Usage](getting_started#Basic-Usage)
+</code></pre></li><li><p><strong>Tutorial</strong></p><pre><code>                                                              - [first_steps](tutorial#first_steps)
+                                                                  - [Visualizing-results](tutorial#Visualizing-results)
+                                                                      - [Modifiers](tutorial#Modifiers)
+                                                                          - [Pipelines](tutorial#Pipelines)
+                                                                              - [Fractals](tutorial#Fractals)
+                                                                                              - [Adding-color](tutorial#Adding-color)
+</code></pre></li><li><p><strong>Gallery</strong></p><pre><code>      - [user_creations](gallery#user_creations)
+
+                                                          - [API-Reference](reference#API-Reference)
+</code></pre></li></ul>`,2),n=[o];function l(c,p,d,_,g,f){return r(),t("div",null,n)}const m=e(a,[["render",l]]);export{h as __pageData,m as default};
