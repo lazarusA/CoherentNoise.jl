@@ -23,9 +23,11 @@ makedocs(;
     build="build",
     pages=[
         "Home" => "index.md",
-        "Overview" => "overview.md",
-        "Algorithms" => "algorithms.md",
-        "Getting Started" => "getting_started.md",
+        "Get Started" => [
+            "install.md",
+            "overview.md",
+            "algorithms.md",
+        ],
         "Tutorial" => "tutorial.md",
         "Gallery" => "gallery.md",
         "API Reference" => "reference.md"
