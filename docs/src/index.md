@@ -1,33 +1,43 @@
-```@meta
-CurrentModule = CoherentNoise
+```@raw html
+---
+# https://vitepress.dev/reference/default-theme-home-page
+layout: home
+
+hero:
+  name: "CoherentNoise.jl"
+  text: "All the noise you need, and more!"
+  tagline: A comprehensive suite of coherent noise algorithms
+  image:
+    src: /logo.png
+    alt: CoherentNoise
+  actions:
+    - theme: brand
+      text: Getting Started
+      link: /getting_started
+    - theme: alt
+      text: View on Github
+      link: https://github.com/lazarusA/CoherentNoise.jl
+    - theme: alt
+      text: API
+      link: /reference
+features:
+  - title: Coherent noise?
+    details: What is it?
+    link: /overview
+  - title: Algorithms
+    details: Explore the ones available.
+    link: /algorithms
+  - title: Gallery
+    details: User's creations. Feel free to submit your own.
+    link: /gallery
+---
 ```
 
-![CoherentNoise is a comprehensive suite of coherent noise algorithms and composable tools for
-manipulating them to create interesting procedurally-generated imagery and other creative
-applications.](assets/splash.png)
+How to Install CoherentNoise.jl?
 
-* **Overview**
-```@contents
-Pages = ["overview.md"]
-```
-* **Algorithms**
-```@contents
-Pages = ["algorithms.md"]
-```
-* **Getting Started**
-```@contents
-Pages = ["getting_started.md"]
-```
-* **Tutorial**
-```@contents
-Pages = ["tutorial.md"]
-Depth = 3
-```
-* **Gallery**
-```@contents
-Pages = ["gallery.md"]
-```
-```@contents
-Pages = ["reference.md"]
-```
+Its easy to install CoherentNoise.jl. Since is registered in the Julia General registry, you can simply run the following command in the Julia REPL:
 
+```julia
+julia> using Pkg
+julia> Pkg.add("CoherentNoise")
+```
